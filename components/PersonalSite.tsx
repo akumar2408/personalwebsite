@@ -1,3 +1,4 @@
+/* FULL FIXED FILE START */
 'use client';
 import { useEffect, useMemo, useState } from "react";
 import {
@@ -8,7 +9,7 @@ import { motion } from "framer-motion";
 
 const CONFIG = {
   name: "Aayush Kumar",
-  tagline: "Builder of practical AI systems and clean, end‑to‑end software.",
+  tagline: "Builder of practical AI systems and clean, end-to-end software.",
   location: "Phoenix • Los Angeles",
   email: "aayushkumar2004@gmail.com",
   resumeUrl: "/Aayush_Kumar_Resume.pdf",
@@ -39,13 +40,13 @@ const skills: Record<string, string[]> = {
 const projects = [
   {
     title: "Operational Dashboard",
-    blurb: "Full‑stack sales analytics (ReactJS + Spring Boot + PostgreSQL) with 30‑day forecasts; improved trend detection accuracy by ~25%.",
+    blurb: "Full-stack sales analytics (ReactJS + Spring Boot + PostgreSQL) with 30-day forecasts; improved trend detection accuracy by ~25%.",
     links: [{ label: "GitHub", href: "https://github.com/akumar2408/operationaldashboard/" }],
     tags: ["React", "Spring Boot", "PostgreSQL", "Forecasting"],
   },
   {
     title: "AIInvestMate",
-    blurb: "Personal finance ‘coach’ (Next.js + TypeScript + Supabase). Beta used by 50+ students; boosted financial‑literacy engagement by ~40%.",
+    blurb: "Personal finance ‘coach’ (Next.js + TypeScript + Supabase). Beta used by 50+ students; boosted financial-literacy engagement by ~40%.",
     links: [
       { label: "Live", href: "https://aiinvestmate.vercel.app" },
       { label: "GitHub", href: "https://github.com/akumar2408/AIInvestMate" },
@@ -60,7 +61,7 @@ const projects = [
   },
   {
     title: "StockCompSystem (Capstone)",
-    blurb: "Multi‑tenant equity platform (Django/DRF, React, PostgreSQL) with 409A workflows, JWT+TOTP 2FA, and AWS RDS.",
+    blurb: "Multi-tenant equity platform (Django/DRF, React, PostgreSQL) with 409A workflows, JWT+TOTP 2FA, and AWS RDS.",
     links: [{ label: "Repo", href: "https://github.com/akumar2408/StockCompSystem" }],
     tags: ["Django", "Postgres", "AWS", "2FA", "Chatbot"],
   },
@@ -68,7 +69,7 @@ const projects = [
 
 const highlights = [
   { icon: Briefcase, title: "Software Engineering Intern", text: "Remote — per résumé." },
-  { icon: Award, title: "Capstone — Stock‑Based Compensation System", text: "Tempe, AZ." },
+  { icon: Award, title: "Capstone — Stock-Based Compensation System", text: "Tempe, AZ." },
   { icon: Cpu, title: "CI/CD + Test Coverage", text: "AWS (RDS) containers + GitHub Actions; ~75% unit+integration coverage." },
   { icon: Rocket, title: "Safety Guardian (Streaming ETL)", text: "AWS Kinesis • Glue • Redshift." },
   { icon: Trophy, title: "AWS Fundamentals Specialization", text: "Completed Jun 2024." },
@@ -76,7 +77,7 @@ const highlights = [
 ];
 
 const blogPosts = [
-  { title: "Shipping AI Services without the Yak Shave", date: "Sep 2025", summary: "Notes from building a multi‑service stack (gateway + microservices) and keeping it boring + reliable.", href: "#" },
+  { title: "Shipping AI Services without the Yak Shave", date: "Sep 2025", summary: "Notes from building a multi-service stack (gateway + microservices) and keeping it boring + reliable.", href: "#" },
   { title: "From Prototype to Vercel in 30 Minutes", date: "Sep 2025", summary: "My minimal checklist for turning a weekend project into a link I can send to recruiters.", href: "#" },
 ];
 
@@ -188,7 +189,7 @@ export default function PersonalSite() {
   const [cmd, setCmd] = useState(false);
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") { e.preventDefault(); setCmd(v => !v); }
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") { e.preventDefault(); setCmd((v) => !v); }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -207,8 +208,8 @@ export default function PersonalSite() {
               {nav.map(n => <a key={n.id} href={`#${n.id}`} className="hover:opacity-70">{n.label}</a>)}
             </nav>
             <div className="flex items-center gap-2">
-              <button aria-label="Open command palette (⌘K)" onClick={()=>setCmd(True:=False)} className="rounded-xl px-3 py-2 border border-zinc-300 dark:border-zinc-700 text-xs">⌘K</button>
-              <button aria-label="Toggle theme" onClick={()=>setDark(!dark)} className="rounded-xl px-3 py-2 border border-zinc-300 dark:border-zinc-700">{dark ? <Sun className="h-4 w-4"/> : <MoonStar className="h-4 w-4"/>}</button>
+              <button aria-label="Open command palette (⌘K)" onClick={() => setCmd(true)} className="rounded-xl px-3 py-2 border border-zinc-300 dark:border-zinc-700 text-xs">⌘K</button>
+              <button aria-label="Toggle theme" onClick={() => setDark(!dark)} className="rounded-xl px-3 py-2 border border-zinc-300 dark:border-zinc-700">{dark ? <Sun className="h-4 w-4"/> : <MoonStar className="h-4 w-4"/>}</button>
             </div>
           </div>
         </header>
@@ -220,7 +221,7 @@ export default function PersonalSite() {
                 <MapPin className="h-3.5 w-3.5" /><span>{CONFIG.location}</span>
               </div>
               <h1 className="mt-4 text-4xl/tight md:text-5xl/tight font-semibold tracking-tight">{CONFIG.tagline}</h1>
-              <p className="mt-4 text-zinc-600 dark:text-zinc-300 max-w-[60ch]">I’m {CONFIG.name.split(" ")[0]}, a CS student at ASU and incoming Associate Developer at Insurity. I ship prototypes that turn into useful tools — from multi‑service AI pipelines to production‑ready web backends.</p>
+              <p className="mt-4 text-zinc-600 dark:text-zinc-300 max-w-[60ch]">I’m {CONFIG.name.split(" ")[0]}, a CS student at ASU and incoming Associate Developer at Insurity. I ship prototypes that turn into useful tools — from multi-service AI pipelines to production-ready web backends.</p>
               <div className="mt-6 flex flex-wrap gap-3">
                 <a href="#projects" className="group inline-flex items-center gap-2 rounded-2xl border border-zinc-900 dark:border-white px-4 py-2 text-sm font-medium hover:-translate-y-0.5 transition-transform">See my work <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition"/></a>
                 <a href={`mailto:${CONFIG.email}`} className="inline-flex items-center gap-2 rounded-2xl border border-zinc-300 dark:border-zinc-700 px-4 py-2 text-sm hover:-translate-y-0.5 transition-transform"><Mail className="h-4 w-4"/> Contact</a>
@@ -241,7 +242,7 @@ export default function PersonalSite() {
                     <div><p className="text-sm font-semibold">Currently</p><p className="text-xs text-zinc-500 dark:text-zinc-400">Associate Developer @ Insurity</p></div>
                   </div>
                   <ul className="mt-4 text-sm leading-6 list-disc ml-4 text-zinc-700 dark:text-zinc-300">
-                    <li>Two‑factor auth (OTP), clean DRF APIs, RDS.</li>
+                    <li>Two-factor auth (OTP), clean DRF APIs, RDS.</li>
                     <li>AI assistants that answer with precise, structured outputs.</li>
                     <li>Deployments that actually stay up.</li>
                   </ul>
@@ -353,7 +354,7 @@ export default function PersonalSite() {
         <section id="contact" className="mx-auto max-w-6xl px-4 py-16">
           <div className="rounded-3xl border border-zinc-200 dark:border-zinc-800 p-8 bg-white/70 dark:bg-zinc-900/40">
             <h2 className="text-xl font-semibold tracking-tight">Let’s build something</h2>
-            <p className="mt-2 text-zinc-600 dark:text-zinc-300 max-w-[60ch]">I’m open to internships, part‑time roles, and interesting side projects in AI, web, or data. The fastest way to reach me is email—or drop a message below.</p>
+            <p className="mt-2 text-zinc-600 dark:text-zinc-300 max-w-[60ch]">I’m open to internships, part-time roles, and interesting side projects in AI, web, or data. The fastest way to reach me is email—or drop a message below.</p>
             <div className="mt-6 grid md:grid-cols-2 gap-6">
               <div className="flex flex-wrap gap-3">
                 <a href={`mailto:${CONFIG.email}`} className="inline-flex items-center gap-2 rounded-2xl border border-zinc-900 dark:border-white px-4 py-2 text-sm font-medium"><Mail className="h-4 w-4"/> {CONFIG.email}</a>
@@ -372,3 +373,4 @@ export default function PersonalSite() {
     </>
   );
 }
+/* FULL FIXED FILE END */
