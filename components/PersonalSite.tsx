@@ -1,15 +1,14 @@
-/* FULL FIXED FILE START */
 'use client';
 import { useEffect, useMemo, useState } from "react";
 import {
   Github, Linkedin, Mail, FileText, ArrowRight, MapPin, Cpu, Rocket, ExternalLink,
-  Sun, MoonStar, Download, GraduationCap, Award, Briefcase, Code, Server, Database, Boxes, Trophy, Newspaper
+  Sun, MoonStar, Download, GraduationCap, Award, Briefcase, Code, Server, Database, Boxes, Newspaper
 } from "lucide-react";
 import { motion } from "framer-motion";
 
 const CONFIG = {
   name: "Aayush Kumar",
-  tagline: "Builder of practical AI systems and clean, end-to-end software.",
+  tagline: "I like building useful software that feels simple and solid.",
   location: "Phoenix • Los Angeles",
   email: "aayushkumar2004@gmail.com",
   resumeUrl: "/Aayush_Kumar_Resume.pdf",
@@ -21,7 +20,6 @@ const nav = [
   { id: "about", label: "About" },
   { id: "skills", label: "Skills" },
   { id: "projects", label: "Projects" },
-  { id: "highlights", label: "Highlights" },
   { id: "blog", label: "Blog" },
   { id: "experience", label: "Experience" },
   { id: "contact", label: "Contact" },
@@ -40,45 +38,42 @@ const skills: Record<string, string[]> = {
 const projects = [
   {
     title: "Operational Dashboard",
-    blurb: "Full-stack sales analytics (ReactJS + Spring Boot + PostgreSQL) with 30-day forecasts; improved trend detection accuracy by ~25%.",
+    blurb: "Full-stack sales analytics with 30-day forecasts. Helped spot trends sooner and keep decisions grounded.",
     links: [{ label: "GitHub", href: "https://github.com/akumar2408/operationaldashboard/" }],
-    tags: ["React", "Spring Boot", "PostgreSQL", "Forecasting"],
+    tags: ["React", "Spring Boot", "PostgreSQL"],
   },
   {
     title: "AIInvestMate",
-    blurb: "Personal finance ‘coach’ (Next.js + TypeScript + Supabase). Beta used by 50+ students; boosted financial-literacy engagement by ~40%.",
+    blurb: "Small app that helps students try out investing ideas and learn the basics in a friendly way.",
     links: [
       { label: "Live", href: "https://aiinvestmate.vercel.app" },
       { label: "GitHub", href: "https://github.com/akumar2408/AIInvestMate" },
     ],
-    tags: ["Next.js", "Supabase", "OpenAI", "Vercel"],
+    tags: ["Next.js", "Supabase"],
   },
   {
     title: "SafetyGuardian",
-    blurb: "Streaming ETL for safety events (AWS Kinesis → Glue → Redshift) with CI/CD and ~75% test coverage; reliably processes 10K+ events/day.",
+    blurb: "Streaming pipeline that moves safety events through AWS and keeps data fresh and reliable.",
     links: [{ label: "GitHub", href: "https://github.com/akumar2408/SafetyGuardian" }],
     tags: ["AWS Kinesis", "Glue", "Redshift", "CI/CD"],
   },
-  {
-    title: "StockCompSystem (Capstone)",
-    blurb: "Multi-tenant equity platform (Django/DRF, React, PostgreSQL) with 409A workflows, JWT+TOTP 2FA, and AWS RDS.",
-    links: [{ label: "Repo", href: "https://github.com/akumar2408/StockCompSystem" }],
-    tags: ["Django", "Postgres", "AWS", "2FA", "Chatbot"],
-  },
-];
-
-const highlights = [
-  { icon: Briefcase, title: "Software Engineering Intern", text: "Remote — per résumé." },
-  { icon: Award, title: "Capstone — Stock-Based Compensation System", text: "Tempe, AZ." },
-  { icon: Cpu, title: "CI/CD + Test Coverage", text: "AWS (RDS) containers + GitHub Actions; ~75% unit+integration coverage." },
-  { icon: Rocket, title: "Safety Guardian (Streaming ETL)", text: "AWS Kinesis • Glue • Redshift." },
-  { icon: Trophy, title: "AWS Fundamentals Specialization", text: "Completed Jun 2024." },
-  { icon: Boxes, title: "Developer Tools", text: "AWS, Postman, PowerBI, Git, Azure, Docker, Jira, Tableau." },
 ];
 
 const blogPosts = [
-  { title: "Shipping AI Services without the Yak Shave", date: "Sep 2025", summary: "Notes from building a multi-service stack (gateway + microservices) and keeping it boring + reliable.", href: "#" },
-  { title: "From Prototype to Vercel in 30 Minutes", date: "Sep 2025", summary: "My minimal checklist for turning a weekend project into a link I can send to recruiters.", href: "#" },
+  {
+    title: "What I actually do when I build AI stuff",
+    date: "Oct 2025",
+    summary:
+      "I start small, ship a tiny end-to-end loop, and only add the fancy pieces after it’s useful. Here’s how I avoid getting stuck and keep things moving.",
+    href: "#",
+  },
+  {
+    title: "My quick checklist before I ship",
+    date: "Oct 2025",
+    summary:
+      "A short list I run through before I push: clear readme, good defaults, basic tests, simple logging, and a way to roll back fast.",
+    href: "#",
+  },
 ];
 
 function useTheme() {
@@ -94,7 +89,6 @@ function useTheme() {
   }, [dark]);
   return { dark, setDark };
 }
-
 const fadeUp = { initial: { opacity: 0, y: 12 }, animate: { opacity: 1, y: 0, transition: { duration: 0.5 } } };
 
 function BackgroundFX() {
@@ -174,7 +168,6 @@ function useThemePref() {
   const { dark, setDark } = useTheme();
   return { dark, setDark };
 }
-
 function DevChecks() {
   useEffect(() => {
     console.assert(CONFIG.email.includes("@"), "CONFIG.email should be valid");
@@ -208,12 +201,13 @@ export default function PersonalSite() {
               {nav.map(n => <a key={n.id} href={`#${n.id}`} className="hover:opacity-70">{n.label}</a>)}
             </nav>
             <div className="flex items-center gap-2">
-              <button aria-label="Open command palette (⌘K)" onClick={() => setCmd(true)} className="rounded-xl px-3 py-2 border border-zinc-300 dark:border-zinc-700 text-xs">⌘K</button>
-              <button aria-label="Toggle theme" onClick={() => setDark(!dark)} className="rounded-xl px-3 py-2 border border-zinc-300 dark:border-zinc-700">{dark ? <Sun className="h-4 w-4"/> : <MoonStar className="h-4 w-4"/>}</button>
+              <button aria-label="Open command palette (⌘K)" onClick={()=>setCmd(true)} className="rounded-xl px-3 py-2 border border-zinc-300 dark:border-zinc-700 text-xs">⌘K</button>
+              <button aria-label="Toggle theme" onClick={()=>setDark(!dark)} className="rounded-xl px-3 py-2 border border-zinc-300 dark:border-zinc-700">{dark ? <Sun className="h-4 w-4"/> : <MoonStar className="h-4 w-4"/>}</button>
             </div>
           </div>
         </header>
 
+        {/* HERO */}
         <section id="home" className="mx-auto max-w-6xl px-4 pt-16 pb-10">
           <div className="grid md:grid-cols-12 gap-8 items-center">
             <motion.div className="md:col-span-7" initial={fadeUp.initial} animate={fadeUp.animate}>
@@ -221,11 +215,20 @@ export default function PersonalSite() {
                 <MapPin className="h-3.5 w-3.5" /><span>{CONFIG.location}</span>
               </div>
               <h1 className="mt-4 text-4xl/tight md:text-5xl/tight font-semibold tracking-tight">{CONFIG.tagline}</h1>
-              <p className="mt-4 text-zinc-600 dark:text-zinc-300 max-w-[60ch]">I’m {CONFIG.name.split(" ")[0]}, a CS student at ASU and incoming Associate Developer at Insurity. I ship prototypes that turn into useful tools — from multi-service AI pipelines to production-ready web backends.</p>
+              <p className="mt-4 text-zinc-600 dark:text-zinc-300 max-w-[60ch]">
+                I’m Aayush, a CS student who likes turning rough ideas into working software. I care about clear code,
+                fast feedback, and keeping things reliable.
+              </p>
               <div className="mt-6 flex flex-wrap gap-3">
-                <a href="#projects" className="group inline-flex items-center gap-2 rounded-2xl border border-zinc-900 dark:border-white px-4 py-2 text-sm font-medium hover:-translate-y-0.5 transition-transform">See my work <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition"/></a>
-                <a href={`mailto:${CONFIG.email}`} className="inline-flex items-center gap-2 rounded-2xl border border-zinc-300 dark:border-zinc-700 px-4 py-2 text-sm hover:-translate-y-0.5 transition-transform"><Mail className="h-4 w-4"/> Contact</a>
-                <a href={CONFIG.resumeUrl} className="inline-flex items-center gap-2 rounded-2xl border border-zinc-300 dark:border-zinc-700 px-4 py-2 text-sm hover:-translate-y-0.5 transition-transform"><FileText className="h-4 w-4"/> Resume</a>
+                <a href="#projects" className="group inline-flex items-center gap-2 rounded-2xl border border-zinc-900 dark:border-white px-4 py-2 text-sm font-medium hover:-translate-y-0.5 transition-transform">
+                  See my work <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition"/>
+                </a>
+                <a href={`mailto:${CONFIG.email}`} className="inline-flex items-center gap-2 rounded-2xl border border-zinc-300 dark:border-zinc-700 px-4 py-2 text-sm hover:-translate-y-0.5 transition-transform">
+                  <Mail className="h-4 w-4"/> Contact
+                </a>
+                <a href={CONFIG.resumeUrl} download className="inline-flex items-center gap-2 rounded-2xl border border-zinc-300 dark:border-zinc-700 px-4 py-2 text-sm hover:-translate-y-0.5 transition-transform">
+                  <FileText className="h-4 w-4"/> Resume
+                </a>
               </div>
               <div className="mt-6 flex items-center gap-4 text-zinc-600 dark:text-zinc-400">
                 <a aria-label="GitHub" href={CONFIG.github} className="hover:opacity-70"><Github className="h-5 w-5"/></a>
@@ -233,44 +236,60 @@ export default function PersonalSite() {
                 <a aria-label="Email" href={`mailto:${CONFIG.email}`} className="hover:opacity-70"><Mail className="h-5 w-5"/></a>
               </div>
             </motion.div>
+
+            {/* Insurity card (incoming role) */}
             <motion.div className="md:col-span-5" initial={fadeUp.initial} animate={fadeUp.animate} transition={{ delay: 0.1 }}>
               <div className="relative">
                 <div className="absolute -inset-1 rounded-[2rem] bg-gradient-to-tr from-fuchsia-500/20 via-sky-500/20 to-emerald-500/20 blur-2xl animate-pulse"/>
                 <div className="relative rounded-[2rem] p-6 border border-zinc-200 dark:border-zinc-800 bg-white/60 dark:bg-zinc-900/50">
                   <div className="flex items-center gap-3">
                     <div className="h-10 w-10 rounded-2xl bg-zinc-200 dark:bg-zinc-800 grid place-items-center"><Cpu className="h-5 w-5"/></div>
-                    <div><p className="text-sm font-semibold">Currently</p><p className="text-xs text-zinc-500 dark:text-zinc-400">Associate Developer @ Insurity</p></div>
+                    <div>
+                      <p className="text-sm font-semibold">Incoming</p>
+                      <p className="text-xs text-zinc-500 dark:text-zinc-400">Associate Developer @ Insurity</p>
+                    </div>
                   </div>
                   <ul className="mt-4 text-sm leading-6 list-disc ml-4 text-zinc-700 dark:text-zinc-300">
-                    <li>Two-factor auth (OTP), clean DRF APIs, RDS.</li>
-                    <li>AI assistants that answer with precise, structured outputs.</li>
-                    <li>Deployments that actually stay up.</li>
+                    <li>Build internal tools and APIs that make the team faster.</li>
+                    <li>Work on AI-assisted features where they’re actually helpful.</li>
+                    <li>Focus on clean code, solid tests, and smooth deploys.</li>
                   </ul>
-                  <div className="mt-4 flex gap-2"><a href={CONFIG.resumeUrl} className="inline-flex items-center gap-2 rounded-xl border px-3 py-2 text-xs"><Download className="h-4 w-4"/> Download résumé</a></div>
+                  <div className="mt-4 flex gap-2">
+                    <a href={CONFIG.resumeUrl} download className="inline-flex items-center gap-2 rounded-xl border px-3 py-2 text-xs">
+                      <Download className="h-4 w-4"/> Download résumé
+                    </a>
+                  </div>
                 </div>
               </div>
             </motion.div>
           </div>
         </section>
 
+        {/* ABOUT */}
         <section id="about" className="mx-auto max-w-6xl px-4 py-12">
           <div className="grid md:grid-cols-12 gap-10">
-            <div className="md:col-span-4"><h2 className="text-xl font-semibold tracking-tight">About</h2><p className="mt-3 text-sm text-zinc-500 dark:text-zinc-400 max-w-[28ch]">Quick background & what I’m into lately.</p></div>
+            <div className="md:col-span-4">
+              <h2 className="text-xl font-semibold tracking-tight">About</h2>
+              <p className="mt-3 text-sm text-zinc-500 dark:text-zinc-400 max-w-[28ch]">A little context and what I’m into.</p>
+            </div>
             <motion.div className="md:col-span-8 text-zinc-700 dark:text-zinc-300" initial={fadeUp.initial} animate={fadeUp.animate}>
-              <p>I like building systems that are simple to reason about and fast to ship. My sweet spot is tying together AI services with practical web infrastructure so people can actually use the thing.</p>
-              <p className="mt-4">On campus, I’m finishing my BS in Computer Science and progressing through ASU’s MCS in Big Data Systems. I’ve led projects spanning mobile sensing, finance UX, and production APIs.</p>
+              <p>I like small, end-to-end slices that prove the idea. Once it works, I clean it up and make it sturdy.
+              Most of my projects mix web, data, and a bit of AI.</p>
+              <p className="mt-4">Right now I’m finishing my BS at ASU and working through the MCS Big Data Systems track.
+              Outside of classes, I build things for fun and post the ones I’m proud of.</p>
               <div className="mt-4 flex flex-wrap gap-2 text-xs">
-                <span className="inline-flex items-center gap-1 rounded-full border px-2 py-1"><Award className="h-3.5 w-3.5"/> Barrett Honors</span>
-                <span className="inline-flex items-center gap-1 rounded-full border px-2 py-1"><GraduationCap className="h-3.5 w-3.5"/> ASU MCS — BDS</span>
-                <span className="inline-flex items-center gap-1 rounded-full border px-2 py-1"><Briefcase className="h-3.5 w-3.5"/> Insurity</span>
+                <span className="inline-flex items-center gap-1 rounded-full border px-2 py-1"><GraduationCap className="h-3.5 w-3.5"/> ASU — BS CS ’25</span>
+                <span className="inline-flex items-center gap-1 rounded-full border px-2 py-1"><Award className="h-3.5 w-3.5"/> Dean’s List (GPA 3.75)</span>
+                <span className="inline-flex items-center gap-1 rounded-full border px-2 py-1"><GraduationCap className="h-3.5 w-3.5"/> ASU — MCS Big Data Systems ’26</span>
               </div>
             </motion.div>
           </div>
         </section>
 
+        {/* SKILLS */}
         <section id="skills" className="mx-auto max-w-6xl px-4 py-12">
           <div className="grid md:grid-cols-12 gap-10">
-            <div className="md:col-span-4"><h2 className="text-xl font-semibold tracking-tight">Skills</h2><p className="mt-3 text-sm text-zinc-500 dark:text-zinc-400 max-w-[28ch]">Stacks I use to turn ideas into things that ship.</p></div>
+            <div className="md:col-span-4"><h2 className="text-xl font-semibold tracking-tight">Skills</h2><p className="mt-3 text-sm text-zinc-500 dark:text-zinc-400 max-w-[28ch]">Tools I use a lot.</p></div>
             <motion.div className="md:col-span-8" initial={fadeUp.initial} animate={fadeUp.animate}>
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {Object.entries(skills).map(([group, items]) => (
@@ -280,8 +299,6 @@ export default function PersonalSite() {
                       {group === 'Frameworks' && <Boxes className="h-4 w-4"/>}
                       {group === 'Cloud' && <Server className="h-4 w-4"/>}
                       {group === 'Data' && <Database className="h-4 w-4"/>}
-                      {group === 'DevOps' && <Cpu className="h-4 w-4"/>}
-                      {group === 'AI' && <Rocket className="h-4 w-4"/>}
                       {group}
                     </p>
                     <div className="mt-3 flex flex-wrap gap-2">
@@ -294,6 +311,7 @@ export default function PersonalSite() {
           </div>
         </section>
 
+        {/* PROJECTS */}
         <section id="projects" className="mx-auto max-w-6xl px-4 py-12">
           <div className="flex items-center justify-between"><h2 className="text-xl font-semibold tracking-tight">Selected Projects</h2><a href={CONFIG.github} className="text-sm inline-flex items-center gap-1">All repos <ExternalLink className="h-4 w-4"/></a></div>
           <motion.div className="mt-6 grid md:grid-cols-3 gap-6" initial="initial" animate="animate" variants={{ initial: {}, animate: { transition: { staggerChildren: 0.08 } } }}>
@@ -308,18 +326,7 @@ export default function PersonalSite() {
           </motion.div>
         </section>
 
-        <section id="highlights" className="mx-auto max-w-6xl px-4 py-12">
-          <div className="flex items-center gap-2"><h2 className="text-xl font-semibold tracking-tight">Highlights</h2><span className="text-xs text-zinc-500 dark:text-zinc-400">wins • certs • press</span></div>
-          <div className="mt-6 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {highlights.map((h, i) => (
-              <motion.div key={i} className="rounded-2xl border border-zinc-200 dark:border-zinc-800 p-5 bg-white/60 dark:bg-zinc-900/50" initial={fadeUp.initial} animate={fadeUp.animate}>
-                <div className="flex items-center gap-2"><h.icon className="h-4 w-4"/><p className="font-medium">{h.title}</p></div>
-                <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-300">{h.text}</p>
-              </motion.div>
-            ))}
-          </div>
-        </section>
-
+        {/* BLOG */}
         <section id="blog" className="mx-auto max-w-6xl px-4 py-12">
           <div className="flex items-center gap-2"><h2 className="text-xl font-semibold tracking-tight">Blog</h2><Newspaper className="h-4 w-4"/></div>
           <div className="mt-6 grid md:grid-cols-2 gap-6">
@@ -334,27 +341,53 @@ export default function PersonalSite() {
           </div>
         </section>
 
+        {/* EXPERIENCE & EDUCATION (synced to résumé) */}
         <section id="experience" className="mx-auto max-w-6xl px-4 py-12">
           <h2 className="text-xl font-semibold tracking-tight">Experience & Education</h2>
           <div className="mt-6 grid md:grid-cols-2 gap-6">
-            {[
-              { org: "Insurity — Incoming Associate Developer (Oct 2025)", bullets: ["AI training project & internal tooling.", "Automation focus; quick, stable prototypes."] },
-              { org: "ASU — BS CS ‘25 • MCS Big Data Systems ‘26", bullets: ["Mobile computing, distributed systems, ML-heavy projects.", "Barrett Honors; capstone on stock-based compensation systems."] }
-            ].map((r) => (
-              <div key={r.org} className="rounded-2xl border border-zinc-200 dark:border-zinc-800 p-5 bg-white/60 dark:bg-zinc-900/50">
-                <p className="font-medium">{r.org}</p>
-                <ul className="mt-3 list-disc ml-5 text-sm text-zinc-700 dark:text-zinc-300">
-                  {r.bullets.map((b, i) => <li key={i}>{b}</li>)}
-                </ul>
-              </div>
-            ))}
+            <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 p-5 bg-white/60 dark:bg-zinc-900/50">
+              <p className="font-medium">The Net VR — Software Engineering Intern</p>
+              <p className="text-xs text-zinc-500 mt-0.5">Aug 2025 – Present • Remote</p>
+              <ul className="mt-3 list-disc ml-5 text-sm text-zinc-700 dark:text-zinc-300">
+                <li>Shipped cross-platform VR and mobile features with Unity and React Native.</li>
+                <li>Built an AI companion service with Flask and a WebSocket bridge.</li>
+                <li>Dockerized services, added CI checks, and improved performance.</li>
+              </ul>
+            </div>
+            <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 p-5 bg-white/60 dark:bg-zinc-900/50">
+              <p className="font-medium">Endless Moments — Software Engineering Intern</p>
+              <p className="text-xs text-zinc-500 mt-0.5">May 2025 – Present • Tempe, AZ</p>
+              <ul className="mt-3 list-disc ml-5 text-sm text-zinc-700 dark:text-zinc-300">
+                <li>Co-built a multi-tenant stock-based compensation system (Django/DRF, React, PostgreSQL).</li>
+                <li>Designed clean data models and a reliable ETL path into Redshift.</li>
+                <li>Hardened auth (JWT + TOTP), added CI, and containerized deploys on AWS.</li>
+              </ul>
+            </div>
+            <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 p-5 bg-white/60 dark:bg-zinc-900/50">
+              <p className="font-medium">Arizona State University — BS Computer Science</p>
+              <p className="text-xs text-zinc-500 mt-0.5">Tempe, AZ • Dec 2025</p>
+              <ul className="mt-3 list-disc ml-5 text-sm text-zinc-700 dark:text-zinc-300">
+                <li>Dean’s List • GPA 3.75</li>
+                <li>Courses: AI/ML, Operating Systems, Networks, Cloud, DS&A, Databases</li>
+              </ul>
+            </div>
+            <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 p-5 bg-white/60 dark:bg-zinc-900/50">
+              <p className="font-medium">Arizona State University — MCS, Big Data Systems</p>
+              <p className="text-xs text-zinc-500 mt-0.5">Online • Dec 2026</p>
+              <ul className="mt-3 list-disc ml-5 text-sm text-zinc-700 dark:text-zinc-300">
+                <li>Mobile Computing, Data Viz, HCI, AI Agents & Agentic AI</li>
+              </ul>
+            </div>
           </div>
         </section>
 
+        {/* CONTACT */}
         <section id="contact" className="mx-auto max-w-6xl px-4 py-16">
           <div className="rounded-3xl border border-zinc-200 dark:border-zinc-800 p-8 bg-white/70 dark:bg-zinc-900/40">
             <h2 className="text-xl font-semibold tracking-tight">Let’s build something</h2>
-            <p className="mt-2 text-zinc-600 dark:text-zinc-300 max-w-[60ch]">I’m open to internships, part-time roles, and interesting side projects in AI, web, or data. The fastest way to reach me is email—or drop a message below.</p>
+            <p className="mt-2 text-zinc-600 dark:text-zinc-300 max-w-[60ch]">
+              I’m open to internships, part-time roles, and projects in web, data, or AI. Email is best, or use the form.
+            </p>
             <div className="mt-6 grid md:grid-cols-2 gap-6">
               <div className="flex flex-wrap gap-3">
                 <a href={`mailto:${CONFIG.email}`} className="inline-flex items-center gap-2 rounded-2xl border border-zinc-900 dark:border-white px-4 py-2 text-sm font-medium"><Mail className="h-4 w-4"/> {CONFIG.email}</a>
@@ -373,4 +406,3 @@ export default function PersonalSite() {
     </>
   );
 }
-/* FULL FIXED FILE END */
