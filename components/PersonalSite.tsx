@@ -149,7 +149,7 @@ function CommandPalette({ open, setOpen }: { open: boolean; setOpen: (v: boolean
   const [q, setQ] = useState("");
   const items = [
     ...nav.map((n) => ({ type: "Section", label: n.label, href: `#${n.id}` })),
-    ...projects.map((p) => ({ type: "Project", label: p.title, href: `#projects` })),
+    ...projects.map((p) => ({ type: "Project", label: p.title, href: `/projects` })),
   ];
   const filtered = items.filter((i) => i.label.toLowerCase().includes(q.toLowerCase())).slice(0, 8);
   if (!open) return null;
@@ -251,7 +251,13 @@ export default function PersonalSite() {
           <div className="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between">
             <a href="#home" className="font-semibold tracking-[-0.01em] text-2xl md:text-3xl hover:drop-shadow-[0_0_8px_rgba(34,211,238,0.25)] transition">{CONFIG.name}</a>
             <nav className="hidden md:flex gap-6 text-sm">
-              {nav.map(n => <a key={n.id} href={`#${n.id}`} className="hover:opacity-80">{n.label}</a>)}
+              <a href="#about" className="hover:opacity-80">About</a>
+              <a href="#skills" className="hover:opacity-80">Skills</a>
+              <a href="/projects" className="hover:opacity-80">Projects</a>
+              <a href="/blog" className="hover:opacity-80">Blog</a>
+              <a href="/games" className="hover:opacity-80">Games</a>  {/* ← added */}
+              <a href="#experience" className="hover:opacity-80">Experience</a>
+              <a href="#contact" className="hover:opacity-80">Contact</a>
             </nav>
             <div className="flex items-center gap-2">
               <button aria-label="Open command palette (⌘K)" onClick={()=>setCmd(true)} className="rounded-[12px] px-3 py-2 border border-white/10 text-xs">⌘K</button>
