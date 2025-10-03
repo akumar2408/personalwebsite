@@ -6,12 +6,15 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 
+/* =========================
+   Basic config
+========================= */
 const CONFIG = {
   name: "Aayush Kumar",
   tagline: "I like building useful software that feels simple and solid.",
   location: "Phoenix • Los Angeles",
   email: "aayushkumar2004@gmail.com",
-  resumeUrl: "/Aayush_Kumar_Resume.pdf",
+  resumeUrl: "/resume.pdf", // <— your file in /public
   github: "https://github.com/akumar2408",
   linkedin: "https://www.linkedin.com/in/aayushkumar2/",
 };
@@ -25,6 +28,9 @@ const nav = [
   { id: "contact", label: "Contact" },
 ];
 
+/* =========================
+   Content
+========================= */
 const skills: Record<string, string[]> = {
   Languages: ["Python", "TypeScript", "JavaScript", "SQL", "Go", "C#"],
   Frameworks: ["React", "Next.js", "Django", "FastAPI", "Spring Boot", "React Native", "Tailwind"],
@@ -61,26 +67,31 @@ const projects = [
 
 const blogPosts = [
   {
+    slug: "what-i-actually-do-when-i-build-ai",
     title: "What I actually do when I build AI stuff",
     date: "Oct 2025",
     summary:
-      "I start small, ship a tiny end-to-end loop, and only add the fancy pieces after it’s useful. Here’s how I avoid getting stuck and keep things moving.",
-    href: "#",
+      "I start small, ship a tiny end-to-end loop, and only add the fancy pieces after it’s useful.",
+    href: "/blog/what-i-actually-do-when-i-build-ai",
   },
   {
+    slug: "my-quick-checklist-before-i-ship",
     title: "My quick checklist before I ship",
     date: "Oct 2025",
     summary:
       "A short list I run through before I push: clear readme, good defaults, basic tests, simple logging, and a way to roll back fast.",
-    href: "#",
+    href: "/blog/my-quick-checklist-before-i-ship",
   },
 ];
 
+/* =========================
+   Theme + Motion
+========================= */
 function useTheme() {
   const [dark, setDark] = useState(false);
   useEffect(() => {
     const stored = localStorage.getItem("prefers-dark");
-    const prefers = stored ? stored === "true" : window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const prefers = stored ? stored === "true" : (window.matchMedia?.("(prefers-color-scheme: dark)").matches ?? true);
     setDark(prefers);
   }, []);
   useEffect(() => {
@@ -89,18 +100,24 @@ function useTheme() {
   }, [dark]);
   return { dark, setDark };
 }
+
 const fadeUp = { initial: { opacity: 0, y: 12 }, animate: { opacity: 1, y: 0, transition: { duration: 0.5 } } };
 
+/* =========================
+   Neo-Noir background blobs
+========================= */
 function BackgroundFX() {
   return (
     <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
       <motion.div
-        className="absolute top-[-10%] left-[-10%] h-[60vmax] w-[60vmax] rounded-full blur-3xl bg-gradient-to-tr from-fuchsia-500/25 via-sky-400/20 to-emerald-400/25"
+        className="absolute top-[-12%] left-[-10%] h-[60vmax] w-[60vmax] rounded-full blur-3xl
+                   bg-gradient-to-tr from-cyan-500/20 via-fuchsia-500/15 to-purple-500/20"
         animate={{ x: [0, 80, -60, 0], y: [0, -40, 60, 0], rotate: [0, 45, -20, 0] }}
         transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
       />
       <motion.div
-        className="absolute bottom-[-10%] right-[-10%] h-[50vmax] w-[50vmax] rounded-full blur-3xl bg-gradient-to-tr from-emerald-500/25 via-indigo-400/20 to-cyan-400/25"
+        className="absolute bottom-[-12%] right-[-10%] h-[52vmax] w-[52vmax] rounded-full blur-3xl
+                   bg-gradient-to-tr from-purple-500/20 via-cyan-400/15 to-fuchsia-500/20"
         animate={{ x: [0, -90, 50, 0], y: [0, 50, -40, 0], rotate: [0, -30, 20, 0] }}
         transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
       />
@@ -108,6 +125,9 @@ function BackgroundFX() {
   );
 }
 
+/* =========================
+   Command Palette (⌘K)
+========================= */
 function CommandPalette({ open, setOpen }: { open: boolean; setOpen: (v: boolean) => void }) {
   const [q, setQ] = useState("");
   const items = [
@@ -118,7 +138,7 @@ function CommandPalette({ open, setOpen }: { open: boolean; setOpen: (v: boolean
   if (!open) return null;
   return (
     <div className="fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm" onClick={() => setOpen(false)}>
-      <div className="mx-auto mt-24 max-w-xl rounded-2xl border border-zinc-700/50 bg-zinc-900 text-zinc-100" onClick={(e)=>e.stopPropagation()}>
+      <div className="mx-auto mt-24 max-w-xl rounded-[28px] border border-white/10 bg-zinc-900 text-zinc-100" onClick={(e)=>e.stopPropagation()}>
         <div className="px-4 py-3 border-b border-white/10">
           <input autoFocus value={q} onChange={(e)=>setQ(e.target.value)} placeholder="Jump to… (type to search)" className="w-full bg-transparent outline-none text-sm"/>
         </div>
@@ -135,6 +155,9 @@ function CommandPalette({ open, setOpen }: { open: boolean; setOpen: (v: boolean
   );
 }
 
+/* =========================
+   Contact Form
+========================= */
 function ContactForm() {
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -151,19 +174,23 @@ function ContactForm() {
       setLoading(false);
     }
   }
-  if (sent) return <div className="rounded-2xl border border-emerald-300/50 bg-emerald-50 dark:bg-emerald-900/20 p-4 text-sm">Thanks! I’ll get back to you soon.</div>;
+  if (sent) return <div className="rounded-[28px] border border-emerald-300/40 bg-emerald-900/15 p-4 text-sm">Thanks! I’ll get back to you soon.</div>;
+  const base = "rounded-[14px] px-3 py-2 border border-white/10 bg-white/5 outline-none";
   return (
-    <form onSubmit={onSubmit} className="rounded-2xl border border-zinc-200 dark:border-zinc-800 p-4 bg-white/60 dark:bg-zinc-900/50 grid gap-3 text-sm">
-      <input name="name" required placeholder="Your name" className="rounded-xl px-3 py-2 border border-zinc-300 dark:border-zinc-700 bg-transparent outline-none"/>
-      <input name="email" required type="email" placeholder="Your email" className="rounded-xl px-3 py-2 border border-zinc-300 dark:border-zinc-700 bg-transparent outline-none"/>
-      <textarea name="message" required placeholder="What’s up?" rows={4} className="rounded-xl px-3 py-2 border border-zinc-300 dark:border-zinc-700 bg-transparent outline-none"/>
-      <button disabled={loading} className="justify-self-start rounded-xl px-4 py-2 border border-zinc-900 dark:border-white">
+    <form onSubmit={onSubmit} className="rounded-[28px] border border-white/10 p-4 bg-white/5 backdrop-blur grid gap-3 text-sm">
+      <input name="name" required placeholder="Your name" className={base}/>
+      <input name="email" required type="email" placeholder="Your email" className={base}/>
+      <textarea name="message" required placeholder="What’s up?" rows={4} className={base}/>
+      <button disabled={loading} className="justify-self-start rounded-[14px] px-4 py-2 border border-white/20 hover:shadow-lg hover:shadow-cyan-500/10 transition-transform hover:-translate-y-0.5">
         {loading ? "Sending…" : "Send"}
       </button>
     </form>
   );
 }
 
+/* =========================
+   Dev sanity checks
+========================= */
 function useThemePref() {
   const { dark, setDark } = useTheme();
   return { dark, setDark };
@@ -176,10 +203,14 @@ function DevChecks() {
   return null;
 }
 
+/* =========================
+   Page
+========================= */
 export default function PersonalSite() {
   const { dark, setDark } = useThemePref();
   const year = useMemo(() => new Date().getFullYear(), []);
   const [cmd, setCmd] = useState(false);
+
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") { e.preventDefault(); setCmd((v) => !v); }
@@ -188,21 +219,26 @@ export default function PersonalSite() {
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
+  const card = "rounded-[28px] border border-white/10 p-6 bg-white/8 dark:bg-white/5 backdrop-blur shadow-2xl shadow-black/10 dark:shadow-black/40";
+  const btn  = "inline-flex items-center gap-2 rounded-[14px] px-4 py-2 text-sm border hover:shadow-lg hover:shadow-cyan-500/10 transition-transform hover:-translate-y-0.5";
+
   return (
     <>
       <BackgroundFX />
       <CommandPalette open={cmd} setOpen={setCmd} />
       <DevChecks />
-      <main className="min-h-screen bg-gradient-to-b from-zinc-50 to-white text-zinc-900 dark:from-zinc-950 dark:to-zinc-900 dark:text-zinc-100 selection:bg-emerald-300/40 dark:selection:bg-emerald-500/30">
-        <header className="sticky top-0 z-40 backdrop-blur bg-white/70 dark:bg-zinc-900/60 border-b border-zinc-200/60 dark:border-zinc-800">
+
+      <main className="min-h-screen bg-gradient-to-b from-zinc-50 to-white text-zinc-900 dark:from-zinc-950 dark:to-zinc-900 dark:text-zinc-100 selection:bg-cyan-300/30 dark:selection:bg-cyan-400/25">
+        {/* Header */}
+        <header className="sticky top-0 z-40 backdrop-blur bg-white/70 dark:bg-zinc-900/60 border-b border-white/10">
           <div className="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between">
             <a href="#home" className="font-semibold tracking-tight text-lg">{CONFIG.name}</a>
             <nav className="hidden md:flex gap-6 text-sm">
-              {nav.map(n => <a key={n.id} href={`#${n.id}`} className="hover:opacity-70">{n.label}</a>)}
+              {nav.map(n => <a key={n.id} href={`#${n.id}`} className="hover:opacity-80">{n.label}</a>)}
             </nav>
             <div className="flex items-center gap-2">
-              <button aria-label="Open command palette (⌘K)" onClick={()=>setCmd(true)} className="rounded-xl px-3 py-2 border border-zinc-300 dark:border-zinc-700 text-xs">⌘K</button>
-              <button aria-label="Toggle theme" onClick={()=>setDark(!dark)} className="rounded-xl px-3 py-2 border border-zinc-300 dark:border-zinc-700">{dark ? <Sun className="h-4 w-4"/> : <MoonStar className="h-4 w-4"/>}</button>
+              <button aria-label="Open command palette (⌘K)" onClick={()=>setCmd(true)} className="rounded-[12px] px-3 py-2 border border-white/10 text-xs">⌘K</button>
+              <button aria-label="Toggle theme" onClick={()=>setDark(!dark)} className="rounded-[12px] px-3 py-2 border border-white/10">{dark ? <Sun className="h-4 w-4"/> : <MoonStar className="h-4 w-4"/>}</button>
             </div>
           </div>
         </header>
@@ -211,51 +247,58 @@ export default function PersonalSite() {
         <section id="home" className="mx-auto max-w-6xl px-4 pt-16 pb-10">
           <div className="grid md:grid-cols-12 gap-8 items-center">
             <motion.div className="md:col-span-7" initial={fadeUp.initial} animate={fadeUp.animate}>
-              <div className="inline-flex items-center gap-2 text-xs px-2 py-1 rounded-full border border-zinc-300 dark:border-zinc-700">
+              <div className="inline-flex items-center gap-2 text-xs px-2 py-1 rounded-full border border-white/10 bg-white/5">
                 <MapPin className="h-3.5 w-3.5" /><span>{CONFIG.location}</span>
               </div>
-              <h1 className="mt-4 text-4xl/tight md:text-5xl/tight font-semibold tracking-tight">{CONFIG.tagline}</h1>
-              <p className="mt-4 text-zinc-600 dark:text-zinc-300 max-w-[60ch]">
+              <h1 className="mt-4 text-4xl/tight md:text-5xl/tight font-semibold tracking-tight tracking-[-0.02em]">{CONFIG.tagline}</h1>
+              <p className="mt-4 text-zinc-600 dark:text-zinc-300 leading-relaxed max-w-[60ch]">
                 I’m Aayush, a CS student who likes turning rough ideas into working software. I care about clear code,
                 fast feedback, and keeping things reliable.
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
-                <a href="#projects" className="group inline-flex items-center gap-2 rounded-2xl border border-zinc-900 dark:border-white px-4 py-2 text-sm font-medium hover:-translate-y-0.5 transition-transform">
-                  See my work <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition"/>
-                </a>
-                <a href={`mailto:${CONFIG.email}`} className="inline-flex items-center gap-2 rounded-2xl border border-zinc-300 dark:border-zinc-700 px-4 py-2 text-sm hover:-translate-y-0.5 transition-transform">
-                  <Mail className="h-4 w-4"/> Contact
-                </a>
-                <a href={CONFIG.resumeUrl} download className="inline-flex items-center gap-2 rounded-2xl border border-zinc-300 dark:border-zinc-700 px-4 py-2 text-sm hover:-translate-y-0.5 transition-transform">
-                  <FileText className="h-4 w-4"/> Resume
-                </a>
+                <a href="#projects" className={`${btn} border-white/20`}>See my work <ArrowRight className="h-4 w-4"/></a>
+                <a href={`mailto:${CONFIG.email}`} className={`${btn} border-white/10`}><Mail className="h-4 w-4"/> Contact</a>
+                <a href={CONFIG.resumeUrl} download className={`${btn} border-white/10`}><FileText className="h-4 w-4"/> Resume</a>
               </div>
               <div className="mt-6 flex items-center gap-4 text-zinc-600 dark:text-zinc-400">
-                <a aria-label="GitHub" href={CONFIG.github} className="hover:opacity-70"><Github className="h-5 w-5"/></a>
-                <a aria-label="LinkedIn" href={CONFIG.linkedin} className="hover:opacity-70"><Linkedin className="h-5 w-5"/></a>
-                <a aria-label="Email" href={`mailto:${CONFIG.email}`} className="hover:opacity-70"><Mail className="h-5 w-5"/></a>
+                <a aria-label="GitHub" href={CONFIG.github} className="hover:opacity-80"><Github className="h-5 w-5"/></a>
+                <a aria-label="LinkedIn" href={CONFIG.linkedin} className="hover:opacity-80"><Linkedin className="h-5 w-5"/></a>
+                <a aria-label="Email" href={`mailto:${CONFIG.email}`} className="hover:opacity-80"><Mail className="h-5 w-5"/></a>
               </div>
             </motion.div>
 
-            {/* Insurity card (incoming role) */}
+            {/* Incoming Insurity card */}
             <motion.div className="md:col-span-5" initial={fadeUp.initial} animate={fadeUp.animate} transition={{ delay: 0.1 }}>
               <div className="relative">
-                <div className="absolute -inset-1 rounded-[2rem] bg-gradient-to-tr from-fuchsia-500/20 via-sky-500/20 to-emerald-500/20 blur-2xl animate-pulse"/>
-                <div className="relative rounded-[2rem] p-6 border border-zinc-200 dark:border-zinc-800 bg-white/60 dark:bg-zinc-900/50">
+                <div className="absolute -inset-1 rounded-[32px] bg-gradient-to-tr from-cyan-500/20 via-fuchsia-500/20 to-purple-500/20 blur-2xl animate-pulse"/>
+                <div className={`${card}`}>
                   <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-2xl bg-zinc-200 dark:bg-zinc-800 grid place-items-center"><Cpu className="h-5 w-5"/></div>
+                    <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-cyan-500/30 to-fuchsia-500/30 grid place-items-center">
+                    <img src="/insurity.svg" alt="Insurity" className="h-6 w-6 opacity-90" />
+                    </div>
                     <div>
-                      <p className="text-sm font-semibold">Incoming</p>
-                      <p className="text-xs text-zinc-500 dark:text-zinc-400">Associate Developer @ Insurity</p>
+                      <p className="text-[11px] uppercase tracking-widest text-cyan-400/90 font-semibold">Incoming</p>
+                      <p className="text-base font-semibold">Associate Developer <span className="text-zinc-500">@ Insurity</span></p>
                     </div>
                   </div>
-                  <ul className="mt-4 text-sm leading-6 list-disc ml-4 text-zinc-700 dark:text-zinc-300">
+
+                  <ul className="mt-4 text-sm leading-6 list-disc ml-4 text-zinc-300">
                     <li>Build internal tools and APIs that make the team faster.</li>
-                    <li>Work on AI-assisted features where they’re actually helpful.</li>
+                    <li>Work on AI-assisted features where they actually help.</li>
                     <li>Focus on clean code, solid tests, and smooth deploys.</li>
                   </ul>
-                  <div className="mt-4 flex gap-2">
-                    <a href={CONFIG.resumeUrl} download className="inline-flex items-center gap-2 rounded-xl border px-3 py-2 text-xs">
+
+                  <div className="mt-5 flex flex-wrap gap-2">
+                    <span className="text-[10px] uppercase tracking-wider px-2 py-1 rounded-full border border-white/10 bg-white/5">
+                      Insurity • Oct 2025
+                    </span>
+                    <span className="text-[10px] uppercase tracking-wider px-2 py-1 rounded-full border border-white/10 bg-white/5">
+                      Incoming Role
+                    </span>
+                  </div>
+
+                  <div className="mt-6">
+                    <a href={CONFIG.resumeUrl} download className="inline-flex items-center gap-2 rounded-[14px] border border-white/20 px-4 py-2 text-sm hover:shadow-lg hover:shadow-cyan-500/10">
                       <Download className="h-4 w-4"/> Download résumé
                     </a>
                   </div>
@@ -266,34 +309,38 @@ export default function PersonalSite() {
         </section>
 
         {/* ABOUT */}
-        <section id="about" className="mx-auto max-w-6xl px-4 py-12">
+        <section id="about" className="mx-auto max-w-6xl px-4 py-16 md:py-24">
           <div className="grid md:grid-cols-12 gap-10">
             <div className="md:col-span-4">
               <h2 className="text-xl font-semibold tracking-tight">About</h2>
               <p className="mt-3 text-sm text-zinc-500 dark:text-zinc-400 max-w-[28ch]">A little context and what I’m into.</p>
             </div>
             <motion.div className="md:col-span-8 text-zinc-700 dark:text-zinc-300" initial={fadeUp.initial} animate={fadeUp.animate}>
-              <p>I like small, end-to-end slices that prove the idea. Once it works, I clean it up and make it sturdy.
-              Most of my projects mix web, data, and a bit of AI.</p>
-              <p className="mt-4">Right now I’m finishing my BS at ASU and working through the MCS Big Data Systems track.
-              Outside of classes, I build things for fun and post the ones I’m proud of.</p>
+              <p className="leading-relaxed">
+                I like small, end-to-end slices that prove the idea. Once it works, I clean it up and make it sturdy.
+                Most of my projects mix web, data, and a bit of AI.
+              </p>
+              <p className="mt-4 leading-relaxed">
+                Right now I’m finishing my BS at ASU and working through the MCS Big Data Systems track.
+                Outside of classes, I build things for fun and post the ones I’m proud of.
+              </p>
               <div className="mt-4 flex flex-wrap gap-2 text-xs">
-                <span className="inline-flex items-center gap-1 rounded-full border px-2 py-1"><GraduationCap className="h-3.5 w-3.5"/> ASU — BS CS ’25</span>
-                <span className="inline-flex items-center gap-1 rounded-full border px-2 py-1"><Award className="h-3.5 w-3.5"/> Dean’s List (GPA 3.75)</span>
-                <span className="inline-flex items-center gap-1 rounded-full border px-2 py-1"><GraduationCap className="h-3.5 w-3.5"/> ASU — MCS Big Data Systems ’26</span>
+                <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-2 py-1"><GraduationCap className="h-3.5 w-3.5"/> ASU — BS CS ’25</span>
+                <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-2 py-1"><Award className="h-3.5 w-3.5"/> Dean’s List (GPA 3.75)</span>
+                <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-2 py-1"><GraduationCap className="h-3.5 w-3.5"/> ASU — MCS Big Data Systems ’26</span>
               </div>
             </motion.div>
           </div>
         </section>
 
         {/* SKILLS */}
-        <section id="skills" className="mx-auto max-w-6xl px-4 py-12">
+        <section id="skills" className="mx-auto max-w-6xl px-4 py-16 md:py-24">
           <div className="grid md:grid-cols-12 gap-10">
             <div className="md:col-span-4"><h2 className="text-xl font-semibold tracking-tight">Skills</h2><p className="mt-3 text-sm text-zinc-500 dark:text-zinc-400 max-w-[28ch]">Tools I use a lot.</p></div>
             <motion.div className="md:col-span-8" initial={fadeUp.initial} animate={fadeUp.animate}>
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 {Object.entries(skills).map(([group, items]) => (
-                  <div key={group} className="rounded-2xl border border-zinc-200 dark:border-zinc-800 p-5 bg-white/60 dark:bg-zinc-900/50">
+                  <div key={group} className={card}>
                     <p className="font-medium flex items-center gap-2">
                       {group === 'Languages' && <Code className="h-4 w-4"/>}
                       {group === 'Frameworks' && <Boxes className="h-4 w-4"/>}
@@ -302,7 +349,7 @@ export default function PersonalSite() {
                       {group}
                     </p>
                     <div className="mt-3 flex flex-wrap gap-2">
-                      {items.map((t) => <span key={t} className="text-xs px-2 py-1 rounded-full border border-zinc-300 dark:border-zinc-700">{t}</span>)}
+                      {items.map((t) => <span key={t} className="text-xs px-2 py-1 rounded-full border border-white/10 bg-white/5">{t}</span>)}
                     </div>
                   </div>
                 ))}
@@ -312,14 +359,20 @@ export default function PersonalSite() {
         </section>
 
         {/* PROJECTS */}
-        <section id="projects" className="mx-auto max-w-6xl px-4 py-12">
-          <div className="flex items-center justify-between"><h2 className="text-xl font-semibold tracking-tight">Selected Projects</h2><a href={CONFIG.github} className="text-sm inline-flex items-center gap-1">All repos <ExternalLink className="h-4 w-4"/></a></div>
-          <motion.div className="mt-6 grid md:grid-cols-3 gap-6" initial="initial" animate="animate" variants={{ initial: {}, animate: { transition: { staggerChildren: 0.08 } } }}>
+        <section id="projects" className="mx-auto max-w-6xl px-4 py-16 md:py-24">
+          <div className="flex items-center justify-between"><h2 className="text-xl font-semibold tracking-tight">Selected Projects</h2><a href={CONFIG.github} className="text-sm inline-flex items-center gap-1 hover:opacity-80">All repos <ExternalLink className="h-4 w-4"/></a></div>
+          <motion.div className="mt-6 grid md:grid-cols-3 gap-8" initial="initial" animate="animate" variants={{ initial: {}, animate: { transition: { staggerChildren: 0.08 } } }}>
             {projects.map((p) => (
-              <motion.article key={p.title} className="rounded-2xl border border-zinc-200 dark:border-zinc-800 p-5 bg-white/60 dark:bg-zinc-900/50 hover:shadow-lg transition-shadow" variants={fadeUp}>
+              <motion.article
+                key={p.title}
+                className={card}
+                variants={fadeUp}
+                whileHover={{ y: -4, scale: 1.01 }}
+                transition={{ type: "spring", stiffness: 260, damping: 20 }}
+              >
                 <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-wide"><Rocket className="h-4 w-4"/> {p.title}</div>
-                <p className="mt-3 text-sm text-zinc-600 dark:text-zinc-300 min-h-[60px]">{p.blurb}</p>
-                <div className="mt-3 flex flex-wrap gap-2">{p.tags.map((t) => <span key={t} className="text-xs px-2 py-1 rounded-full border border-zinc-300 dark:border-zinc-700">{t}</span>)}</div>
+                <p className="mt-3 text-sm text-zinc-300 min-h-[60px]">{p.blurb}</p>
+                <div className="mt-3 flex flex-wrap gap-2">{p.tags.map((t) => <span key={t} className="text-xs px-2 py-1 rounded-full border border-white/10 bg-white/5">{t}</span>)}</div>
                 <div className="mt-4 flex gap-3 text-sm">{p.links.map((l) => <a key={l.label} href={l.href} className="inline-flex items-center gap-1 hover:opacity-80">{l.label} <ExternalLink className="h-3.5 w-3.5"/></a>)}</div>
               </motion.article>
             ))}
@@ -327,54 +380,54 @@ export default function PersonalSite() {
         </section>
 
         {/* BLOG */}
-        <section id="blog" className="mx-auto max-w-6xl px-4 py-12">
+        <section id="blog" className="mx-auto max-w-6xl px-4 py-16 md:py-24">
           <div className="flex items-center gap-2"><h2 className="text-xl font-semibold tracking-tight">Blog</h2><Newspaper className="h-4 w-4"/></div>
-          <div className="mt-6 grid md:grid-cols-2 gap-6">
+          <div className="mt-6 grid md:grid-cols-2 gap-8">
             {blogPosts.map((post, i) => (
-              <motion.article key={i} className="rounded-2xl border border-zinc-200 dark:border-zinc-800 p-5 bg-white/60 dark:bg-zinc-900/50 hover:shadow-lg transition-shadow" initial={fadeUp.initial} animate={fadeUp.animate}>
-                <p className="text-xs text-zinc-500 dark:text-zinc-400">{post.date}</p>
+              <motion.article key={i} className={card} initial={fadeUp.initial} animate={fadeUp.animate}>
+                <p className="text-xs text-zinc-400">{post.date}</p>
                 <h3 className="mt-1 font-medium">{post.title}</h3>
-                <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-300">{post.summary}</p>
-                <a href={post.href} className="mt-3 inline-flex items-center gap-1 text-sm">Read more <ExternalLink className="h-3.5 w-3.5"/></a>
+                <p className="mt-2 text-sm text-zinc-300">{post.summary}</p>
+                <a href={post.href} className="mt-3 inline-flex items-center gap-1 text-sm hover:underline underline-offset-4">Read more <ExternalLink className="h-3.5 w-3.5"/></a>
               </motion.article>
             ))}
           </div>
         </section>
 
-        {/* EXPERIENCE & EDUCATION (synced to résumé) */}
-        <section id="experience" className="mx-auto max-w-6xl px-4 py-12">
+        {/* EXPERIENCE & EDUCATION */}
+        <section id="experience" className="mx-auto max-w-6xl px-4 py-16 md:py-24">
           <h2 className="text-xl font-semibold tracking-tight">Experience & Education</h2>
-          <div className="mt-6 grid md:grid-cols-2 gap-6">
-            <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 p-5 bg-white/60 dark:bg-zinc-900/50">
+          <div className="mt-6 grid md:grid-cols-2 gap-8">
+            <div className={card}>
               <p className="font-medium">The Net VR — Software Engineering Intern</p>
-              <p className="text-xs text-zinc-500 mt-0.5">Aug 2025 – Present • Remote</p>
-              <ul className="mt-3 list-disc ml-5 text-sm text-zinc-700 dark:text-zinc-300">
+              <p className="text-xs text-zinc-400 mt-0.5">Aug 2025 – Present • Remote</p>
+              <ul className="mt-3 list-disc ml-5 text-sm text-zinc-300">
                 <li>Shipped cross-platform VR and mobile features with Unity and React Native.</li>
                 <li>Built an AI companion service with Flask and a WebSocket bridge.</li>
                 <li>Dockerized services, added CI checks, and improved performance.</li>
               </ul>
             </div>
-            <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 p-5 bg-white/60 dark:bg-zinc-900/50">
+            <div className={card}>
               <p className="font-medium">Endless Moments — Software Engineering Intern</p>
-              <p className="text-xs text-zinc-500 mt-0.5">May 2025 – Present • Tempe, AZ</p>
-              <ul className="mt-3 list-disc ml-5 text-sm text-zinc-700 dark:text-zinc-300">
+              <p className="text-xs text-zinc-400 mt-0.5">May 2025 – Present • Tempe, AZ</p>
+              <ul className="mt-3 list-disc ml-5 text-sm text-zinc-300">
                 <li>Co-built a multi-tenant stock-based compensation system (Django/DRF, React, PostgreSQL).</li>
                 <li>Designed clean data models and a reliable ETL path into Redshift.</li>
                 <li>Hardened auth (JWT + TOTP), added CI, and containerized deploys on AWS.</li>
               </ul>
             </div>
-            <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 p-5 bg-white/60 dark:bg-zinc-900/50">
+            <div className={card}>
               <p className="font-medium">Arizona State University — BS Computer Science</p>
-              <p className="text-xs text-zinc-500 mt-0.5">Tempe, AZ • Dec 2025</p>
-              <ul className="mt-3 list-disc ml-5 text-sm text-zinc-700 dark:text-zinc-300">
+              <p className="text-xs text-zinc-400 mt-0.5">Tempe, AZ • Dec 2025</p>
+              <ul className="mt-3 list-disc ml-5 text-sm text-zinc-300">
                 <li>Dean’s List • GPA 3.75</li>
                 <li>Courses: AI/ML, Operating Systems, Networks, Cloud, DS&A, Databases</li>
               </ul>
             </div>
-            <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 p-5 bg-white/60 dark:bg-zinc-900/50">
+            <div className={card}>
               <p className="font-medium">Arizona State University — MCS, Big Data Systems</p>
-              <p className="text-xs text-zinc-500 mt-0.5">Online • Dec 2026</p>
-              <ul className="mt-3 list-disc ml-5 text-sm text-zinc-700 dark:text-zinc-300">
+              <p className="text-xs text-zinc-400 mt-0.5">Online • Dec 2026</p>
+              <ul className="mt-3 list-disc ml-5 text-sm text-zinc-300">
                 <li>Mobile Computing, Data Viz, HCI, AI Agents & Agentic AI</li>
               </ul>
             </div>
@@ -382,17 +435,17 @@ export default function PersonalSite() {
         </section>
 
         {/* CONTACT */}
-        <section id="contact" className="mx-auto max-w-6xl px-4 py-16">
-          <div className="rounded-3xl border border-zinc-200 dark:border-zinc-800 p-8 bg-white/70 dark:bg-zinc-900/40">
+        <section id="contact" className="mx-auto max-w-6xl px-4 py-16 md:py-24">
+          <div className={card}>
             <h2 className="text-xl font-semibold tracking-tight">Let’s build something</h2>
-            <p className="mt-2 text-zinc-600 dark:text-zinc-300 max-w-[60ch]">
+            <p className="mt-2 text-zinc-300 max-w-[60ch]">
               I’m open to internships, part-time roles, and projects in web, data, or AI. Email is best, or use the form.
             </p>
             <div className="mt-6 grid md:grid-cols-2 gap-6">
               <div className="flex flex-wrap gap-3">
-                <a href={`mailto:${CONFIG.email}`} className="inline-flex items-center gap-2 rounded-2xl border border-zinc-900 dark:border-white px-4 py-2 text-sm font-medium"><Mail className="h-4 w-4"/> {CONFIG.email}</a>
-                <a href={CONFIG.github} className="inline-flex items-center gap-2 rounded-2xl border border-zinc-300 dark:border-zinc-700 px-4 py-2 text-sm"><Github className="h-4 w-4"/> @akumar2408</a>
-                <a href={CONFIG.linkedin} className="inline-flex items-center gap-2 rounded-2xl border border-zinc-300 dark:border-zinc-700 px-4 py-2 text-sm"><Linkedin className="h-4 w-4"/> LinkedIn</a>
+                <a href={`mailto:${CONFIG.email}`} className={`${btn} border-white/20`}><Mail className="h-4 w-4"/> {CONFIG.email}</a>
+                <a href={CONFIG.github} className={`${btn} border-white/10`}><Github className="h-4 w-4"/> @akumar2408</a>
+                <a href={CONFIG.linkedin} className={`${btn} border-white/10`}><Linkedin className="h-4 w-4"/> LinkedIn</a>
               </div>
               <ContactForm/>
             </div>
@@ -400,7 +453,7 @@ export default function PersonalSite() {
         </section>
 
         <footer className="pb-16 px-4">
-          <div className="mx-auto max-w-6xl text-xs text-zinc-500 dark:text-zinc-400">© {year} {CONFIG.name}. Built with Next.js, Tailwind & framer-motion. • Press ⌘K / Ctrl+K</div>
+          <div className="mx-auto max-w-6xl text-xs text-zinc-400">© {year} {CONFIG.name}. Built with Next.js, Tailwind & framer-motion. • Press ⌘K / Ctrl+K</div>
         </footer>
       </main>
     </>
