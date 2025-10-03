@@ -273,8 +273,8 @@ export default function PersonalSite() {
                 <div className="absolute -inset-1 rounded-[32px] bg-gradient-to-tr from-cyan-500/20 via-fuchsia-500/20 to-purple-500/20 blur-2xl animate-pulse"/>
                 <div className={`${card}`}>
                   <div className="flex items-center gap-3">
-                    <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-cyan-500/30 to-fuchsia-500/30 grid place-items-center">
-                    <img src="/insurity.svg" alt="Insurity" className="h-6 w-6 opacity-90" />
+                    <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-cyan-500/30 to-fuchsia-500/30 grid place-items-center">
+                    <img src="/insurity.svg" alt="Insurity" className="h-full w-full object-contain drop-shadow-sm" />
                     </div>
                     <div>
                       <p className="text-[11px] uppercase tracking-widest text-cyan-400/90 font-semibold">Incoming</p>
