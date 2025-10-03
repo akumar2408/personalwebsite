@@ -82,7 +82,24 @@ const blogPosts = [
       "A short list I run through before I push: clear readme, good defaults, basic tests, simple logging, and a way to roll back fast.",
     href: "/blog/my-quick-checklist-before-i-ship",
   },
+  {
+    slug: "one-bug-a-day",
+    title: "One bug a day",
+    date: "May 2025",
+    summary:
+      "Fixing one small bug each day taught me more than any tutorial. It kept me honest and moved the work forward.",
+    href: "/blog/one-bug-a-day",
+  },
+  {
+    slug: "the-day-i-deleted-half-the-code",
+    title: "The day I deleted half the code",
+    date: "Dec 2024",
+    summary:
+      "We kept the parts that mattered and tossed the rest. The app got faster, and so did the team.",
+    href: "/blog/the-day-i-deleted-half-the-code",
+  },
 ];
+
 
 /* =========================
    Theme + Motion
@@ -258,7 +275,7 @@ export default function PersonalSite() {
               <div className="mt-6 flex flex-wrap gap-3">
                 <a href="#projects" className={`${btn} border-white/20`}>See my work <ArrowRight className="h-4 w-4"/></a>
                 <a href={`mailto:${CONFIG.email}`} className={`${btn} border-white/10`}><Mail className="h-4 w-4"/> Contact</a>
-                <a href={CONFIG.resumeUrl} download className={`${btn} border-white/10`}><FileText className="h-4 w-4"/> Resume</a>
+                <a href={CONFIG.resumeUrl} target="_blank" rel="noopener noreferrer" className={`${btn} border-white/10`}><FileText className="h-4 w-4"/> View Resume</a>
               </div>
               <div className="mt-6 flex items-center gap-4 text-zinc-600 dark:text-zinc-400">
                 <a aria-label="GitHub" href={CONFIG.github} className="hover:opacity-80"><Github className="h-5 w-5"/></a>
