@@ -1,3 +1,4 @@
+import React from "react";
 import Link from "next/link";
 
 const posts = [
@@ -5,15 +6,13 @@ const posts = [
     slug: "what-i-actually-do-when-i-build-ai",
     title: "What I actually do when I build AI stuff",
     date: "Oct 2025",
-    summary:
-      "I start small, ship a tiny end-to-end loop, and only add the fancy pieces after it’s useful.",
+    summary: "I start small, ship a tiny end-to-end loop, and only add the fancy pieces after it’s useful.",
   },
   {
     slug: "my-quick-checklist-before-i-ship",
     title: "My quick checklist before I ship",
     date: "Oct 2025",
-    summary:
-      "A short list I run through before I push: clear readme, good defaults, basic tests, simple logging, and a way to roll back fast.",
+    summary: "A short list I run through before I push: clear readme, good defaults, basic tests, simple logging, and a way to roll back fast.",
   },
 ];
 
