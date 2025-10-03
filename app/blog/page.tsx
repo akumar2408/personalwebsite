@@ -1,3 +1,4 @@
+// app/blog/page.tsx
 import React from "react";
 import Link from "next/link";
 
@@ -35,7 +36,12 @@ const posts = [
 export default function BlogIndex() {
   return (
     <main className="mx-auto max-w-3xl p-6">
-      <h1 className="text-2xl font-semibold tracking-tight">Blog</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-semibold tracking-tight">Blog</h1>
+        <Link href="/" className="text-sm opacity-80 hover:underline">
+          ← Back home
+        </Link>
+      </div>
       <p className="opacity-70 mt-2">Personal notes on building and shipping.</p>
       <div className="mt-6 space-y-4">
         {posts.map((p) => (
