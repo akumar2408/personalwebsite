@@ -1,10 +1,11 @@
 'use client';
 import { useEffect, useMemo, useState } from "react";
 import {
-  Github, Linkedin, Mail, FileText, ArrowRight, MapPin, Cpu, Rocket, ExternalLink,
-  Sun, MoonStar, Download, GraduationCap, Award, Briefcase, Code, Server, Database, Boxes, Newspaper
+  Github, Linkedin, Mail, FileText, ArrowRight, MapPin, Rocket, ExternalLink,
+  Sun, MoonStar, Download, GraduationCap, Award, Code, Server, Database, Boxes, Newspaper
 } from "lucide-react";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 /* =========================
    Basic config
@@ -43,14 +44,18 @@ const skills: Record<string, string[]> = {
 
 const projects = [
   {
+    slug: "operational-dashboard",
     title: "Operational Dashboard",
-    blurb: "Full-stack sales analytics with 30-day forecasts. Helped spot trends sooner and keep decisions grounded.",
+    blurb:
+      "Full-stack sales analytics with 30-day forecasts. Helped spot trends sooner and keep decisions grounded.",
     links: [{ label: "GitHub", href: "https://github.com/akumar2408/operationaldashboard/" }],
     tags: ["React", "Spring Boot", "PostgreSQL"],
   },
   {
+    slug: "aiinvestmate",
     title: "AIInvestMate",
-    blurb: "Small app that helps students try out investing ideas and learn the basics in a friendly way.",
+    blurb:
+      "Small app that helps students try out investing ideas and learn the basics in a friendly way.",
     links: [
       { label: "Live", href: "https://aiinvestmate.vercel.app" },
       { label: "GitHub", href: "https://github.com/akumar2408/AIInvestMate" },
@@ -58,8 +63,10 @@ const projects = [
     tags: ["Next.js", "Supabase"],
   },
   {
+    slug: "streaming-etl",
     title: "SafetyGuardian",
-    blurb: "Streaming pipeline that moves safety events through AWS and keeps data fresh and reliable.",
+    blurb:
+      "Streaming pipeline that moves safety events through AWS and keeps data fresh and reliable.",
     links: [{ label: "GitHub", href: "https://github.com/akumar2408/SafetyGuardian" }],
     tags: ["AWS Kinesis", "Glue", "Redshift", "CI/CD"],
   },
@@ -99,7 +106,6 @@ const blogPosts = [
     href: "/blog/the-day-i-deleted-half-the-code",
   },
 ];
-
 
 /* =========================
    Theme + Motion
@@ -149,7 +155,7 @@ function CommandPalette({ open, setOpen }: { open: boolean; setOpen: (v: boolean
   const [q, setQ] = useState("");
   const items = [
     ...nav.map((n) => ({ type: "Section", label: n.label, href: `#${n.id}` })),
-    ...projects.map((p) => ({ type: "Project", label: p.title, href: `/projects` })),
+    ...projects.map((p) => ({ type: "Project", label: p.title, href: `/projects/${p.slug}` })),
   ];
   const filtered = items.filter((i) => i.label.toLowerCase().includes(q.toLowerCase())).slice(0, 8);
   if (!open) return null;
@@ -161,7 +167,18 @@ function CommandPalette({ open, setOpen }: { open: boolean; setOpen: (v: boolean
         </div>
         <ul className="py-2 max-h-80 overflow-y-auto">
           {filtered.map((i, idx) => (
-            <li key={idx} className="px-4 py-2 hover:bg-white/5 text-sm cursor-pointer" onClick={()=>{ setOpen(false); const el=document.querySelector(i.href) as HTMLElement|null; el && el.scrollIntoView({behavior:'smooth'}); }}>
+            <li
+              key={idx}
+              className="px-4 py-2 hover:bg-white/5 text-sm cursor-pointer"
+              onClick={() => {
+                setOpen(false);
+                if (i.href.startsWith("/")) window.location.href = i.href;
+                else {
+                  const el = document.querySelector(i.href) as HTMLElement | null;
+                  el && el.scrollIntoView({ behavior: "smooth" });
+                }
+              }}
+            >
               <span className="text-zinc-400 mr-2">{i.type}</span>{i.label}
             </li>
           ))}
@@ -255,7 +272,7 @@ export default function PersonalSite() {
               <a href="#skills" className="hover:opacity-80">Skills</a>
               <a href="/projects" className="hover:opacity-80">Projects</a>
               <a href="/blog" className="hover:opacity-80">Blog</a>
-              <a href="/games" className="hover:opacity-80">Games</a>  {/* ← added */}
+              <a href="/games" className="hover:opacity-80">Games</a>
               <a href="#experience" className="hover:opacity-80">Experience</a>
               <a href="#contact" className="hover:opacity-80">Contact</a>
             </nav>
@@ -279,7 +296,7 @@ export default function PersonalSite() {
                 fast feedback, and keeping things reliable.
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
-                <a href="#projects" className={`${btn} border-white/20`}>See my work <ArrowRight className="h-4 w-4"/></a>
+                <a href="/projects" className={`${btn} border-white/20`}>See my work <ArrowRight className="h-4 w-4"/></a>
                 <a href={`mailto:${CONFIG.email}`} className={`${btn} border-white/10`}><Mail className="h-4 w-4"/> Contact</a>
                 <a href={CONFIG.resumeUrl} target="_blank" rel="noopener noreferrer" className={`${btn} border-white/10`}><FileText className="h-4 w-4"/> View Resume</a>
               </div>
@@ -297,7 +314,7 @@ export default function PersonalSite() {
                 <div className={`${card}`}>
                   <div className="flex items-center gap-3">
                     <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-cyan-500/30 to-fuchsia-500/30 grid place-items-center">
-                    <img src="/insurity.svg" alt="Insurity" className="h-full w-full object-contain drop-shadow-sm" />
+                      <img src="/insurity.svg" alt="Insurity" className="h-full w-full object-contain drop-shadow-sm" />
                     </div>
                     <div>
                       <p className="text-[11px] uppercase tracking-widest text-cyan-400/90 font-semibold">Incoming</p>
@@ -383,20 +400,60 @@ export default function PersonalSite() {
 
         {/* PROJECTS */}
         <section id="projects" className="mx-auto max-w-6xl px-4 py-16 md:py-24">
-          <div className="flex items-center justify-between"><h2 className="text-xl font-semibold tracking-tight">Selected Projects</h2><a href={CONFIG.github} className="text-sm inline-flex items-center gap-1 hover:opacity-80">All repos <ExternalLink className="h-4 w-4"/></a></div>
-          <motion.div className="mt-6 grid md:grid-cols-3 gap-8" initial="initial" animate="animate" variants={{ initial: {}, animate: { transition: { staggerChildren: 0.08 } } }}>
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-semibold tracking-tight">Selected Projects</h2>
+            <a href={CONFIG.github} className="text-sm inline-flex items-center gap-1 hover:opacity-80">
+              All repos <ExternalLink className="h-4 w-4"/>
+            </a>
+          </div>
+
+          <motion.div
+            className="mt-6 grid md:grid-cols-3 gap-8"
+            initial="initial"
+            animate="animate"
+            variants={{ initial: {}, animate: { transition: { staggerChildren: 0.08 } } }}
+          >
             {projects.map((p) => (
               <motion.article
                 key={p.title}
-                className={card}
+                className={`${card} relative`}
                 variants={fadeUp}
                 whileHover={{ y: -4, scale: 1.01 }}
                 transition={{ type: "spring", stiffness: 260, damping: 20 }}
               >
-                <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-wide"><Rocket className="h-4 w-4"/> {p.title}</div>
+                {/* Make whole card link to case study */}
+                <Link href={`/projects/${p.slug}`} className="absolute inset-0" aria-label={`Open case study for ${p.title}`} />
+
+                <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-wide">
+                  <Rocket className="h-4 w-4" /> {p.title}
+                </div>
                 <p className="mt-3 text-sm text-zinc-300 min-h-[60px]">{p.blurb}</p>
-                <div className="mt-3 flex flex-wrap gap-2">{p.tags.map((t) => <span key={t} className="text-xs px-2 py-1 rounded-full border border-white/10 bg-white/5">{t}</span>)}</div>
-                <div className="mt-4 flex gap-3 text-sm">{p.links.map((l) => <a key={l.label} href={l.href} className="inline-flex items-center gap-1 hover:opacity-80">{l.label} <ExternalLink className="h-3.5 w-3.5"/></a>)}</div>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {p.tags.map((t) => (
+                    <span key={t} className="text-xs px-2 py-1 rounded-full border border-white/10 bg-white/5">{t}</span>
+                  ))}
+                </div>
+
+                {/* Keep external links clickable above overlay */}
+                <div className="mt-4 flex gap-3 text-sm relative z-10">
+                  {p.links.map((l) => (
+                    <a
+                      key={l.label}
+                      href={l.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 hover:opacity-80"
+                    >
+                      {l.label} <ExternalLink className="h-3.5 w-3.5" />
+                    </a>
+                  ))}
+                </div>
+
+                <div className="mt-2 text-sm relative z-10">
+                  <Link href={`/projects/${p.slug}`} className="underline underline-offset-4">
+                    Read the case study
+                  </Link>
+                </div>
               </motion.article>
             ))}
           </motion.div>
@@ -411,7 +468,9 @@ export default function PersonalSite() {
                 <p className="text-xs text-zinc-400">{post.date}</p>
                 <h3 className="mt-1 font-medium">{post.title}</h3>
                 <p className="mt-2 text-sm text-zinc-300">{post.summary}</p>
-                <a href={post.href} className="mt-3 inline-flex items-center gap-1 text-sm hover:underline underline-offset-4">Read more <ExternalLink className="h-3.5 w-3.5"/></a>
+                <a href={post.href} className="mt-3 inline-flex items-center gap-1 text-sm hover:underline underline-offset-4">
+                  Read more <ExternalLink className="h-3.5 w-3.5"/>
+                </a>
               </motion.article>
             ))}
           </div>
@@ -462,7 +521,7 @@ export default function PersonalSite() {
           <div className={card}>
             <h2 className="text-xl font-semibold tracking-tight">Let’s build something</h2>
             <p className="mt-2 text-zinc-300 max-w-[60ch]">
-              I’m open to internships, part-time roles, and projects in web, data, or AI. Email is best, or use the form.
+              I’m open to full-time roles, internships, and projects in web, data, or AI. Email is best, or use the form.
             </p>
             <div className="mt-6 grid md:grid-cols-2 gap-6">
               <div className="flex flex-wrap gap-3">
@@ -476,7 +535,9 @@ export default function PersonalSite() {
         </section>
 
         <footer className="pb-16 px-4">
-          <div className="mx-auto max-w-6xl text-xs text-zinc-400">© {year} {CONFIG.name}. Built with Next.js, Tailwind & framer-motion. • Press ⌘K / Ctrl+K</div>
+          <div className="mx-auto max-w-6xl text-xs text-zinc-400">
+            © {year} {CONFIG.name}. Built with Next.js, Tailwind & framer-motion. • Press ⌘K / Ctrl+K
+          </div>
         </footer>
       </main>
     </>
