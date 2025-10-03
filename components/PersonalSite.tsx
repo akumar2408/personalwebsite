@@ -232,7 +232,7 @@ export default function PersonalSite() {
         {/* Header */}
         <header className="sticky top-0 z-40 backdrop-blur bg-white/70 dark:bg-zinc-900/60 border-b border-white/10">
           <div className="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between">
-            <a href="#home" className="font-semibold tracking-tight text-lg">{CONFIG.name}</a>
+            <a href="#home" className="font-semibold tracking-[-0.01em] text-2xl md:text-3xl hover:drop-shadow-[0_0_8px_rgba(34,211,238,0.25)] transition">{CONFIG.name}</a>
             <nav className="hidden md:flex gap-6 text-sm">
               {nav.map(n => <a key={n.id} href={`#${n.id}`} className="hover:opacity-80">{n.label}</a>)}
             </nav>
