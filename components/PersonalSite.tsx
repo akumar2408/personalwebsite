@@ -4,7 +4,7 @@ import {
   Github, Linkedin, Mail, FileText, ArrowRight, MapPin, Rocket, ExternalLink,
   Sun, MoonStar, Download, GraduationCap, Award, Code, Server, Database, Boxes, Newspaper
 } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 
 /* =========================
@@ -25,6 +25,8 @@ const nav = [
   { id: "skills", label: "Skills" },
   { id: "projects", label: "Projects" },
   { id: "blog", label: "Blog" },
+  // Games is a route (app/games/page.tsx) you can add anytime:
+  // It’s linked here in the header nav below.
   { id: "experience", label: "Experience" },
   { id: "contact", label: "Contact" },
 ];
@@ -149,13 +151,102 @@ function BackgroundFX() {
 }
 
 /* =========================
+   Splash Intro (one-time)
+========================= */
+function SplashIntro({ onDone }: { onDone: () => void }) {
+  useEffect(() => {
+    const mq = window.matchMedia?.('(prefers-reduced-motion: reduce)');
+    if (mq?.matches) {
+      onDone();
+      return;
+    }
+    const prev = document.documentElement.style.overflow;
+    document.documentElement.style.overflow = 'hidden';
+    const t = setTimeout(onDone, 1600);
+    return () => {
+      clearTimeout(t);
+      document.documentElement.style.overflow = prev;
+    };
+  }, [onDone]);
+
+  const letters = Array.from('Aayush Kumar');
+
+  return (
+    <AnimatePresence>
+      <motion.div
+        className="fixed inset-0 z-[100] grid place-items-center bg-black"
+        initial={{ opacity: 1, scale: 1 }}
+        animate={{ opacity: 1, scale: 1 }}
+        // tiny shimmer on exit
+        exit={{ opacity: 0, scale: [1, 1.02, 1], transition: { duration: 0.35 } }}
+      >
+        {/* ambient blobs */}
+        <motion.div
+          className="absolute -top-24 -left-24 h-[60vmax] w-[60vmax] rounded-full blur-3xl
+                     bg-gradient-to-tr from-cyan-500/25 via-fuchsia-500/20 to-purple-500/25"
+          animate={{ x: [0, 60, -40, 0], y: [0, -30, 40, 0], rotate: [0, 30, -15, 0] }}
+          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+        />
+        <motion.div
+          className="absolute -bottom-28 -right-28 h-[55vmax] w-[55vmax] rounded-full blur-3xl
+                     bg-gradient-to-tr from-purple-500/25 via-cyan-400/20 to-fuchsia-500/25"
+          animate={{ x: [0, -50, 30, 0], y: [0, 40, -30, 0], rotate: [0, -25, 12, 0] }}
+          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
+        />
+
+        <div className="relative text-center">
+          <motion.h1
+            className="text-[10vw] md:text-7xl font-semibold tracking-[-0.04em]
+                       bg-gradient-to-r from-cyan-300 via-white to-fuchsia-300 bg-clip-text text-transparent"
+            initial="hidden"
+            animate="show"
+            variants={{
+              hidden: { transition: { staggerChildren: 0.03, staggerDirection: -1 } },
+              show:   { transition: { staggerChildren: 0.03 } },
+            }}
+          >
+            {letters.map((ch, i) => (
+              <motion.span
+                key={i}
+                className="inline-block"
+                variants={{
+                  hidden: { y: 18, opacity: 0, filter: 'blur(6px)' },
+                  show:   { y: 0,  opacity: 1, filter: 'blur(0px)', transition: { duration: 0.38, ease: 'easeOut' } }
+                }}
+              >
+                {ch === ' ' ? '\u00A0' : ch}
+              </motion.span>
+            ))}
+          </motion.h1>
+
+          <motion.p
+            className="mt-3 text-zinc-300/90 text-sm md:text-base"
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0, transition: { delay: 0.55, duration: 0.35 } }}
+          >
+            Incoming — Associate Developer @ Insurity
+          </motion.p>
+        </div>
+
+        <button
+          onClick={onDone}
+          className="absolute bottom-6 right-6 text-xs text-zinc-400 hover:text-white/90"
+        >
+          Skip
+        </button>
+      </motion.div>
+    </AnimatePresence>
+  );
+}
+
+/* =========================
    Command Palette (⌘K)
 ========================= */
 function CommandPalette({ open, setOpen }: { open: boolean; setOpen: (v: boolean) => void }) {
   const [q, setQ] = useState("");
   const items = [
     ...nav.map((n) => ({ type: "Section", label: n.label, href: `#${n.id}` })),
-    ...projects.map((p) => ({ type: "Project", label: p.title, href: `/projects/${p.slug}` })),
+    ...projects.map((p) => ({ type: "Project", label: p.title, href: `/projects` })),
   ];
   const filtered = items.filter((i) => i.label.toLowerCase().includes(q.toLowerCase())).slice(0, 8);
   if (!open) return null;
@@ -167,18 +258,7 @@ function CommandPalette({ open, setOpen }: { open: boolean; setOpen: (v: boolean
         </div>
         <ul className="py-2 max-h-80 overflow-y-auto">
           {filtered.map((i, idx) => (
-            <li
-              key={idx}
-              className="px-4 py-2 hover:bg-white/5 text-sm cursor-pointer"
-              onClick={() => {
-                setOpen(false);
-                if (i.href.startsWith("/")) window.location.href = i.href;
-                else {
-                  const el = document.querySelector(i.href) as HTMLElement | null;
-                  el && el.scrollIntoView({ behavior: "smooth" });
-                }
-              }}
-            >
+            <li key={idx} className="px-4 py-2 hover:bg-white/5 text-sm cursor-pointer" onClick={()=>{ setOpen(false); const el=document.querySelector(i.href) as HTMLElement|null; el && el.scrollIntoView({behavior:'smooth'}); }}>
               <span className="text-zinc-400 mr-2">{i.type}</span>{i.label}
             </li>
           ))}
@@ -245,6 +325,20 @@ export default function PersonalSite() {
   const year = useMemo(() => new Date().getFullYear(), []);
   const [cmd, setCmd] = useState(false);
 
+  // Splash: show once every 12 hours
+  const [showSplash, setShowSplash] = useState(false);
+  useEffect(() => {
+    try {
+      const key = 'seen-splash-at';
+      const last = localStorage.getItem(key);
+      const twelveHours = 1000 * 60 * 60 * 12;
+      if (!last || Date.now() - Number(last) > twelveHours) {
+        setShowSplash(true);
+        localStorage.setItem(key, String(Date.now()));
+      }
+    } catch { /* ignore */ }
+  }, []);
+
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") { e.preventDefault(); setCmd((v) => !v); }
@@ -258,6 +352,8 @@ export default function PersonalSite() {
 
   return (
     <>
+      {showSplash && <SplashIntro onDone={() => setShowSplash(false)} />}
+
       <BackgroundFX />
       <CommandPalette open={cmd} setOpen={setCmd} />
       <DevChecks />
@@ -270,9 +366,9 @@ export default function PersonalSite() {
             <nav className="hidden md:flex gap-6 text-sm">
               <a href="#about" className="hover:opacity-80">About</a>
               <a href="#skills" className="hover:opacity-80">Skills</a>
-              <a href="/projects" className="hover:opacity-80">Projects</a>
-              <a href="/blog" className="hover:opacity-80">Blog</a>
-              <a href="/games" className="hover:opacity-80">Games</a>
+              <Link href="/projects" className="hover:opacity-80">Projects</Link>
+              <Link href="/blog" className="hover:opacity-80">Blog</Link>
+              <Link href="/games" className="hover:opacity-80">Games</Link>
               <a href="#experience" className="hover:opacity-80">Experience</a>
               <a href="#contact" className="hover:opacity-80">Contact</a>
             </nav>
@@ -296,7 +392,7 @@ export default function PersonalSite() {
                 fast feedback, and keeping things reliable.
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
-                <a href="/projects" className={`${btn} border-white/20`}>See my work <ArrowRight className="h-4 w-4"/></a>
+                <a href="#projects" className={`${btn} border-white/20`}>See my work <ArrowRight className="h-4 w-4"/></a>
                 <a href={`mailto:${CONFIG.email}`} className={`${btn} border-white/10`}><Mail className="h-4 w-4"/> Contact</a>
                 <a href={CONFIG.resumeUrl} target="_blank" rel="noopener noreferrer" className={`${btn} border-white/10`}><FileText className="h-4 w-4"/> View Resume</a>
               </div>
@@ -400,59 +496,32 @@ export default function PersonalSite() {
 
         {/* PROJECTS */}
         <section id="projects" className="mx-auto max-w-6xl px-4 py-16 md:py-24">
-          <div className="flex items-center justify-between">
-            <h2 className="text-xl font-semibold tracking-tight">Selected Projects</h2>
-            <a href={CONFIG.github} className="text-sm inline-flex items-center gap-1 hover:opacity-80">
-              All repos <ExternalLink className="h-4 w-4"/>
-            </a>
-          </div>
-
-          <motion.div
-            className="mt-6 grid md:grid-cols-3 gap-8"
-            initial="initial"
-            animate="animate"
-            variants={{ initial: {}, animate: { transition: { staggerChildren: 0.08 } } }}
-          >
+          <div className="flex items-center justify-between"><h2 className="text-xl font-semibold tracking-tight">Selected Projects</h2><a href={CONFIG.github} className="text-sm inline-flex items-center gap-1 hover:opacity-80">All repos <ExternalLink className="h-4 w-4"/></a></div>
+          <motion.div className="mt-6 grid md:grid-cols-3 gap-8" initial="initial" animate="animate" variants={{ initial: {}, animate: { transition: { staggerChildren: 0.08 } } }}>
             {projects.map((p) => (
               <motion.article
                 key={p.title}
-                className={`${card} relative`}
+                className={card}
                 variants={fadeUp}
                 whileHover={{ y: -4, scale: 1.01 }}
                 transition={{ type: "spring", stiffness: 260, damping: 20 }}
               >
-                {/* Make whole card link to case study */}
-                <Link href={`/projects/${p.slug}`} className="absolute inset-0" aria-label={`Open case study for ${p.title}`} />
-
-                <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-wide">
-                  <Rocket className="h-4 w-4" /> {p.title}
-                </div>
-                <p className="mt-3 text-sm text-zinc-300 min-h-[60px]">{p.blurb}</p>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {p.tags.map((t) => (
-                    <span key={t} className="text-xs px-2 py-1 rounded-full border border-white/10 bg-white/5">{t}</span>
-                  ))}
-                </div>
-
-                {/* Keep external links clickable above overlay */}
-                <div className="mt-4 flex gap-3 text-sm relative z-10">
+                <Link href={`/projects/${p.slug}`} className="block group focus:outline-none">
+                  <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-wide">
+                    <Rocket className="h-4 w-4"/> {p.title}
+                  </div>
+                  <p className="mt-3 text-sm text-zinc-300 min-h-[60px]">{p.blurb}</p>
+                  <div className="mt-3 flex flex-wrap gap-2">{p.tags.map((t) => <span key={t} className="text-xs px-2 py-1 rounded-full border border-white/10 bg-white/5">{t}</span>)}</div>
+                  <span className="mt-4 inline-flex items-center gap-1 text-sm text-cyan-300 group-hover:underline underline-offset-4">
+                    Read the case study <ExternalLink className="h-3.5 w-3.5"/>
+                  </span>
+                </Link>
+                <div className="mt-3 flex gap-3 text-sm">
                   {p.links.map((l) => (
-                    <a
-                      key={l.label}
-                      href={l.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 hover:opacity-80"
-                    >
-                      {l.label} <ExternalLink className="h-3.5 w-3.5" />
+                    <a key={l.label} href={l.href} className="inline-flex items-center gap-1 hover:opacity-80">
+                      {l.label} <ExternalLink className="h-3.5 w-3.5"/>
                     </a>
                   ))}
-                </div>
-
-                <div className="mt-2 text-sm relative z-10">
-                  <Link href={`/projects/${p.slug}`} className="underline underline-offset-4">
-                    Read the case study
-                  </Link>
                 </div>
               </motion.article>
             ))}
@@ -468,9 +537,7 @@ export default function PersonalSite() {
                 <p className="text-xs text-zinc-400">{post.date}</p>
                 <h3 className="mt-1 font-medium">{post.title}</h3>
                 <p className="mt-2 text-sm text-zinc-300">{post.summary}</p>
-                <a href={post.href} className="mt-3 inline-flex items-center gap-1 text-sm hover:underline underline-offset-4">
-                  Read more <ExternalLink className="h-3.5 w-3.5"/>
-                </a>
+                <Link href={post.href} className="mt-3 inline-flex items-center gap-1 text-sm hover:underline underline-offset-4">Read more <ExternalLink className="h-3.5 w-3.5"/></Link>
               </motion.article>
             ))}
           </div>
@@ -535,9 +602,7 @@ export default function PersonalSite() {
         </section>
 
         <footer className="pb-16 px-4">
-          <div className="mx-auto max-w-6xl text-xs text-zinc-400">
-            © {year} {CONFIG.name}. Built with Next.js, Tailwind & framer-motion. • Press ⌘K / Ctrl+K
-          </div>
+          <div className="mx-auto max-w-6xl text-xs text-zinc-400">© {year} {CONFIG.name}. Built with Next.js, Tailwind & framer-motion. • Press ⌘K / Ctrl+K</div>
         </footer>
       </main>
     </>
