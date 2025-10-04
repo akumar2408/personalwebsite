@@ -537,7 +537,7 @@ export default function PersonalSite() {
                 <p className="text-xs text-zinc-400">{post.date}</p>
                 <h3 className="mt-1 font-medium">{post.title}</h3>
                 <p className="mt-2 text-sm text-zinc-300">{post.summary}</p>
-                <Link href={post.href} className="mt-3 inline-flex items-center gap-1 text-sm hover:underline underline-offset-4">Read more <ExternalLink className="h-3.5 w-3.5"/></Link>
+                <a href={post.href} className="mt-3 inline-flex items-center gap-1 text-sm hover:underline underline-offset-4">Read more <ExternalLink className="h-3.5 w-3.5"/></a>
               </motion.article>
             ))}
           </div>
