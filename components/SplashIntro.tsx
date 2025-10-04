@@ -3,16 +3,15 @@ import { useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function SplashIntro({ onDone }: { onDone: () => void }) {
-  // Exit after the total sequence length
-  const TOTAL_MS = 2800;
+  // Total length of sequence (dash draw + letters + exit)
+  const TOTAL_MS = 3600;
 
   useEffect(() => {
     const mq = window.matchMedia?.('(prefers-reduced-motion: reduce)');
     if (mq?.matches) {
-      onDone(); // no animation for reduced motion users
+      onDone(); // no animation for rm users
       return;
     }
-    // Lock scroll while playing
     const prev = document.documentElement.style.overflow;
     document.documentElement.style.overflow = 'hidden';
     const t = setTimeout(onDone, TOTAL_MS);
@@ -22,7 +21,8 @@ export default function SplashIntro({ onDone }: { onDone: () => void }) {
     };
   }, [onDone]);
 
-  const letters = useMemo(() => Array.from('Aayush Kumar'), []);
+  const NAME = 'Aayush Kumar';
+  const letters = useMemo(() => Array.from(NAME), []);
 
   return (
     <AnimatePresence>
@@ -46,82 +46,93 @@ export default function SplashIntro({ onDone }: { onDone: () => void }) {
           transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut' }}
         />
 
-        {/* Title */}
-        <div className="relative text-center px-6">
-          {/* Per-letter rise + glow sweep */}
-          <motion.h1
-            className="font-semibold tracking-[-0.04em] text-[12vw] md:text-7xl
-                       bg-clip-text text-transparent bg-gradient-to-r from-cyan-300 via-white to-fuchsia-300"
-            initial="hidden"
-            animate="show"
-            variants={{
-              hidden: { transition: { staggerChildren: 0.035, staggerDirection: -1 } },
-              show:   { transition: { staggerChildren: 0.035 } },
-            }}
-          >
-            {letters.map((ch, i) => (
-              <motion.span
-                key={i}
-                className="inline-block will-change-transform"
-                variants={{
-                  hidden: { y: 22, opacity: 0, filter: 'blur(6px)' },
-                  show:   {
-                    y: 0,
-                    opacity: 1,
-                    filter: 'blur(0px)',
-                    transition: { duration: 0.42, ease: 'easeOut' }
-                  }
-                }}
-              >
-                {/* Neon “sheen” sweep overlay */}
-                <span className="relative">
-                  <span>{ch === ' ' ? '\u00A0' : ch}</span>
-                  <motion.span
-                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-transparent"
-                    style={{ mixBlendMode: 'overlay' }}
-                    initial={{ x: '-120%', opacity: 0 }}
-                    animate={{ x: '120%', opacity: [0, 1, 0] }}
-                    transition={{ delay: 0.2 + i * 0.03, duration: 0.5, ease: 'easeInOut' }}
-                  />
-                </span>
-              </motion.span>
-            ))}
-          </motion.h1>
-
-          {/* Subtitle */}
-          <motion.p
-            className="mt-3 text-zinc-300/90 text-sm md:text-base"
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0, transition: { delay: 0.65, duration: 0.4 } }}
-          >
-            Incoming — Associate Developer @ Insurity
-          </motion.p>
-
-          {/* Underline stroke (SVG path draws left→right) */}
+        {/* Sequencer wrapper so we can exit with a "dash away" motion */}
+        <motion.div
+          className="relative text-center px-6"
+          initial={{ scale: 1, y: 0 }}
+          animate={{ scale: 1, y: 0 }}
+          exit={{
+            opacity: 0,
+            y: -60,
+            scale: 0.92,
+            transition: { duration: 0.55, ease: 'easeInOut' }
+          }}
+        >
+          {/* 1) DASH: draws left -> right */}
           <motion.svg
-            viewBox="0 0 600 30"
-            className="mx-auto mt-4 w-[70vw] max-w-[560px]"
-            initial={{ opacity: 0 }}
+            viewBox="0 0 1200 60"
+            className="mx-auto w-[80vw] max-w-[900px]"
+            initial={{ opacity: 1 }}
             animate={{ opacity: 1 }}
           >
-            <motion.path
-              d="M10 20 Q 150 5 300 20 T 590 20"
-              stroke="url(#g)"
-              strokeWidth="3"
-              fill="none"
-              initial={{ pathLength: 0 }}
-              animate={{ pathLength: 1 }}
-              transition={{ delay: 0.95, duration: 0.7, ease: 'easeInOut' }}
-            />
             <defs>
-              <linearGradient id="g" x1="0" x2="1">
+              <linearGradient id="dashG" x1="0" x2="1">
                 <stop offset="0%"  stopColor="#22d3ee" />
                 <stop offset="50%" stopColor="#ffffff" />
                 <stop offset="100%" stopColor="#e879f9" />
               </linearGradient>
             </defs>
+            <motion.path
+              d="M40 30 H1160"
+              fill="none"
+              stroke="url(#dashG)"
+              strokeWidth="4"
+              strokeLinecap="round"
+              style={{ pathLength: 0 }}
+              animate={{ pathLength: [0, 1] }}
+              transition={{ duration: 0.9, ease: 'easeInOut' }}
+            />
           </motion.svg>
-        </div>
+
+          {/* 2) NAME: per-letter pop with neon sweep */}
+          <motion.h1
+            className="mt-4 font-semibold tracking-[-0.04em] text-[12vw] md:text-7xl
+                       bg-clip-text text-transparent bg-gradient-to-r from-cyan-300 via-white to-fuchsia-300"
+            initial="hidden"
+            animate="show"
+            variants={{
+              hidden: { transition: { staggerChildren: 0.045, staggerDirection: -1 } },
+              show:   { transition: { delay: 0.2, staggerChildren: 0.045 } },
+            }}
+          >
+            {letters.map((ch, i) => (
+              <motion.span
+                key={i}
+                className="inline-block will-change-transform relative"
+                variants={{
+                  hidden: { y: 26, opacity: 0, filter: 'blur(8px)' },
+                  show:   { y: 0,  opacity: 1, filter: 'blur(0px)', transition: { duration: 0.46, ease: 'easeOut' } }
+                }}
+              >
+                <span>{ch === ' ' ? '\u00A0' : ch}</span>
+                {/* neon sheen */}
+                <motion.span
+                  className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-transparent"
+                  style={{ mixBlendMode: 'overlay' }}
+                  initial={{ x: '-130%', opacity: 0 }}
+                  animate={{ x: '130%', opacity: [0, 1, 0] }}
+                  transition={{ delay: 0.45 + i * 0.035, duration: 0.6, ease: 'easeInOut' }}
+                />
+              </motion.span>
+            ))}
+          </motion.h1>
+
+          {/* 3) Subtitle (briefly visible) */}
+          <motion.p
+            className="mt-3 text-zinc-300/90 text-sm md:text-base"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0, transition: { delay: 1.2, duration: 0.4 } }}
+          >
+            Incoming — Associate Developer @ Insurity
+          </motion.p>
+
+          {/* 4) Exit dash (shrinks and slides upward slightly) */}
+          <motion.div
+            className="mx-auto mt-5 h-[3px] w-[44vw] max-w-[420px] rounded-full bg-gradient-to-r from-cyan-300 via-white to-fuchsia-300"
+            initial={{ scaleX: 0 }}
+            animate={{ scaleX: 1, transition: { delay: 1.35, duration: 0.5, ease: 'easeOut' } }}
+          />
+        </motion.div>
       </motion.div>
     </AnimatePresence>
   );

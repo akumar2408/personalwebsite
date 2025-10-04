@@ -4,8 +4,10 @@ import {
   Github, Linkedin, Mail, FileText, ArrowRight, MapPin, Rocket, ExternalLink,
   Sun, MoonStar, Download, GraduationCap, Award, Code, Server, Database, Boxes, Newspaper
 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import Link from "next/link";
+import SplashIntro from "./SplashIntro";
+import type { Route } from "next";
 
 /* =========================
    Basic config
@@ -25,8 +27,6 @@ const nav = [
   { id: "skills", label: "Skills" },
   { id: "projects", label: "Projects" },
   { id: "blog", label: "Blog" },
-  // Games is a route (app/games/page.tsx) you can add anytime:
-  // It’s linked here in the header nav below.
   { id: "experience", label: "Experience" },
   { id: "contact", label: "Contact" },
 ];
@@ -74,7 +74,15 @@ const projects = [
   },
 ];
 
-const blogPosts = [
+type BlogPost = {
+  slug: string;
+  title: string;
+  date: string;
+  summary: string;
+  href: Route; // typed for Next typedRoutes
+};
+
+const blogPosts: BlogPost[] = [
   {
     slug: "what-i-actually-do-when-i-build-ai",
     title: "What I actually do when I build AI stuff",
@@ -151,102 +159,13 @@ function BackgroundFX() {
 }
 
 /* =========================
-   Splash Intro (one-time)
-========================= */
-function SplashIntro({ onDone }: { onDone: () => void }) {
-  useEffect(() => {
-    const mq = window.matchMedia?.('(prefers-reduced-motion: reduce)');
-    if (mq?.matches) {
-      onDone();
-      return;
-    }
-    const prev = document.documentElement.style.overflow;
-    document.documentElement.style.overflow = 'hidden';
-    const t = setTimeout(onDone, 1600);
-    return () => {
-      clearTimeout(t);
-      document.documentElement.style.overflow = prev;
-    };
-  }, [onDone]);
-
-  const letters = Array.from('Aayush Kumar');
-
-  return (
-    <AnimatePresence>
-      <motion.div
-        className="fixed inset-0 z-[100] grid place-items-center bg-black"
-        initial={{ opacity: 1, scale: 1 }}
-        animate={{ opacity: 1, scale: 1 }}
-        // tiny shimmer on exit
-        exit={{ opacity: 0, scale: [1, 1.02, 1], transition: { duration: 0.35 } }}
-      >
-        {/* ambient blobs */}
-        <motion.div
-          className="absolute -top-24 -left-24 h-[60vmax] w-[60vmax] rounded-full blur-3xl
-                     bg-gradient-to-tr from-cyan-500/25 via-fuchsia-500/20 to-purple-500/25"
-          animate={{ x: [0, 60, -40, 0], y: [0, -30, 40, 0], rotate: [0, 30, -15, 0] }}
-          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
-        />
-        <motion.div
-          className="absolute -bottom-28 -right-28 h-[55vmax] w-[55vmax] rounded-full blur-3xl
-                     bg-gradient-to-tr from-purple-500/25 via-cyan-400/20 to-fuchsia-500/25"
-          animate={{ x: [0, -50, 30, 0], y: [0, 40, -30, 0], rotate: [0, -25, 12, 0] }}
-          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
-        />
-
-        <div className="relative text-center">
-          <motion.h1
-            className="text-[10vw] md:text-7xl font-semibold tracking-[-0.04em]
-                       bg-gradient-to-r from-cyan-300 via-white to-fuchsia-300 bg-clip-text text-transparent"
-            initial="hidden"
-            animate="show"
-            variants={{
-              hidden: { transition: { staggerChildren: 0.03, staggerDirection: -1 } },
-              show:   { transition: { staggerChildren: 0.03 } },
-            }}
-          >
-            {letters.map((ch, i) => (
-              <motion.span
-                key={i}
-                className="inline-block"
-                variants={{
-                  hidden: { y: 18, opacity: 0, filter: 'blur(6px)' },
-                  show:   { y: 0,  opacity: 1, filter: 'blur(0px)', transition: { duration: 0.38, ease: 'easeOut' } }
-                }}
-              >
-                {ch === ' ' ? '\u00A0' : ch}
-              </motion.span>
-            ))}
-          </motion.h1>
-
-          <motion.p
-            className="mt-3 text-zinc-300/90 text-sm md:text-base"
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0, transition: { delay: 0.55, duration: 0.35 } }}
-          >
-            Incoming — Associate Developer @ Insurity
-          </motion.p>
-        </div>
-
-        <button
-          onClick={onDone}
-          className="absolute bottom-6 right-6 text-xs text-zinc-400 hover:text-white/90"
-        >
-          Skip
-        </button>
-      </motion.div>
-    </AnimatePresence>
-  );
-}
-
-/* =========================
    Command Palette (⌘K)
 ========================= */
 function CommandPalette({ open, setOpen }: { open: boolean; setOpen: (v: boolean) => void }) {
   const [q, setQ] = useState("");
   const items = [
     ...nav.map((n) => ({ type: "Section", label: n.label, href: `#${n.id}` })),
-    ...projects.map((p) => ({ type: "Project", label: p.title, href: `/projects` })),
+    ...projects.map((p) => ({ type: "Project", label: p.title, href: `/projects/${p.slug}` })),
   ];
   const filtered = items.filter((i) => i.label.toLowerCase().includes(q.toLowerCase())).slice(0, 8);
   if (!open) return null;
@@ -258,7 +177,18 @@ function CommandPalette({ open, setOpen }: { open: boolean; setOpen: (v: boolean
         </div>
         <ul className="py-2 max-h-80 overflow-y-auto">
           {filtered.map((i, idx) => (
-            <li key={idx} className="px-4 py-2 hover:bg-white/5 text-sm cursor-pointer" onClick={()=>{ setOpen(false); const el=document.querySelector(i.href) as HTMLElement|null; el && el.scrollIntoView({behavior:'smooth'}); }}>
+            <li
+              key={idx}
+              className="px-4 py-2 hover:bg-white/5 text-sm cursor-pointer"
+              onClick={() => {
+                setOpen(false);
+                if (i.href.startsWith("/")) window.location.href = i.href;
+                else {
+                  const el = document.querySelector(i.href) as HTMLElement | null;
+                  el && el.scrollIntoView({ behavior: "smooth" });
+                }
+              }}
+            >
               <span className="text-zinc-400 mr-2">{i.type}</span>{i.label}
             </li>
           ))}
@@ -325,19 +255,8 @@ export default function PersonalSite() {
   const year = useMemo(() => new Date().getFullYear(), []);
   const [cmd, setCmd] = useState(false);
 
-  // Splash: show once every 12 hours
-  const [showSplash, setShowSplash] = useState(false);
-  useEffect(() => {
-    try {
-      const key = 'seen-splash-at';
-      const last = localStorage.getItem(key);
-      const twelveHours = 1000 * 60 * 60 * 12;
-      if (!last || Date.now() - Number(last) > twelveHours) {
-        setShowSplash(true);
-        localStorage.setItem(key, String(Date.now()));
-      }
-    } catch { /* ignore */ }
-  }, []);
+  // Always show splash on each visit
+  const [showSplash, setShowSplash] = useState(true);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -362,7 +281,11 @@ export default function PersonalSite() {
         {/* Header */}
         <header className="sticky top-0 z-40 backdrop-blur bg-white/70 dark:bg-zinc-900/60 border-b border-white/10">
           <div className="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between">
-            <a href="#home" className="font-semibold tracking-[-0.01em] text-2xl md:text-3xl hover:drop-shadow-[0_0_8px_rgba(34,211,238,0.25)] transition">{CONFIG.name}</a>
+            <a href="#home" className="font-semibold tracking-[-0.01em] text-2xl md:text-3xl transition
+               bg-clip-text text-transparent bg-gradient-to-r from-cyan-300 via-white to-fuchsia-300
+               hover:drop-shadow-[0_0_8px_rgba(34,211,238,0.25)]">
+              {CONFIG.name}
+            </a>
             <nav className="hidden md:flex gap-6 text-sm">
               <a href="#about" className="hover:opacity-80">About</a>
               <a href="#skills" className="hover:opacity-80">Skills</a>
@@ -392,7 +315,7 @@ export default function PersonalSite() {
                 fast feedback, and keeping things reliable.
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
-                <a href="#projects" className={`${btn} border-white/20`}>See my work <ArrowRight className="h-4 w-4"/></a>
+                <a href="/projects" className={`${btn} border-white/20`}>See my work <ArrowRight className="h-4 w-4"/></a>
                 <a href={`mailto:${CONFIG.email}`} className={`${btn} border-white/10`}><Mail className="h-4 w-4"/> Contact</a>
                 <a href={CONFIG.resumeUrl} target="_blank" rel="noopener noreferrer" className={`${btn} border-white/10`}><FileText className="h-4 w-4"/> View Resume</a>
               </div>
@@ -506,7 +429,7 @@ export default function PersonalSite() {
                 whileHover={{ y: -4, scale: 1.01 }}
                 transition={{ type: "spring", stiffness: 260, damping: 20 }}
               >
-                <Link href={`/projects/${p.slug}`} className="block group focus:outline-none">
+                <Link href={`/projects/${p.slug}` as Route} className="block group focus:outline-none">
                   <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-wide">
                     <Rocket className="h-4 w-4"/> {p.title}
                   </div>
@@ -518,7 +441,7 @@ export default function PersonalSite() {
                 </Link>
                 <div className="mt-3 flex gap-3 text-sm">
                   {p.links.map((l) => (
-                    <a key={l.label} href={l.href} className="inline-flex items-center gap-1 hover:opacity-80">
+                    <a key={l.label} href={l.href} className="inline-flex items-center gap-1 hover:opacity-80" target="_blank" rel="noopener noreferrer">
                       {l.label} <ExternalLink className="h-3.5 w-3.5"/>
                     </a>
                   ))}
@@ -537,7 +460,9 @@ export default function PersonalSite() {
                 <p className="text-xs text-zinc-400">{post.date}</p>
                 <h3 className="mt-1 font-medium">{post.title}</h3>
                 <p className="mt-2 text-sm text-zinc-300">{post.summary}</p>
-                <a href={post.href} className="mt-3 inline-flex items-center gap-1 text-sm hover:underline underline-offset-4">Read more <ExternalLink className="h-3.5 w-3.5"/></a>
+                <Link href={post.href} className="mt-3 inline-flex items-center gap-1 text-sm hover:underline underline-offset-4">
+                  Read more <ExternalLink className="h-3.5 w-3.5"/>
+                </Link>
               </motion.article>
             ))}
           </div>
