@@ -79,7 +79,8 @@ type BlogPost = {
   title: string;
   date: string;
   summary: string;
-  href: Route; // typed for Next typedRoutes
+  // NOTE: keep href as string; we’ll cast at Link usage to satisfy typedRoutes.
+  href: string;
 };
 
 const blogPosts: BlogPost[] = [
@@ -153,6 +154,34 @@ function BackgroundFX() {
                    bg-gradient-to-tr from-purple-500/20 via-cyan-400/15 to-fuchsia-500/20"
         animate={{ x: [0, -90, 50, 0], y: [0, 50, -40, 0], rotate: [0, -30, 20, 0] }}
         transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
+      />
+    </div>
+  );
+}
+
+/* =========================
+   Cursor Halo (subtle)
+========================= */
+function CursorHalo() {
+  const [pos, setPos] = useState({ x: -9999, y: -9999 });
+  useEffect(() => {
+    const move = (e: PointerEvent) => setPos({ x: e.clientX, y: e.clientY });
+    window.addEventListener("pointermove", move);
+    return () => window.removeEventListener("pointermove", move);
+  }, []);
+  return (
+    <div aria-hidden className="pointer-events-none fixed inset-0 -z-10">
+      <motion.div
+        className="absolute h-72 w-72 rounded-full"
+        style={{
+          left: pos.x - 144,
+          top: pos.y - 144,
+          background:
+            "radial-gradient(closest-side, rgba(56,189,248,0.18), transparent 70%)",
+          filter: "blur(40px)",
+        }}
+        animate={{ x: 0, y: 0 }}
+        transition={{ type: "spring", stiffness: 120, damping: 20, mass: 0.6 }}
       />
     </div>
   );
@@ -274,6 +303,7 @@ export default function PersonalSite() {
       {showSplash && <SplashIntro onDone={() => setShowSplash(false)} />}
 
       <BackgroundFX />
+      <CursorHalo />
       <CommandPalette open={cmd} setOpen={setCmd} />
       <DevChecks />
 
@@ -291,7 +321,7 @@ export default function PersonalSite() {
               <a href="#skills" className="hover:opacity-80">Skills</a>
               <Link href="/projects" className="hover:opacity-80">Projects</Link>
               <Link href="/blog" className="hover:opacity-80">Blog</Link>
-              <Link href="/games" className="hover:opacity-80">Games</Link>
+              <a href="/games" className="hover:opacity-80">Games</a>
               <a href="#experience" className="hover:opacity-80">Experience</a>
               <a href="#contact" className="hover:opacity-80">Contact</a>
             </nav>
@@ -315,7 +345,9 @@ export default function PersonalSite() {
                 fast feedback, and keeping things reliable.
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
-                <a href="/projects" className={`${btn} border-white/20`}>See my work <ArrowRight className="h-4 w-4"/></a>
+                <Link href="/projects" className={`${btn} border-white/20` as const}>
+                  See my work <ArrowRight className="h-4 w-4"/>
+                </Link>
                 <a href={`mailto:${CONFIG.email}`} className={`${btn} border-white/10`}><Mail className="h-4 w-4"/> Contact</a>
                 <a href={CONFIG.resumeUrl} target="_blank" rel="noopener noreferrer" className={`${btn} border-white/10`}><FileText className="h-4 w-4"/> View Resume</a>
               </div>
@@ -429,7 +461,8 @@ export default function PersonalSite() {
                 whileHover={{ y: -4, scale: 1.01 }}
                 transition={{ type: "spring", stiffness: 260, damping: 20 }}
               >
-                <Link href={`/projects/${p.slug}` as Route} className="block group focus:outline-none">
+                {/* Cast dynamic route to satisfy typedRoutes at build time */}
+                <Link href={`/projects/${p.slug}` as unknown as Route} className="block group focus:outline-none">
                   <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-wide">
                     <Rocket className="h-4 w-4"/> {p.title}
                   </div>
@@ -460,7 +493,8 @@ export default function PersonalSite() {
                 <p className="text-xs text-zinc-400">{post.date}</p>
                 <h3 className="mt-1 font-medium">{post.title}</h3>
                 <p className="mt-2 text-sm text-zinc-300">{post.summary}</p>
-                <Link href={post.href} className="mt-3 inline-flex items-center gap-1 text-sm hover:underline underline-offset-4">
+                {/* Cast to Route to satisfy typedRoutes */}
+                <Link href={post.href as unknown as Route} className="mt-3 inline-flex items-center gap-1 text-sm hover:underline underline-offset-4">
                   Read more <ExternalLink className="h-3.5 w-3.5"/>
                 </Link>
               </motion.article>
