@@ -5,7 +5,7 @@ import {
   Github, Linkedin, Mail, FileText, ArrowRight, MapPin, Rocket, ExternalLink,
   Sun, MoonStar, Download, GraduationCap, Award, Code, Server, Database, Boxes, Newspaper
 } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 /* =========================
    Basic config
@@ -15,7 +15,7 @@ const CONFIG = {
   tagline: "I like building useful software that feels simple and solid.",
   location: "Phoenix • Los Angeles",
   email: "aayushkumar2004@gmail.com",
-  resumeUrl: "/resume.pdf",
+  resumeUrl: "/resume.pdf", // file in /public
   github: "https://github.com/akumar2408",
   linkedin: "https://www.linkedin.com/in/aayushkumar2/",
 };
@@ -25,9 +25,11 @@ const nav = [
   { id: "skills", label: "Skills" },
   { id: "projects", label: "Projects" },
   { id: "blog", label: "Blog" },
+  // external routes are fine here
+  { id: "games", label: "Games", href: "/games" },
   { id: "experience", label: "Experience" },
   { id: "contact", label: "Contact" },
-] as const;
+];
 
 /* =========================
    Content
@@ -42,26 +44,20 @@ const skills: Record<string, string[]> = {
   BI: ["PowerBI", "Tableau"],
 };
 
-type Project = {
-  slug: string;
-  title: string;
-  blurb: string;
-  links: { label: string; href: string }[];
-  tags: string[];
-};
-
-const projects: Project[] = [
+const projects = [
   {
     slug: "operational-dashboard",
     title: "Operational Dashboard",
-    blurb: "Full-stack sales analytics with 30-day forecasts. Helped spot trends sooner and keep decisions grounded.",
+    blurb:
+      "Full-stack sales analytics with 30-day forecasts. Helped spot trends sooner and keep decisions grounded.",
     links: [{ label: "GitHub", href: "https://github.com/akumar2408/operationaldashboard/" }],
     tags: ["React", "Spring Boot", "PostgreSQL"],
   },
   {
     slug: "aiinvestmate",
     title: "AIInvestMate",
-    blurb: "Small app that helps students try out investing ideas and learn the basics in a friendly way.",
+    blurb:
+      "Small app that helps students try out investing ideas and learn the basics in a friendly way.",
     links: [
       { label: "Live", href: "https://aiinvestmate.vercel.app" },
       { label: "GitHub", href: "https://github.com/akumar2408/AIInvestMate" },
@@ -71,7 +67,8 @@ const projects: Project[] = [
   {
     slug: "streaming-etl",
     title: "SafetyGuardian",
-    blurb: "Streaming pipeline that moves safety events through AWS and keeps data fresh and reliable.",
+    blurb:
+      "Streaming pipeline that moves safety events through AWS and keeps data fresh and reliable.",
     links: [{ label: "GitHub", href: "https://github.com/akumar2408/SafetyGuardian" }],
     tags: ["AWS Kinesis", "Glue", "Redshift", "CI/CD"],
   },
@@ -82,28 +79,32 @@ const blogPosts = [
     slug: "what-i-actually-do-when-i-build-ai",
     title: "What I actually do when I build AI stuff",
     date: "Oct 2025",
-    summary: "I start small, ship a tiny end-to-end loop, and only add the fancy pieces after it’s useful.",
+    summary:
+      "I start small, ship a tiny end-to-end loop, and only add the fancy pieces after it’s useful.",
     href: "/blog/what-i-actually-do-when-i-build-ai",
   },
   {
     slug: "my-quick-checklist-before-i-ship",
     title: "My quick checklist before I ship",
     date: "Oct 2025",
-    summary: "A short list I run through before I push: clear readme, good defaults, basic tests, simple logging, and a way to roll back fast.",
+    summary:
+      "A short list I run through before I push: clear readme, good defaults, basic tests, simple logging, and a way to roll back fast.",
     href: "/blog/my-quick-checklist-before-i-ship",
   },
   {
     slug: "one-bug-a-day",
     title: "One bug a day",
     date: "May 2025",
-    summary: "Fixing one small bug each day taught me more than any tutorial. It kept me honest and moved the work forward.",
+    summary:
+      "Fixing one small bug each day taught me more than any tutorial. It kept me honest and moved the work forward.",
     href: "/blog/one-bug-a-day",
   },
   {
     slug: "the-day-i-deleted-half-the-code",
     title: "The day I deleted half the code",
     date: "Dec 2024",
-    summary: "We kept the parts that mattered and tossed the rest. The app got faster, and so did the team.",
+    summary:
+      "We kept the parts that mattered and tossed the rest. The app got faster, and so did the team.",
     href: "/blog/the-day-i-deleted-half-the-code",
   },
 ];
@@ -114,121 +115,209 @@ const blogPosts = [
 function useTheme() {
   const [dark, setDark] = useState(false);
   useEffect(() => {
-    const prefers =
-      typeof window !== "undefined" &&
-      (window.matchMedia?.("(prefers-color-scheme: dark)").matches ?? true);
+    const stored = localStorage.getItem("prefers-dark");
+    const prefers = stored ? stored === "true" : (window.matchMedia?.("(prefers-color-scheme: dark)").matches ?? true);
     setDark(prefers);
   }, []);
   useEffect(() => {
     document.documentElement.classList.toggle("dark", dark);
+    localStorage.setItem("prefers-dark", String(dark));
   }, [dark]);
   return { dark, setDark };
 }
 
-const fadeUp = {
-  initial: { opacity: 0, y: 12 },
-  animate: { opacity: 1, y: 0, transition: { duration: 0.5 } },
-} as const;
+const fadeUp = { initial: { opacity: 0, y: 12 }, animate: { opacity: 1, y: 0, transition: { duration: 0.5 } } };
 
 /* =========================
-   Splash (crisp name + role)
+   Splash intro — ultra‑crisp name animation (every visit)
+   - no text blur
+   - respects reduced motion
+   - locks scroll while visible
+   - skip button for power users
 ========================= */
-function Splash({ onDone }: { onDone: () => void }) {
-  const NAME = "Aayush Kumar".split("");
+function SplashOverlay() {
+  const [show, setShow] = useState(true);
+  const [reduced, setReduced] = useState(false);
 
-  // sequence timing
-  const [phase, setPhase] = useState<"name" | "role" | "out">("name");
   useEffect(() => {
-    const t1 = setTimeout(() => setPhase("role"), 1200);  // after name lands
-    const t2 = setTimeout(() => setPhase("out"), 2400);   // start exit
-    const t3 = setTimeout(onDone, 2800);                  // remove overlay
-    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
-  }, [onDone]);
+    const mq = window.matchMedia?.("(prefers-reduced-motion: reduce)");
+    setReduced(!!mq?.matches);
+  }, []);
+
+  // lock scroll when overlay is visible
+  useEffect(() => {
+    if (!show) return;
+    const el = document.documentElement;
+    const prev = el.style.overflow;
+    el.style.overflow = "hidden";
+    return () => { el.style.overflow = prev; };
+  }, [show]);
+
+  useEffect(() => {
+    if (reduced) {
+      const t = setTimeout(() => setShow(false), 800);
+      return () => clearTimeout(t);
+    }
+    const t = setTimeout(() => setShow(false), 3200); // ~3.2s total
+    return () => clearTimeout(t);
+  }, [reduced]);
 
   return (
-    <motion.div
-      initial={{ opacity: 1, scale: 1 }}
-      animate={{
-        opacity: phase === "out" ? 0 : 1,
-        scale: phase === "out" ? [1, 1.02, 1] : 1,
-      }}
-      transition={{ duration: 0.4 }}
-      className="fixed inset-0 z-[70] grid place-items-center
-                 bg-[radial-gradient(1200px_600px_at_20%_20%,rgba(168,85,247,0.14),transparent),radial-gradient(1000px_500px_at_80%_70%,rgba(34,211,238,0.12),transparent)]
-                 bg-zinc-950"
-      style={{ willChange: "opacity, transform" }}
-    >
-      <div className="text-center select-none">
-        {/* Name reveal */}
-        <div className="font-semibold text-white tracking-tight">
-          <motion.h1
-            className="text-[42px] md:text-6xl"
-            initial="hidden"
-            animate="show"
-            variants={{
-              hidden: {},
-              show: {
-                transition: { staggerChildren: 0.04, delayChildren: 0.05 },
-              },
-            }}
-          >
-            {NAME.map((ch, i) => (
-              <motion.span
-                key={i}
-                className="inline-block"
-                variants={{
-                  hidden: { opacity: 0, y: 22 },
-                  show: { opacity: 1, y: 0, transition: { duration: 0.45, ease: "easeOut" } },
-                }}
-              >
-                {ch === " " ? "\u00A0" : ch}
-              </motion.span>
-            ))}
-          </motion.h1>
+    <AnimatePresence>
+      {show && (
+        <motion.div
+          className="fixed inset-0 z-[70] pointer-events-none select-none"
+          initial={{ opacity: 1 }}
+          exit={{ opacity: 0, transition: { duration: 0.35 } }}
+        >
+          {/* background — soft but crisp (no backdrop blur over text) */}
+          <div className="absolute inset-0 bg-gradient-to-tr from-fuchsia-900/35 via-zinc-900/60 to-cyan-900/35" />
 
-          {/* underline sweep */}
-          <div className="mt-2 h-[3px] w-[240px] mx-auto overflow-hidden rounded-full bg-white/10">
+          {/* glow orbs */}
+          <div aria-hidden className="absolute inset-0 overflow-hidden">
             <motion.div
-              className="h-full bg-white"
-              initial={{ width: 0 }}
-              animate={{ width: 240 }}
-              transition={{ duration: 0.6, ease: "easeOut", delay: 0.45 }}
+              className="absolute -top-32 -left-24 h-[60vmax] w-[60vmax] rounded-full blur-3xl bg-gradient-to-tr from-cyan-500/20 via-fuchsia-500/15 to-purple-500/20"
+              animate={{ x: [0, 60, -40, 0], y: [0, -30, 40, 0] }}
+              transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+            />
+            <motion.div
+              className="absolute -bottom-40 -right-24 h-[48vmax] w-[48vmax] rounded-full blur-3xl bg-gradient-to-tr from-purple-500/20 via-cyan-400/15 to-fuchsia-500/20"
+              animate={{ x: [0, -70, 40, 0], y: [0, 40, -30, 0] }}
+              transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
             />
           </div>
-        </div>
 
-        {/* Role line */}
-        <motion.p
-          className="mt-6 text-base md:text-xl text-zinc-200"
-          initial={{ opacity: 0, y: 10 }}
-          animate={phase !== "name" ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
-          transition={{ duration: 0.45, ease: "easeOut" }}
-        >
-          Incoming — <span className="font-medium">Associate Developer</span> @ Insurity
-        </motion.p>
-      </div>
-    </motion.div>
+          {/* name drawing */}
+          <div className="relative h-full grid place-items-center [text-rendering:optimizeLegibility] [-webkit-font-smoothing:antialiased] [font-smooth:always]">
+            <div className="pointer-events-auto translate-y-20">
+              <svg
+                width="960"
+                height="240"
+                viewBox="0 0 960 240"
+                className="drop-shadow-[0_10px_30px_rgba(34,211,238,0.25)] will-change-transform"
+                shapeRendering="geometricPrecision"
+                textRendering="geometricPrecision"
+              >
+                <defs>
+                  <linearGradient id="splashInk" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#22d3ee" />
+                    <stop offset="50%" stopColor="#d946ef" />
+                    <stop offset="100%" stopColor="#8b5cf6" />
+                  </linearGradient>
+                  {/* subtle shine moving across the fill */}
+                  <linearGradient id="shine" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#ffffff00" />
+                    <stop offset="50%" stopColor="#ffffff40" />
+                    <stop offset="100%" stopColor="#ffffff00" />
+                  </linearGradient>
+                  <mask id="revealMask">
+                    <motion.rect
+                      x="-10" y="0" width="980" height="240" rx="12" fill="#fff"
+                      initial={{ x: -980 }}
+                      animate={{ x: [-980, 0] }}
+                      transition={{ duration: reduced ? 0.2 : 1.4, ease: "easeInOut", delay: reduced ? 0 : 0.9 }}
+                    />
+                  </mask>
+                </defs>
+
+                {/* outline draw */}
+                <motion.text
+                  x="50%"
+                  y="45%"
+                  textAnchor="middle"
+                  dominantBaseline="middle"
+                  fontFamily="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto"
+                  fontWeight={800}
+                  fontSize={64}
+                  fill="transparent"
+                  stroke="url(#splashInk)"
+                  strokeWidth="2.4"
+                  vectorEffect="non-scaling-stroke"
+                  style={{ strokeDasharray: 1400, strokeDashoffset: 1400 }}
+                  animate={{ strokeDashoffset: 0 }}
+                  transition={{ duration: reduced ? 0.25 : 2.0, ease: "easeInOut" }}
+                >
+                  Aayush Kumar
+                </motion.text>
+
+                {/* solid fill revealed with moving shine */}
+                <g mask="url(#revealMask)">
+                  <text
+                    x="50%" y="45%" textAnchor="middle" dominantBaseline="middle"
+                    fontFamily="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto"
+                    fontWeight={800} fontSize={64}
+                    fill="url(#splashInk)"
+                  >Aayush Kumar</text>
+                  <motion.rect x="-200" y="60" width="200" height="40" fill="url(#shine)"
+                    animate={{ x: [ -200, 1160 ] }}
+                    transition={{ duration: reduced ? 0.2 : 1.6, ease: "easeInOut", delay: reduced ? 0 : 1.0 }}
+                  />
+                </g>
+
+                {/* cursor blink — positioned near center */}
+                {!reduced && (
+                  <motion.rect x={545} y={108} width={14} height={38} rx={2} fill="url(#splashInk)"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: [0, 1, 0] }}
+                    transition={{ duration: 0.9, repeat: Infinity, ease: "easeInOut", delay: 0.7 }}
+                  />
+                )}
+              </svg>
+
+              {/* role line */}
+              <motion.div
+                className="mt-6 text-center text-zinc-100/95 text-lg md:text-xl"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: reduced ? 0 : 2.05, duration: 0.45 }}
+              >
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-300 via-fuchsia-300 to-purple-300">
+                  Incoming — Associate Developer @ Insurity
+                </span>
+              </motion.div>
+
+              {/* Skip button */}
+              <button
+                onClick={() => setShow(false)}
+                className="mt-6 mx-auto block pointer-events-auto text-[11px] uppercase tracking-widest rounded-full border border-white/20 bg-white/10 px-3 py-1 text-zinc-200 hover:bg-white/20"
+                aria-label="Skip intro"
+              >
+                Skip
+              </button>
+            </div>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
 
 /* =========================
-   Background FX
+   Command Palette (⌘K)
 ========================= */
-function BackgroundFX() {
+function CommandPalette({ open, setOpen }: { open: boolean; setOpen: (v: boolean) => void }) {
+  const [q, setQ] = useState("");
+  const items = [
+    ...nav.map((n) => ({ type: "Section", label: n.label, href: n.href ?? `#${n.id}` })),
+    ...projects.map((p) => ({ type: "Project", label: p.title, href: `/projects/${p.slug}` })),
+  ];
+  const filtered = items.filter((i) => i.label.toLowerCase().includes(q.toLowerCase())).slice(0, 8);
+  if (!open) return null;
   return (
-    <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
-      <motion.div
-        className="absolute top-[-12%] left-[-10%] h-[60vmax] w-[60vmax] rounded-full
-                   bg-gradient-to-tr from-cyan-500/20 via-fuchsia-500/15 to-purple-500/20"
-        animate={{ x: [0, 80, -60, 0], y: [0, -40, 60, 0], rotate: [0, 45, -20, 0] }}
-        transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.div
-        className="absolute bottom-[-12%] right-[-10%] h-[52vmax] w-[52vmax] rounded-full
-                   bg-gradient-to-tr from-purple-500/20 via-cyan-400/15 to-fuchsia-500/20"
-        animate={{ x: [0, -90, 50, 0], y: [0, 50, -40, 0], rotate: [0, -30, 20, 0] }}
-        transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
-      />
+    <div className="fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm" onClick={() => setOpen(false)}>
+      <div className="mx-auto mt-24 max-w-xl rounded-[28px] border border-white/10 bg-zinc-900 text-zinc-100" onClick={(e)=>e.stopPropagation()}>
+        <div className="px-4 py-3 border-b border-white/10">
+          <input autoFocus value={q} onChange={(e)=>setQ(e.target.value)} placeholder="Jump to… (type to search)" className="w-full bg-transparent outline-none text-sm"/>
+        </div>
+        <ul className="py-2 max-h-80 overflow-y-auto">
+          {filtered.map((i, idx) => (
+            <li key={idx} className="px-4 py-2 hover:bg-white/5 text-sm cursor-pointer" onClick={()=>{ setOpen(false); location.assign(i.href); }}>
+              <span className="text-zinc-400 mr-2">{i.type}</span>{i.label}
+            </li>
+          ))}
+          {!filtered.length && <li className="px-4 py-6 text-center text-xs text-zinc-500">No matches</li>}
+        </ul>
+      </div>
     </div>
   );
 }
@@ -252,13 +341,7 @@ function ContactForm() {
       setLoading(false);
     }
   }
-  if (sent) {
-    return (
-      <div className="rounded-[28px] border border-emerald-300/40 bg-emerald-900/15 p-4 text-sm">
-        Thanks! I’ll get back to you soon.
-      </div>
-    );
-  }
+  if (sent) return <div className="rounded-[28px] border border-emerald-300/40 bg-emerald-900/15 p-4 text-sm">Thanks! I’ll get back to you soon.</div>;
   const base = "rounded-[14px] px-3 py-2 border border-white/10 bg-white/5 outline-none";
   return (
     <form onSubmit={onSubmit} className="rounded-[28px] border border-white/10 p-4 bg-white/5 backdrop-blur grid gap-3 text-sm">
@@ -273,13 +356,27 @@ function ContactForm() {
 }
 
 /* =========================
+   Dev sanity checks
+========================= */
+function useThemePref() {
+  const { dark, setDark } = useTheme();
+  return { dark, setDark };
+}
+function DevChecks() {
+  useEffect(() => {
+    console.assert(CONFIG.email.includes("@"), "CONFIG.email should be valid");
+    console.assert(CONFIG.linkedin.startsWith("http"), "CONFIG.linkedin should be a URL");
+  }, []);
+  return null;
+}
+
+/* =========================
    Page
 ========================= */
 export default function PersonalSite() {
-  const { dark, setDark } = useTheme();
+  const { dark, setDark } = useThemePref();
   const year = useMemo(() => new Date().getFullYear(), []);
   const [cmd, setCmd] = useState(false);
-  const [showSplash, setShowSplash] = useState(true); // ALWAYS show on visit
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -294,9 +391,27 @@ export default function PersonalSite() {
 
   return (
     <>
-      {showSplash && <Splash onDone={() => setShowSplash(false)} />}
+      {/* Splash intro */}
+      <SplashOverlay />
 
-      <BackgroundFX />
+      {/* Background blobs */}
+      <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
+        <motion.div
+          className="absolute top-[-12%] left-[-10%] h-[60vmax] w-[60vmax] rounded-full blur-3xl
+                     bg-gradient-to-tr from-cyan-500/20 via-fuchsia-500/15 to-purple-500/20"
+          animate={{ x: [0, 80, -60, 0], y: [0, -40, 60, 0], rotate: [0, 45, -20, 0] }}
+          transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div
+          className="absolute bottom-[-12%] right-[-10%] h-[52vmax] w-[52vmax] rounded-full blur-3xl
+                     bg-gradient-to-tr from-purple-500/20 via-cyan-400/15 to-fuchsia-500/20"
+          animate={{ x: [0, -90, 50, 0], y: [0, 50, -40, 0], rotate: [0, -30, 20, 0] }}
+          transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
+        />
+      </div>
+
+      <CommandPalette open={cmd} setOpen={setCmd} />
+      <DevChecks />
 
       <main className="min-h-screen bg-gradient-to-b from-zinc-50 to-white text-zinc-900 dark:from-zinc-950 dark:to-zinc-900 dark:text-zinc-100 selection:bg-cyan-300/30 dark:selection:bg-cyan-400/25">
         {/* Header */}
@@ -304,13 +419,11 @@ export default function PersonalSite() {
           <div className="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between">
             <a href="#home" className="font-semibold tracking-[-0.01em] text-2xl md:text-3xl hover:drop-shadow-[0_0_8px_rgba(34,211,238,0.25)] transition">{CONFIG.name}</a>
             <nav className="hidden md:flex gap-6 text-sm">
-              <a href="#about" className="hover:opacity-80">About</a>
-              <a href="#skills" className="hover:opacity-80">Skills</a>
-              <a href="/projects" className="hover:opacity-80">Projects</a>
-              <a href="/blog" className="hover:opacity-80">Blog</a>
-              <a href="/games" className="hover:opacity-80">Games</a>
-              <a href="#experience" className="hover:opacity-80">Experience</a>
-              <a href="#contact" className="hover:opacity-80">Contact</a>
+              {nav.map(n => (
+                n.href
+                  ? <a key={n.id} href={n.href} className="hover:opacity-80">{n.label}</a>
+                  : <a key={n.id} href={`#${n.id}`} className="hover:opacity-80">{n.label}</a>
+              ))}
             </nav>
             <div className="flex items-center gap-2">
               <button aria-label="Open command palette (⌘K)" onClick={()=>setCmd(true)} className="rounded-[12px] px-3 py-2 border border-white/10 text-xs">⌘K</button>
@@ -418,10 +531,10 @@ export default function PersonalSite() {
                 {Object.entries(skills).map(([group, items]) => (
                   <div key={group} className={card}>
                     <p className="font-medium flex items-center gap-2">
-                      {group === "Languages" && <Code className="h-4 w-4" />}
-                      {group === "Frameworks" && <Boxes className="h-4 w-4" />}
-                      {group === "Cloud" && <Server className="h-4 w-4" />}
-                      {group === "Data" && <Database className="h-4 w-4" />}
+                      {group === 'Languages' && <Code className="h-4 w-4"/>}
+                      {group === 'Frameworks' && <Boxes className="h-4 w-4"/>}
+                      {group === 'Cloud' && <Server className="h-4 w-4"/>}
+                      {group === 'Data' && <Database className="h-4 w-4"/>}
                       {group}
                     </p>
                     <div className="mt-3 flex flex-wrap gap-2">
@@ -436,52 +549,34 @@ export default function PersonalSite() {
 
         {/* PROJECTS */}
         <section id="projects" className="mx-auto max-w-6xl px-4 py-16 md:py-24">
-          <div className="flex items-center justify-between">
-            <h2 className="text-xl font-semibold tracking-tight">Selected Projects</h2>
-            <a href={CONFIG.github} className="text-sm inline-flex items-center gap-1 hover:opacity-80">
-              All repos <ExternalLink className="h-4 w-4"/>
-            </a>
-          </div>
-
-          <motion.div
-            className="mt-6 grid md:grid-cols-3 gap-8"
-            initial="initial"
-            animate="animate"
-            variants={{ initial: {}, animate: { transition: { staggerChildren: 0.08 } } }}
-          >
-            {projects.map((p) => (
-              <motion.article
-                key={p.slug}
-                className={card}
-                variants={fadeUp}
-                whileHover={{ y: -4, scale: 1.01 }}
-                transition={{ type: "spring", stiffness: 260, damping: 20 }}
-              >
-                <a href={`/projects/${p.slug}`} className="block group focus:outline-none">
+          <div className="flex items-center justify-between"><h2 className="text-xl font-semibold tracking-tight">Selected Projects</h2><a href={CONFIG.github} className="text-sm inline-flex items-center gap-1 hover:opacity-80">All repos <ExternalLink className="h-4 w-4"/></a></div>
+          <motion.div className="mt-6 grid md:grid-cols-3 gap-8" initial="initial" animate="animate" variants={{ initial: {}, animate: { transition: { staggerChildren: 0.08 } } }}>
+            {projects.map((p) => {
+              const caseStudyHref = `/projects/${p.slug}`;
+              return (
+                <motion.article
+                  key={p.title}
+                  className={`${card} relative group`}
+                  variants={fadeUp}
+                  whileHover={{ y: -4, scale: 1.01 }}
+                  transition={{ type: "spring", stiffness: 260, damping: 20 }}
+                >
+                  {/* Make entire card clickable to the case study */}
+                  <a href={caseStudyHref} className="absolute inset-0 rounded-[28px]" aria-label={`Read case study: ${p.title}`} />
                   <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-wide">
                     <Rocket className="h-4 w-4"/> {p.title}
                   </div>
-                  <p className="mt-3 text-sm text-zinc-300 min-h-[60px] group-hover:opacity-90 transition">
-                    {p.blurb}
-                  </p>
+                  <p className="mt-3 text-sm text-zinc-300 min-h-[60px]">{p.blurb}</p>
                   <div className="mt-3 flex flex-wrap gap-2">
-                    {p.tags.map((t) => (
-                      <span key={t} className="text-xs px-2 py-1 rounded-full border border-white/10 bg-white/5">{t}</span>
-                    ))}
+                    {p.tags.map((t) => <span key={t} className="text-xs px-2 py-1 rounded-full border border-white/10 bg-white/5">{t}</span>)}
                   </div>
-                  <span className="mt-4 inline-flex items-center gap-1 text-sm hover:underline underline-offset-4">
-                    Read the case study <ExternalLink className="h-3.5 w-3.5"/>
-                  </span>
-                </a>
-                <div className="mt-3 flex gap-3 text-sm">
-                  {p.links.map((l) => (
-                    <a key={l.label} href={l.href} className="inline-flex items-center gap-1 hover:opacity-80">
-                      {l.label} <ExternalLink className="h-3.5 w-3.5"/>
-                    </a>
-                  ))}
-                </div>
-              </motion.article>
-            ))}
+                  <div className="mt-4 flex gap-3 text-sm relative z-10">
+                    {p.links.map((l) => <a key={l.label} href={l.href} onClick={(e)=>e.stopPropagation()} className="inline-flex items-center gap-1 hover:opacity-80">{l.label} <ExternalLink className="h-3.5 w-3.5"/></a>)}
+                    <a href={caseStudyHref} onClick={(e)=>e.stopPropagation()} className="ml-auto underline underline-offset-4 opacity-90 group-hover:opacity-100">Read the case study</a>
+                  </div>
+                </motion.article>
+              );
+            })}
           </motion.div>
         </section>
 
@@ -494,9 +589,7 @@ export default function PersonalSite() {
                 <p className="text-xs text-zinc-400">{post.date}</p>
                 <h3 className="mt-1 font-medium">{post.title}</h3>
                 <p className="mt-2 text-sm text-zinc-300">{post.summary}</p>
-                <a href={post.href} className="mt-3 inline-flex items-center gap-1 text-sm hover:underline underline-offset-4">
-                  Read more <ExternalLink className="h-3.5 w-3.5"/>
-                </a>
+                <a href={post.href} className="mt-3 inline-flex items-center gap-1 text-sm hover:underline underline-offset-4">Read more <ExternalLink className="h-3.5 w-3.5"/></a>
               </motion.article>
             ))}
           </div>
