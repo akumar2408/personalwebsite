@@ -1,9 +1,10 @@
 'use client';
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import {
   Github, Linkedin, Mail, FileText, ArrowRight, MapPin, Rocket, ExternalLink,
-  Sun, MoonStar, Download, GraduationCap, Award, Code, Server, Database, Boxes, Newspaper
+  Sun, MoonStar, Download, GraduationCap, Award, Code, Server, Database, Boxes, Newspaper,
+  TerminalSquare, HelpCircle, Keyboard, Grid3X3
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -15,7 +16,7 @@ const CONFIG = {
   tagline: "I like building useful software that feels simple and solid.",
   location: "Phoenix • Los Angeles",
   email: "aayushkumar2004@gmail.com",
-  resumeUrl: "/resume.pdf", // file in /public
+  resumeUrl: "/resume.pdf",
   github: "https://github.com/akumar2408",
   linkedin: "https://www.linkedin.com/in/aayushkumar2/",
 };
@@ -25,7 +26,6 @@ const nav = [
   { id: "skills", label: "Skills" },
   { id: "projects", label: "Projects" },
   { id: "blog", label: "Blog" },
-  // external routes are fine here
   { id: "games", label: "Games", href: "/games" },
   { id: "experience", label: "Experience" },
   { id: "contact", label: "Contact" },
@@ -45,79 +45,20 @@ const skills: Record<string, string[]> = {
 };
 
 const projects = [
-  {
-    slug: "operational-dashboard",
-    title: "Operational Dashboard",
-    blurb:
-      "Full-stack sales analytics with 30-day forecasts. Helped spot trends sooner and keep decisions grounded.",
-    links: [{ label: "GitHub", href: "https://github.com/akumar2408/operationaldashboard/" }],
-    tags: ["React", "Spring Boot", "PostgreSQL"],
-  },
-  {
-    slug: "aiinvestmate",
-    title: "AIInvestMate",
-    blurb:
-      "Small app that helps students try out investing ideas and learn the basics in a friendly way.",
-    links: [
-      { label: "Live", href: "https://aiinvestmate.vercel.app" },
-      { label: "GitHub", href: "https://github.com/akumar2408/AIInvestMate" },
-    ],
-    tags: ["Next.js", "Supabase"],
-  },
-  {
-    slug: "streaming-etl",
-    title: "SafetyGuardian",
-    blurb:
-      "Streaming pipeline that moves safety events through AWS and keeps data fresh and reliable.",
-    links: [{ label: "GitHub", href: "https://github.com/akumar2408/SafetyGuardian" }],
-    tags: ["AWS Kinesis", "Glue", "Redshift", "CI/CD"],
-  },
-];
-
-const blogPosts = [
-  {
-    slug: "what-i-actually-do-when-i-build-ai",
-    title: "What I actually do when I build AI stuff",
-    date: "Oct 2025",
-    summary:
-      "I start small, ship a tiny end-to-end loop, and only add the fancy pieces after it’s useful.",
-    href: "/blog/what-i-actually-do-when-i-build-ai",
-  },
-  {
-    slug: "my-quick-checklist-before-i-ship",
-    title: "My quick checklist before I ship",
-    date: "Oct 2025",
-    summary:
-      "A short list I run through before I push: clear readme, good defaults, basic tests, simple logging, and a way to roll back fast.",
-    href: "/blog/my-quick-checklist-before-i-ship",
-  },
-  {
-    slug: "one-bug-a-day",
-    title: "One bug a day",
-    date: "May 2025",
-    summary:
-      "Fixing one small bug each day taught me more than any tutorial. It kept me honest and moved the work forward.",
-    href: "/blog/one-bug-a-day",
-  },
-  {
-    slug: "the-day-i-deleted-half-the-code",
-    title: "The day I deleted half the code",
-    date: "Dec 2024",
-    summary:
-      "We kept the parts that mattered and tossed the rest. The app got faster, and so did the team.",
-    href: "/blog/the-day-i-deleted-half-the-code",
-  },
+  { slug: "operational-dashboard", title: "Operational Dashboard", blurb: "Full-stack sales analytics with 30-day forecasts.", links: [{ label: "GitHub", href: "https://github.com/akumar2408/operationaldashboard/" }], tags: ["React", "Spring Boot", "PostgreSQL"] },
+  { slug: "aiinvestmate", title: "AIInvestMate", blurb: "Small app that helps students try out investing ideas.", links: [{ label: "Live", href: "https://aiinvestmate.vercel.app" }, { label: "GitHub", href: "https://github.com/akumar2408/AIInvestMate" }], tags: ["Next.js", "Supabase"] },
+  { slug: "streaming-etl", title: "SafetyGuardian", blurb: "Streaming pipeline for safety events on AWS.", links: [{ label: "GitHub", href: "https://github.com/akumar2408/SafetyGuardian" }], tags: ["AWS Kinesis", "Glue", "Redshift", "CI/CD"] },
 ];
 
 /* =========================
    Theme + Motion
 ========================= */
 function useTheme() {
-  const [dark, setDark] = useState(false);
+  const [dark, setDark] = useState(true);
   useEffect(() => {
     const stored = localStorage.getItem("prefers-dark");
-    const prefers = stored ? stored === "true" : (window.matchMedia?.("(prefers-color-scheme: dark)").matches ?? true);
-    setDark(prefers);
+    if (stored !== null) setDark(stored === "true");
+    else setDark(true);
   }, []);
   useEffect(() => {
     document.documentElement.classList.toggle("dark", dark);
@@ -129,11 +70,7 @@ function useTheme() {
 const fadeUp = { initial: { opacity: 0, y: 12 }, animate: { opacity: 1, y: 0, transition: { duration: 0.5 } } };
 
 /* =========================
-   Splash intro — ultra‑crisp name animation (every visit)
-   - no text blur
-   - respects reduced motion
-   - locks scroll while visible
-   - skip button for power users
+   Splash intro — ultra-crisp (every visit)
 ========================= */
 function SplashOverlay() {
   const [show, setShow] = useState(true);
@@ -144,7 +81,6 @@ function SplashOverlay() {
     setReduced(!!mq?.matches);
   }, []);
 
-  // lock scroll when overlay is visible
   useEffect(() => {
     if (!show) return;
     const el = document.documentElement;
@@ -154,136 +90,42 @@ function SplashOverlay() {
   }, [show]);
 
   useEffect(() => {
-    if (reduced) {
-      const t = setTimeout(() => setShow(false), 800);
-      return () => clearTimeout(t);
-    }
-    const t = setTimeout(() => setShow(false), 3200); // ~3.2s total
+    const t = setTimeout(() => setShow(false), reduced ? 800 : 3400);
     return () => clearTimeout(t);
   }, [reduced]);
+
+  if (!show) return null;
 
   return (
     <AnimatePresence>
       {show && (
-        <motion.div
-          className="fixed inset-0 z-[70] pointer-events-none select-none"
-          initial={{ opacity: 1 }}
-          exit={{ opacity: 0, transition: { duration: 0.35 } }}
-        >
-          {/* background — soft but crisp (no backdrop blur over text) */}
-          <div className="absolute inset-0 bg-gradient-to-tr from-fuchsia-900/35 via-zinc-900/60 to-cyan-900/35" />
-
-          {/* glow orbs */}
-          <div aria-hidden className="absolute inset-0 overflow-hidden">
-            <motion.div
-              className="absolute -top-32 -left-24 h-[60vmax] w-[60vmax] rounded-full blur-3xl bg-gradient-to-tr from-cyan-500/20 via-fuchsia-500/15 to-purple-500/20"
-              animate={{ x: [0, 60, -40, 0], y: [0, -30, 40, 0] }}
-              transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
-            />
-            <motion.div
-              className="absolute -bottom-40 -right-24 h-[48vmax] w-[48vmax] rounded-full blur-3xl bg-gradient-to-tr from-purple-500/20 via-cyan-400/15 to-fuchsia-500/20"
-              animate={{ x: [0, -70, 40, 0], y: [0, 40, -30, 0] }}
-              transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
-            />
-          </div>
-
-          {/* name drawing */}
+        <motion.div className="fixed inset-0 z-[80] pointer-events-none select-none" initial={{ opacity: 1 }} exit={{ opacity: 0, transition: { duration: 0.35 } }}>
+          <div className="absolute inset-0 bg-black" />
+          <div className="absolute inset-0 bg-[radial-gradient(60%_60%_at_30%_20%,rgba(34,211,238,0.12),transparent_70%),radial-gradient(60%_60%_at_70%_80%,rgba(168,85,247,0.12),transparent_70%)]" />
           <div className="relative h-full grid place-items-center [text-rendering:optimizeLegibility] [-webkit-font-smoothing:antialiased] [font-smooth:always]">
-            <div className="pointer-events-auto translate-y-20">
-              <svg
-                width="960"
-                height="240"
-                viewBox="0 0 960 240"
-                className="drop-shadow-[0_10px_30px_rgba(34,211,238,0.25)] will-change-transform"
-                shapeRendering="geometricPrecision"
-                textRendering="geometricPrecision"
-              >
+            <div className="translate-y-16">
+              <svg viewBox="0 0 960 260" className="block mx-auto will-change-transform drop-shadow-[0_10px_30px_rgba(34,211,238,0.35)]" style={{ width: 'min(92vw, 960px)', height: 'auto' }}>
                 <defs>
                   <linearGradient id="splashInk" x1="0%" y1="0%" x2="100%" y2="0%">
                     <stop offset="0%" stopColor="#22d3ee" />
                     <stop offset="50%" stopColor="#d946ef" />
                     <stop offset="100%" stopColor="#8b5cf6" />
                   </linearGradient>
-                  {/* subtle shine moving across the fill */}
-                  <linearGradient id="shine" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="#ffffff00" />
-                    <stop offset="50%" stopColor="#ffffff40" />
-                    <stop offset="100%" stopColor="#ffffff00" />
-                  </linearGradient>
-                  <mask id="revealMask">
-                    <motion.rect
-                      x="-10" y="0" width="980" height="240" rx="12" fill="#fff"
-                      initial={{ x: -980 }}
-                      animate={{ x: [-980, 0] }}
-                      transition={{ duration: reduced ? 0.2 : 1.4, ease: "easeInOut", delay: reduced ? 0 : 0.9 }}
-                    />
-                  </mask>
+                  <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                    <feGaussianBlur stdDeviation="2.6" result="blur" />
+                    <feMerge>
+                      <feMergeNode in="blur" />
+                      <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                  </filter>
                 </defs>
-
-                {/* outline draw */}
-                <motion.text
-                  x="50%"
-                  y="45%"
-                  textAnchor="middle"
-                  dominantBaseline="middle"
-                  fontFamily="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto"
-                  fontWeight={800}
-                  fontSize={64}
-                  fill="transparent"
-                  stroke="url(#splashInk)"
-                  strokeWidth="2.4"
-                  vectorEffect="non-scaling-stroke"
-                  style={{ strokeDasharray: 1400, strokeDashoffset: 1400 }}
-                  animate={{ strokeDashoffset: 0 }}
-                  transition={{ duration: reduced ? 0.25 : 2.0, ease: "easeInOut" }}
-                >
-                  Aayush Kumar
-                </motion.text>
-
-                {/* solid fill revealed with moving shine */}
-                <g mask="url(#revealMask)">
-                  <text
-                    x="50%" y="45%" textAnchor="middle" dominantBaseline="middle"
-                    fontFamily="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto"
-                    fontWeight={800} fontSize={64}
-                    fill="url(#splashInk)"
-                  >Aayush Kumar</text>
-                  <motion.rect x="-200" y="60" width="200" height="40" fill="url(#shine)"
-                    animate={{ x: [ -200, 1160 ] }}
-                    transition={{ duration: reduced ? 0.2 : 1.6, ease: "easeInOut", delay: reduced ? 0 : 1.0 }}
-                  />
-                </g>
-
-                {/* cursor blink — positioned near center */}
-                {!reduced && (
-                  <motion.rect x={545} y={108} width={14} height={38} rx={2} fill="url(#splashInk)"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: [0, 1, 0] }}
-                    transition={{ duration: 0.9, repeat: Infinity, ease: "easeInOut", delay: 0.7 }}
-                  />
-                )}
+                <motion.text x="50%" y="45%" textAnchor="middle" dominantBaseline="middle" fontFamily="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto" fontWeight={900} fontSize={76} fill="transparent" stroke="url(#splashInk)" strokeWidth="4" filter="url(#glow)" vectorEffect="non-scaling-stroke" style={{ strokeDasharray: 1400, strokeDashoffset: 1400 }} animate={{ strokeDashoffset: 0 }} transition={{ duration: reduced ? 0.25 : 1.2, ease: 'easeInOut' }}>Aayush Kumar</motion.text>
+                <motion.text x="50%" y="45%" textAnchor="middle" dominantBaseline="middle" fontFamily="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto" fontWeight={900} fontSize={76} fill="url(#splashInk)" filter="url(#glow)" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: reduced ? 0 : 0.45, duration: reduced ? 0.1 : 0.35 }}>Aayush Kumar</motion.text>
+                <motion.rect x={220} y={170} width={520} height={5} rx={2} fill="url(#splashInk)" shapeRendering="crispEdges" initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} style={{ transformOrigin: '50% 50%' }} transition={{ delay: reduced ? 0.1 : 0.95, duration: reduced ? 0.1 : 0.45, ease: 'easeOut' }} />
               </svg>
-
-              {/* role line */}
-              <motion.div
-                className="mt-6 text-center text-zinc-100/95 text-lg md:text-xl"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: reduced ? 0 : 2.05, duration: 0.45 }}
-              >
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-300 via-fuchsia-300 to-purple-300">
-                  Incoming — Associate Developer @ Insurity
-                </span>
+              <motion.div className="mt-6 text-center text-zinc-100 text-lg md:text-xl" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: reduced ? 0.15 : 1.15, duration: reduced ? 0.15 : 0.45 }}>
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-300 via-fuchsia-300 to-purple-300">Incoming — Associate Developer @ Insurity</span>
               </motion.div>
-
-              {/* Skip button */}
-              <button
-                onClick={() => setShow(false)}
-                className="mt-6 mx-auto block pointer-events-auto text-[11px] uppercase tracking-widest rounded-full border border-white/20 bg-white/10 px-3 py-1 text-zinc-200 hover:bg-white/20"
-                aria-label="Skip intro"
-              >
-                Skip
-              </button>
             </div>
           </div>
         </motion.div>
@@ -293,65 +135,146 @@ function SplashOverlay() {
 }
 
 /* =========================
-   Command Palette (⌘K)
+   Grid Overlay (for designers)
 ========================= */
-function CommandPalette({ open, setOpen }: { open: boolean; setOpen: (v: boolean) => void }) {
-  const [q, setQ] = useState("");
-  const items = [
-    ...nav.map((n) => ({ type: "Section", label: n.label, href: n.href ?? `#${n.id}` })),
-    ...projects.map((p) => ({ type: "Project", label: p.title, href: `/projects/${p.slug}` })),
-  ];
-  const filtered = items.filter((i) => i.label.toLowerCase().includes(q.toLowerCase())).slice(0, 8);
-  if (!open) return null;
+function GridOverlay({ show }: { show: boolean }) {
+  if (!show) return null;
   return (
-    <div className="fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm" onClick={() => setOpen(false)}>
-      <div className="mx-auto mt-24 max-w-xl rounded-[28px] border border-white/10 bg-zinc-900 text-zinc-100" onClick={(e)=>e.stopPropagation()}>
-        <div className="px-4 py-3 border-b border-white/10">
-          <input autoFocus value={q} onChange={(e)=>setQ(e.target.value)} placeholder="Jump to… (type to search)" className="w-full bg-transparent outline-none text-sm"/>
-        </div>
-        <ul className="py-2 max-h-80 overflow-y-auto">
-          {filtered.map((i, idx) => (
-            <li key={idx} className="px-4 py-2 hover:bg-white/5 text-sm cursor-pointer" onClick={()=>{ setOpen(false); location.assign(i.href); }}>
-              <span className="text-zinc-400 mr-2">{i.type}</span>{i.label}
-            </li>
-          ))}
-          {!filtered.length && <li className="px-4 py-6 text-center text-xs text-zinc-500">No matches</li>}
+    <div className="pointer-events-none fixed inset-0 z-[50] mix-blend-screen opacity-40">
+      <div className="absolute inset-0 bg-[linear-gradient(transparent_95%,rgba(255,255,255,0.15)_95%),repeating-linear-gradient(90deg,rgba(255,255,255,0.08)_0_1px,transparent_1px_80px)]" />
+    </div>
+  );
+}
+
+/* =========================
+   Quick Tour (press ?)
+========================= */
+function QuickTour({ open, setOpen }: { open: boolean; setOpen: (v: boolean) => void }) {
+  if (!open) return null;
+  const Item = ({ children }: { children: React.ReactNode }) => (
+    <li className="flex items-start gap-2 text-sm text-zinc-200"><Keyboard className="h-4 w-4 mt-0.5"/>{children}</li>
+  );
+  return (
+    <div className="fixed inset-0 z-[70] bg-black/50 backdrop-blur-sm" onClick={() => setOpen(false)}>
+      <div className="mx-auto mt-24 max-w-xl rounded-[28px] border border-white/10 bg-zinc-900 text-zinc-100 p-6" onClick={(e)=>e.stopPropagation()}>
+        <div className="flex items-center gap-2 text-lg font-semibold mb-2"><HelpCircle className="h-5 w-5"/> Quick Tour</div>
+        <ul className="grid gap-2">
+          <Item>Press <code className="px-1 rounded bg-white/10">⌘/Ctrl + K</code> to open the command palette.</Item>
+          <Item>Press <code className="px-1 rounded bg-white/10">?</code> to toggle this tour.</Item>
+          <Item>Press <code className="px-1 rounded bg-white/10">~</code> to open the Easter‑egg terminal.</Item>
+          <Item>Use the palette actions to copy email, print resume, or jump to a random project.</Item>
+          <Item>Toggle the design grid from the palette when showcasing layout work.</Item>
         </ul>
+        <button onClick={()=>setOpen(false)} className="mt-4 rounded-[12px] px-3 py-2 border border-white/10 text-sm">Got it</button>
       </div>
     </div>
   );
 }
 
 /* =========================
-   Contact Form
+   Easter‑egg Terminal (press ~)
 ========================= */
-function ContactForm() {
-  const [sent, setSent] = useState(false);
-  const [loading, setLoading] = useState(false);
-  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      const form = e.currentTarget;
-      const data = Object.fromEntries(new FormData(form).entries());
-      const res = await fetch("/api/contact", { method: "POST", body: JSON.stringify(data) });
-      const j = await res.json();
-      if (j.ok) { setSent(true); form.reset(); }
-    } finally {
-      setLoading(false);
+function EggTerminal({ open, setOpen }: { open: boolean; setOpen: (v: boolean) => void }) {
+  const [lines, setLines] = useState<string[]>(["type 'help' to see commands."]); 
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(()=>{ if(open) setTimeout(()=>inputRef.current?.focus(), 50); }, [open]);
+  if (!open) return null;
+
+  function run(cmd: string) {
+    const c = cmd.trim().toLowerCase();
+    const add = (s: string) => setLines((L) => [...L, s]);
+    if (!c) return;
+    switch (c) {
+      case 'help':
+        add("commands: help, whoami, skills, projects, contact, clear");
+        break;
+      case 'whoami':
+        add("Aayush Kumar — builder of simple, solid software.");
+        break;
+      case 'skills':
+        add(Object.entries(skills).map(([k,v])=>`${k}: ${v.join(', ')}`).join(' | '));
+        break;
+      case 'projects':
+        add(projects.map(p=>`${p.title} -> /projects/${p.slug}`).join(' | '));
+        break;
+      case 'contact':
+        add(`email: ${CONFIG.email}`);
+        navigator.clipboard?.writeText(CONFIG.email).catch(()=>{});
+        break;
+      case 'clear':
+        setLines([]);
+        break;
+      default:
+        add(`unknown: ${c}`);
     }
   }
-  if (sent) return <div className="rounded-[28px] border border-emerald-300/40 bg-emerald-900/15 p-4 text-sm">Thanks! I’ll get back to you soon.</div>;
-  const base = "rounded-[14px] px-3 py-2 border border-white/10 bg-white/5 outline-none";
+
+  function onSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    const val = (inputRef.current?.value || '').trim();
+    if (!val) return;
+    setLines((L)=>[...L, `> ${val}`]);
+    run(val);
+    if (inputRef.current) inputRef.current.value = '';
+  }
+
   return (
-    <form onSubmit={onSubmit} className="rounded-[28px] border border-white/10 p-4 bg-white/5 backdrop-blur grid gap-3 text-sm">
-      <input name="name" required placeholder="Your name" className={base}/>
-      <input name="email" required type="email" placeholder="Your email" className={base}/>
-      <textarea name="message" required placeholder="What’s up?" rows={4} className={base}/>
-      <button disabled={loading} className="justify-self-start rounded-[14px] px-4 py-2 border border-white/20 hover:shadow-lg hover:shadow-cyan-500/10 transition-transform hover:-translate-y-0.5">
-        {loading ? "Sending…" : "Send"}
-      </button>
-    </form>
+    <div className="fixed inset-0 z-[80] bg-black/50 backdrop-blur-sm" onClick={()=>setOpen(false)}>
+      <div className="mx-auto mt-24 max-w-2xl rounded-[20px] border border-white/10 bg-zinc-900 text-zinc-100 p-4" onClick={(e)=>e.stopPropagation()}>
+        <div className="flex items-center gap-2 text-sm font-medium mb-2"><TerminalSquare className="h-4 w-4"/> Terminal — press Esc to close</div>
+        <div className="h-56 overflow-y-auto rounded-[12px] border border-white/10 bg-black/40 p-3 text-sm font-mono">
+          {lines.map((ln,i)=>(<div key={i} className="text-zinc-200">{ln}</div>))}
+        </div>
+        <form onSubmit={onSubmit} className="mt-2 flex items-center gap-2">
+          <span className="text-xs text-zinc-500">$</span>
+          <input ref={inputRef} className="flex-1 bg-transparent outline-none text-sm px-2 py-1 rounded border border-white/10" placeholder="type a command…"/>
+          <button className="rounded px-3 py-1.5 border border-white/10 text-sm">Run</button>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+/* =========================
+   Command Palette (⌘K) — now with actions
+========================= */
+function CommandPalette({ open, setOpen, onSelect }: { open: boolean; setOpen: (v: boolean) => void; onSelect: (href: string | null, action?: string) => void; }) {
+  const [q, setQ] = useState("");
+  const items = [
+    // Actions
+    { type: "Action", label: "Toggle design grid", action: "toggle-grid", icon: Grid3X3 },
+    { type: "Action", label: "Copy email to clipboard", action: "copy-email", icon: Mail },
+    { type: "Action", label: "Print resume", action: "print-resume", icon: FileText },
+    { type: "Action", label: "Open random project", action: "random-project", icon: Rocket },
+    { type: "Action", label: "Surprise me", action: "surprise", icon: ExternalLink },
+    // Navigation
+    ...nav.map((n) => ({ type: "Section", label: n.label, href: n.href ?? `#${n.id}` })),
+    ...projects.map((p) => ({ type: "Project", label: p.title, href: `/projects/${p.slug}` })),
+  ];
+  const filtered = items.filter((i) => i.label.toLowerCase().includes(q.toLowerCase())).slice(0, 10);
+  if (!open) return null;
+  return (
+    <div className="fixed inset-0 z-[70] bg-black/50 backdrop-blur-sm" onClick={() => setOpen(false)}>
+      <div className="mx-auto mt-24 max-w-xl rounded-[28px] border border-white/10 bg-zinc-900 text-zinc-100" onClick={(e)=>e.stopPropagation()}>
+        <div className="px-4 py-3 border-b border-white/10 flex items-center gap-2">
+          <Keyboard className="h-4 w-4 text-zinc-400"/>
+          <input autoFocus value={q} onChange={(e)=>setQ(e.target.value)} placeholder="Search or run an action… (type)" className="w-full bg-transparent outline-none text-sm"/>
+        </div>
+        <ul className="py-2 max-h-80 overflow-y-auto">
+          {filtered.map((i, idx) => {
+            const Icon = (i as any).icon;
+            return (
+              <li key={idx} className="px-4 py-2 hover:bg-white/5 text-sm cursor-pointer flex items-center gap-2" onClick={()=>{ setOpen(false); onSelect((i as any).href ?? null, (i as any).action); }}>
+                {Icon && <Icon className="h-4 w-4 text-zinc-400"/>}
+                <span className="text-zinc-400 mr-2">{i.type}</span>{i.label}
+              </li>
+            );
+          })}
+          {!filtered.length && <li className="px-4 py-6 text-center text-xs text-zinc-500">No matches</li>}
+        </ul>
+      </div>
+    </div>
   );
 }
 
@@ -376,46 +299,68 @@ function DevChecks() {
 export default function PersonalSite() {
   const { dark, setDark } = useThemePref();
   const year = useMemo(() => new Date().getFullYear(), []);
-  const [cmd, setCmd] = useState(false);
 
+  // UI states
+  const [cmd, setCmd] = useState(false);
+  const [tour, setTour] = useState(false);
+  const [grid, setGrid] = useState(false);
+  const [term, setTerm] = useState(false);
+
+  // global hotkeys: ⌘/Ctrl+K, ?, ~, Esc
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") { e.preventDefault(); setCmd((v) => !v); }
+      const key = e.key;
+      if ((e.metaKey || e.ctrlKey) && key.toLowerCase() === 'k') { e.preventDefault(); setCmd(v=>!v); return; }
+      if (key === '?') { e.preventDefault(); setTour(v=>!v); return; }
+      if (key === '~') { e.preventDefault(); setTerm(v=>!v); return; }
+      if (key === 'Escape') { setCmd(false); setTour(false); setTerm(false); }
     };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
   }, []);
+
+  function handlePaletteSelect(href: string | null, action?: string) {
+    if (href) {
+      if (href.startsWith('#')) location.assign(href); else location.assign(href);
+      return;
+    }
+    switch(action) {
+      case 'toggle-grid': setGrid(v=>!v); break;
+      case 'copy-email': navigator.clipboard?.writeText(CONFIG.email); break;
+      case 'print-resume': {
+        const w = window.open(CONFIG.resumeUrl, '_blank');
+        // best effort; many browsers block auto print, so we just open
+        if (w) w.focus();
+        break;
+      }
+      case 'random-project': {
+        const p = projects[Math.floor(Math.random()*projects.length)];
+        location.assign(`/projects/${p.slug}`); break;
+      }
+      case 'surprise': {
+        const options = ['#about','#skills','#projects','#blog','#experience','#contact','/games'];
+        const r = options[Math.floor(Math.random()*options.length)];
+        location.assign(r);
+        break;
+      }
+    }
+  }
 
   const card = "rounded-[28px] border border-white/10 p-6 bg-white/8 dark:bg-white/5 backdrop-blur shadow-2xl shadow-black/10 dark:shadow-black/40";
   const btn  = "inline-flex items-center gap-2 rounded-[14px] px-4 py-2 text-sm border hover:shadow-lg hover:shadow-cyan-500/10 transition-transform hover:-translate-y-0.5";
 
   return (
     <>
-      {/* Splash intro */}
-      <SplashOverlay />
+      <SplashOverlay/>
+      <GridOverlay show={grid}/>
+      <CommandPalette open={cmd} setOpen={setCmd} onSelect={handlePaletteSelect}/>
+      <QuickTour open={tour} setOpen={setTour}/>
+      <EggTerminal open={term} setOpen={setTerm}/>
+      <DevChecks/>
 
-      {/* Background blobs */}
-      <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
-        <motion.div
-          className="absolute top-[-12%] left-[-10%] h-[60vmax] w-[60vmax] rounded-full blur-3xl
-                     bg-gradient-to-tr from-cyan-500/20 via-fuchsia-500/15 to-purple-500/20"
-          animate={{ x: [0, 80, -60, 0], y: [0, -40, 60, 0], rotate: [0, 45, -20, 0] }}
-          transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <motion.div
-          className="absolute bottom-[-12%] right-[-10%] h-[52vmax] w-[52vmax] rounded-full blur-3xl
-                     bg-gradient-to-tr from-purple-500/20 via-cyan-400/15 to-fuchsia-500/20"
-          animate={{ x: [0, -90, 50, 0], y: [0, 50, -40, 0], rotate: [0, -30, 20, 0] }}
-          transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
-        />
-      </div>
-
-      <CommandPalette open={cmd} setOpen={setCmd} />
-      <DevChecks />
-
-      <main className="min-h-screen bg-gradient-to-b from-zinc-50 to-white text-zinc-900 dark:from-zinc-950 dark:to-zinc-900 dark:text-zinc-100 selection:bg-cyan-300/30 dark:selection:bg-cyan-400/25">
+      <main className="min-h-screen bg-gradient-to-b from-zinc-950 to-zinc-900 text-zinc-100 selection:bg-cyan-400/20">
         {/* Header */}
-        <header className="sticky top-0 z-40 backdrop-blur bg-white/70 dark:bg-zinc-900/60 border-b border-white/10">
+        <header className="sticky top-0 z-40 backdrop-blur bg-zinc-900/70 border-b border-white/10">
           <div className="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between">
             <a href="#home" className="font-semibold tracking-[-0.01em] text-2xl md:text-3xl hover:drop-shadow-[0_0_8px_rgba(34,211,238,0.25)] transition">{CONFIG.name}</a>
             <nav className="hidden md:flex gap-6 text-sm">
@@ -427,6 +372,7 @@ export default function PersonalSite() {
             </nav>
             <div className="flex items-center gap-2">
               <button aria-label="Open command palette (⌘K)" onClick={()=>setCmd(true)} className="rounded-[12px] px-3 py-2 border border-white/10 text-xs">⌘K</button>
+              <button aria-label="Quick tour (?)" onClick={()=>setTour(true)} className="rounded-[12px] px-3 py-2 border border-white/10 text-xs"><HelpCircle className="h-4 w-4"/></button>
               <button aria-label="Toggle theme" onClick={()=>setDark(!dark)} className="rounded-[12px] px-3 py-2 border border-white/10">{dark ? <Sun className="h-4 w-4"/> : <MoonStar className="h-4 w-4"/>}</button>
             </div>
           </div>
@@ -440,7 +386,7 @@ export default function PersonalSite() {
                 <MapPin className="h-3.5 w-3.5" /><span>{CONFIG.location}</span>
               </div>
               <h1 className="mt-4 text-4xl/tight md:text-5xl/tight font-semibold tracking-tight tracking-[-0.02em]">{CONFIG.tagline}</h1>
-              <p className="mt-4 text-zinc-600 dark:text-zinc-300 leading-relaxed max-w-[60ch]">
+              <p className="mt-4 text-zinc-300 leading-relaxed max-w-[60ch]">
                 I’m Aayush, a CS student who likes turning rough ideas into working software. I care about clear code,
                 fast feedback, and keeping things reliable.
               </p>
@@ -449,7 +395,7 @@ export default function PersonalSite() {
                 <a href={`mailto:${CONFIG.email}`} className={`${btn} border-white/10`}><Mail className="h-4 w-4"/> Contact</a>
                 <a href={CONFIG.resumeUrl} target="_blank" rel="noopener noreferrer" className={`${btn} border-white/10`}><FileText className="h-4 w-4"/> View Resume</a>
               </div>
-              <div className="mt-6 flex items-center gap-4 text-zinc-600 dark:text-zinc-400">
+              <div className="mt-6 flex items-center gap-4 text-zinc-400">
                 <a aria-label="GitHub" href={CONFIG.github} className="hover:opacity-80"><Github className="h-5 w-5"/></a>
                 <a aria-label="LinkedIn" href={CONFIG.linkedin} className="hover:opacity-80"><Linkedin className="h-5 w-5"/></a>
                 <a aria-label="Email" href={`mailto:${CONFIG.email}`} className="hover:opacity-80"><Mail className="h-5 w-5"/></a>
@@ -470,22 +416,15 @@ export default function PersonalSite() {
                       <p className="text-base font-semibold">Associate Developer <span className="text-zinc-500">@ Insurity</span></p>
                     </div>
                   </div>
-
                   <ul className="mt-4 text-sm leading-6 list-disc ml-4 text-zinc-300">
                     <li>Build internal tools and APIs that make the team faster.</li>
                     <li>Work on AI-assisted features where they actually help.</li>
                     <li>Focus on clean code, solid tests, and smooth deploys.</li>
                   </ul>
-
                   <div className="mt-5 flex flex-wrap gap-2">
-                    <span className="text-[10px] uppercase tracking-wider px-2 py-1 rounded-full border border-white/10 bg-white/5">
-                      Insurity • Oct 2025
-                    </span>
-                    <span className="text-[10px] uppercase tracking-wider px-2 py-1 rounded-full border border-white/10 bg-white/5">
-                      Incoming Role
-                    </span>
+                    <span className="text-[10px] uppercase tracking-wider px-2 py-1 rounded-full border border-white/10 bg-white/5">Insurity • Oct 2025</span>
+                    <span className="text-[10px] uppercase tracking-wider px-2 py-1 rounded-full border border-white/10 bg-white/5">Incoming Role</span>
                   </div>
-
                   <div className="mt-6">
                     <a href={CONFIG.resumeUrl} download className="inline-flex items-center gap-2 rounded-[14px] border border-white/20 px-4 py-2 text-sm hover:shadow-lg hover:shadow-cyan-500/10">
                       <Download className="h-4 w-4"/> Download résumé
@@ -502,17 +441,11 @@ export default function PersonalSite() {
           <div className="grid md:grid-cols-12 gap-10">
             <div className="md:col-span-4">
               <h2 className="text-xl font-semibold tracking-tight">About</h2>
-              <p className="mt-3 text-sm text-zinc-500 dark:text-zinc-400 max-w-[28ch]">A little context and what I’m into.</p>
+              <p className="mt-3 text-sm text-zinc-400 max-w-[28ch]">A little context and what I’m into.</p>
             </div>
-            <motion.div className="md:col-span-8 text-zinc-700 dark:text-zinc-300" initial={fadeUp.initial} animate={fadeUp.animate}>
-              <p className="leading-relaxed">
-                I like small, end-to-end slices that prove the idea. Once it works, I clean it up and make it sturdy.
-                Most of my projects mix web, data, and a bit of AI.
-              </p>
-              <p className="mt-4 leading-relaxed">
-                Right now I’m finishing my BS at ASU and working through the MCS Big Data Systems track.
-                Outside of classes, I build things for fun and post the ones I’m proud of.
-              </p>
+            <motion.div className="md:col-span-8 text-zinc-300" initial={fadeUp.initial} animate={fadeUp.animate}>
+              <p className="leading-relaxed">I like small, end-to-end slices that prove the idea. Once it works, I clean it up and make it sturdy. Most of my projects mix web, data, and a bit of AI.</p>
+              <p className="mt-4 leading-relaxed">Right now I’m finishing my BS at ASU and working through the MCS Big Data Systems track. Outside of classes, I build things for fun and post the ones I’m proud of.</p>
               <div className="mt-4 flex flex-wrap gap-2 text-xs">
                 <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-2 py-1"><GraduationCap className="h-3.5 w-3.5"/> ASU — BS CS ’25</span>
                 <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-2 py-1"><Award className="h-3.5 w-3.5"/> Dean’s List (GPA 3.75)</span>
@@ -525,7 +458,7 @@ export default function PersonalSite() {
         {/* SKILLS */}
         <section id="skills" className="mx-auto max-w-6xl px-4 py-16 md:py-24">
           <div className="grid md:grid-cols-12 gap-10">
-            <div className="md:col-span-4"><h2 className="text-xl font-semibold tracking-tight">Skills</h2><p className="mt-3 text-sm text-zinc-500 dark:text-zinc-400 max-w-[28ch]">Tools I use a lot.</p></div>
+            <div className="md:col-span-4"><h2 className="text-xl font-semibold tracking-tight">Skills</h2><p className="mt-3 text-sm text-zinc-400 max-w-[28ch]">Tools I use a lot.</p></div>
             <motion.div className="md:col-span-8" initial={fadeUp.initial} animate={fadeUp.animate}>
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 {Object.entries(skills).map(([group, items]) => (
@@ -554,14 +487,7 @@ export default function PersonalSite() {
             {projects.map((p) => {
               const caseStudyHref = `/projects/${p.slug}`;
               return (
-                <motion.article
-                  key={p.title}
-                  className={`${card} relative group`}
-                  variants={fadeUp}
-                  whileHover={{ y: -4, scale: 1.01 }}
-                  transition={{ type: "spring", stiffness: 260, damping: 20 }}
-                >
-                  {/* Make entire card clickable to the case study */}
+                <motion.article key={p.title} className={`${card} relative group`} variants={fadeUp} whileHover={{ y: -4, scale: 1.01 }} transition={{ type: "spring", stiffness: 260, damping: 20 }}>
                   <a href={caseStudyHref} className="absolute inset-0 rounded-[28px]" aria-label={`Read case study: ${p.title}`} />
                   <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-wide">
                     <Rocket className="h-4 w-4"/> {p.title}
@@ -584,7 +510,8 @@ export default function PersonalSite() {
         <section id="blog" className="mx-auto max-w-6xl px-4 py-16 md:py-24">
           <div className="flex items-center gap-2"><h2 className="text-xl font-semibold tracking-tight">Blog</h2><Newspaper className="h-4 w-4"/></div>
           <div className="mt-6 grid md:grid-cols-2 gap-8">
-            {blogPosts.map((post, i) => (
+            {[{slug:'what-i-actually-do-when-i-build-ai', title:'What I actually do when I build AI stuff', date:'Oct 2025', summary:'I start small, ship a tiny end-to-end loop, and only add the fancy pieces after it’s useful.', href:'/blog/what-i-actually-do-when-i-build-ai'},
+              {slug:'my-quick-checklist-before-i-ship', title:'My quick checklist before I ship', date:'Oct 2025', summary:'A short list I run through before I push: clear readme, good defaults, basic tests, simple logging, and a way to roll back fast.', href:'/blog/my-quick-checklist-before-i-ship'}].map((post, i) => (
               <motion.article key={i} className={card} initial={fadeUp.initial} animate={fadeUp.animate}>
                 <p className="text-xs text-zinc-400">{post.date}</p>
                 <h3 className="mt-1 font-medium">{post.title}</h3>
@@ -639,9 +566,7 @@ export default function PersonalSite() {
         <section id="contact" className="mx-auto max-w-6xl px-4 py-16 md:py-24">
           <div className={card}>
             <h2 className="text-xl font-semibold tracking-tight">Let’s build something</h2>
-            <p className="mt-2 text-zinc-300 max-w-[60ch]">
-              I’m open to full-time roles, internships, and projects in web, data, or AI. Email is best, or use the form.
-            </p>
+            <p className="mt-2 text-zinc-300 max-w-[60ch]">I’m open to full-time roles, internships, and projects in web, data, or AI. Email is best, or use the form.</p>
             <div className="mt-6 grid md:grid-cols-2 gap-6">
               <div className="flex flex-wrap gap-3">
                 <a href={`mailto:${CONFIG.email}`} className={`${btn} border-white/20`}><Mail className="h-4 w-4"/> {CONFIG.email}</a>
@@ -654,9 +579,42 @@ export default function PersonalSite() {
         </section>
 
         <footer className="pb-16 px-4">
-          <div className="mx-auto max-w-6xl text-xs text-zinc-400">© {year} {CONFIG.name}. Built with Next.js, Tailwind & framer-motion. • Press ⌘K / Ctrl+K</div>
+          <div className="mx-auto max-w-6xl text-xs text-zinc-400">© {year} {CONFIG.name}. Built with Next.js, Tailwind & framer-motion. • Press ⌘K / Ctrl+K • Press ? for a tour • Press ~ for terminal</div>
         </footer>
       </main>
     </>
+  );
+}
+
+/* =========================
+   Contact Form (same as before)
+========================= */
+function ContactForm() {
+  const [sent, setSent] = useState(false);
+  const [loading, setLoading] = useState(false);
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const form = e.currentTarget;
+      const data = Object.fromEntries(new FormData(form).entries());
+      const res = await fetch("/api/contact", { method: "POST", body: JSON.stringify(data) });
+      const j = await res.json();
+      if (j.ok) { setSent(true); form.reset(); }
+    } finally {
+      setLoading(false);
+    }
+  }
+  if (sent) return <div className="rounded-[28px] border border-emerald-300/40 bg-emerald-900/15 p-4 text-sm">Thanks! I’ll get back to you soon.</div>;
+  const base = "rounded-[14px] px-3 py-2 border border-white/10 bg-white/5 outline-none";
+  return (
+    <form onSubmit={onSubmit} className="rounded-[28px] border border-white/10 p-4 bg-white/5 backdrop-blur grid gap-3 text-sm">
+      <input name="name" required placeholder="Your name" className={base}/>
+      <input name="email" required type="email" placeholder="Your email" className={base}/>
+      <textarea name="message" required placeholder="What’s up?" rows={4} className={base}/>
+      <button disabled={loading} className="justify-self-start rounded-[14px] px-4 py-2 border border-white/20 hover:shadow-lg hover:shadow-cyan-500/10 transition-transform hover:-translate-y-0.5">
+        {loading ? "Sending…" : "Send"}
+      </button>
+    </form>
   );
 }
