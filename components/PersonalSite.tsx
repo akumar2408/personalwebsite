@@ -46,7 +46,7 @@ const skills: Record<string, string[]> = {
 
 const projects = [
   { slug: "operational-dashboard", title: "Operational Dashboard", blurb: "Full-stack sales analytics with 30-day forecasts.", links: [{ label: "GitHub", href: "https://github.com/akumar2408/operationaldashboard/" }], tags: ["React", "Spring Boot", "PostgreSQL"] },
-  { slug: "aiinvestmate", title: "AIInvestMate", blurb: "Small app that helps students try out investing ideas.", links: [{ label: "Live", href: "https://aiinvestmate.vercel.app" }, { label: "GitHub", href: "https://github.com/akumar2408/AIInvestMate" }], tags: ["Next.js", "Supabase"] },
+  { slug: "aiinvestmate", title: "AIInvestMate", blurb: "Small app that helps students try out investing ideas.", links: [{ label: "Live", href: "https://ai-invest-mate.vercel.app/" }, { label: "GitHub", href: "https://github.com/akumar2408/AIInvestMate" }], tags: ["Next.js", "Supabase"] },
   { slug: "streaming-etl", title: "SafetyGuardian", blurb: "Streaming pipeline for safety events on AWS.", links: [{ label: "GitHub", href: "https://github.com/akumar2408/SafetyGuardian" }], tags: ["AWS Kinesis", "Glue", "Redshift", "CI/CD"] },
 ];
 
