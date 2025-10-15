@@ -13,7 +13,7 @@ import { motion, AnimatePresence } from "framer-motion";
 ========================= */
 const CONFIG = {
   name: "Aayush Kumar",
-  tagline: "I like building useful software that feels simple and solid.",
+  tagline: "I like making useful stuff that just works.",
   location: "Phoenix • Los Angeles",
   email: "aayushkumar2004@gmail.com",
   resumeUrl: "/resume.pdf",
@@ -387,8 +387,8 @@ export default function PersonalSite() {
               </div>
               <h1 className="mt-4 text-4xl/tight md:text-5xl/tight font-semibold tracking-tight tracking-[-0.02em]">{CONFIG.tagline}</h1>
               <p className="mt-4 text-zinc-300 leading-relaxed max-w-[60ch]">
-                I’m Aayush, a CS student who likes turning rough ideas into working software. I care about clear code,
-                fast feedback, and keeping things reliable.
+                I’m Aayush, working at Insurity on AI-driven tools that make insurance software smarter. When I’m not coding, 
+                I’m usually exploring new ideas in machine learning and system design.
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
                 <a href="#projects" className={`${btn} border-white/20`}>See my work <ArrowRight className="h-4 w-4"/></a>
@@ -412,18 +412,17 @@ export default function PersonalSite() {
                       <img src="/insurity.svg" alt="Insurity" className="h-full w-full object-contain drop-shadow-sm" />
                     </div>
                     <div>
-                      <p className="text-[11px] uppercase tracking-widest text-cyan-400/90 font-semibold">Incoming</p>
+                      <p className="text-[11px] uppercase tracking-widest text-cyan-400/90 font-semibold">Currently</p>
                       <p className="text-base font-semibold">Associate Developer <span className="text-zinc-500">@ Insurity</span></p>
                     </div>
                   </div>
                   <ul className="mt-4 text-sm leading-6 list-disc ml-4 text-zinc-300">
-                    <li>Build internal tools and APIs that make the team faster.</li>
+                    <li>Build AI tools with the AI Solutions team.</li>
                     <li>Work on AI-assisted features where they actually help.</li>
                     <li>Focus on clean code, solid tests, and smooth deploys.</li>
                   </ul>
                   <div className="mt-5 flex flex-wrap gap-2">
                     <span className="text-[10px] uppercase tracking-wider px-2 py-1 rounded-full border border-white/10 bg-white/5">Insurity • Oct 2025</span>
-                    <span className="text-[10px] uppercase tracking-wider px-2 py-1 rounded-full border border-white/10 bg-white/5">Incoming Role</span>
                   </div>
                   <div className="mt-6">
                     <a href={CONFIG.resumeUrl} download className="inline-flex items-center gap-2 rounded-[14px] border border-white/20 px-4 py-2 text-sm hover:shadow-lg hover:shadow-cyan-500/10">
@@ -510,8 +509,8 @@ export default function PersonalSite() {
         <section id="blog" className="mx-auto max-w-6xl px-4 py-16 md:py-24">
           <div className="flex items-center gap-2"><h2 className="text-xl font-semibold tracking-tight">Blog</h2><Newspaper className="h-4 w-4"/></div>
           <div className="mt-6 grid md:grid-cols-2 gap-8">
-            {[{slug:'what-i-actually-do-when-i-build-ai', title:'What I actually do when I build AI stuff', date:'Oct 2025', summary:'I start small, ship a tiny end-to-end loop, and only add the fancy pieces after it’s useful.', href:'/blog/what-i-actually-do-when-i-build-ai'},
-              {slug:'my-quick-checklist-before-i-ship', title:'My quick checklist before I ship', date:'Oct 2025', summary:'A short list I run through before I push: clear readme, good defaults, basic tests, simple logging, and a way to roll back fast.', href:'/blog/my-quick-checklist-before-i-ship'}].map((post, i) => (
+            {[{slug:'what-i-actually-do-when-i-build-ai', title:'What I actually do when I build AI stuff', date:'Nov 2024', summary:'I start small, ship a tiny end-to-end loop, and only add the fancy pieces after it’s useful.', href:'/blog/what-i-actually-do-when-i-build-ai'},
+              {slug:'my-quick-checklist-before-i-ship', title:'My quick checklist before I ship', date:'Mar 2025', summary:'A short list I run through before I push: clear readme, good defaults, basic tests, simple logging, and a way to roll back fast.', href:'/blog/my-quick-checklist-before-i-ship'}].map((post, i) => (
               <motion.article key={i} className={card} initial={fadeUp.initial} animate={fadeUp.animate}>
                 <p className="text-xs text-zinc-400">{post.date}</p>
                 <h3 className="mt-1 font-medium">{post.title}</h3>

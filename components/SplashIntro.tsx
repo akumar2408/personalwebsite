@@ -123,7 +123,7 @@ export default function SplashIntro({ onDone }: { onDone: () => void }) {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0, transition: { delay: 1.2, duration: 0.4 } }}
           >
-            Incoming — Associate Developer @ Insurity
+            AI Associate Developer @ Insurity
           </motion.p>
 
           {/* 4) Exit dash (shrinks and slides upward slightly) */}
