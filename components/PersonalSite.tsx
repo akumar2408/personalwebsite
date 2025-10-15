@@ -585,7 +585,6 @@ export default function PersonalSite() {
           <div className="grid md:grid-cols-12 gap-10">
             <div className="md:col-span-4">
               <h2 className={`section-title ${titleGrad} text-xl md:text-2xl font-semibold tracking-tight`}style={{ ["--hlw" as any]: "140px" }}>About</h2>
-              <div className="mt-2 h-[2px] w-24 rounded-full bg-gradient-to-r from-cyan-400/60 via-fuchsia-400/50 to-purple-400/60" />
               <p className="mt-3 text-sm text-zinc-400 max-w-[28ch]">A little context and what I’m into.</p>
             </div>
             <motion.div className="md:col-span-8 text-zinc-300" initial={fadeUp.initial} animate={fadeUp.animate}>
@@ -617,7 +616,6 @@ export default function PersonalSite() {
           <div className="grid md:grid-cols-12 gap-10">
             <div className="md:col-span-4">
               <h2 className={`section-title ${titleGrad} text-xl md:text-2xl font-semibold tracking-tight`}style={{ ["--hlw" as any]: "140px" }}>Skills</h2>
-              <div className="mt-2 h-[2px] w-24 rounded-full bg-gradient-to-r from-cyan-400/60 via-fuchsia-400/50 to-purple-400/60" />
               <p className="mt-3 text-sm text-zinc-400 max-w-[28ch]">Tools I use a lot.</p>
             </div>
             <motion.div className="md:col-span-8" initial={fadeUp.initial} animate={fadeUp.animate}>
