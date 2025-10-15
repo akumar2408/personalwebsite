@@ -3,6 +3,7 @@
 import { HelpCircle, Sun, MoonStar } from "lucide-react";
 import { useEffect, useState } from "react";
 import { motion, useScroll } from "framer-motion";
+import Link from "next/link";
 import NavTabs from "./NavTabs";
 import MobileNav from "./MobileNav";
 
@@ -41,13 +42,22 @@ export default function Header() {
 
       <header className="sticky top-0 z-50 backdrop-blur bg-zinc-950/75 border-b border-white/10
         after:block after:h-px after:w-full after:bg-gradient-to-r after:from-cyan-400/25 after:via-fuchsia-400/15 after:to-purple-400/25">
-        <div className="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between">
-          <a
-            href="/"
-            className="font-semibold tracking-[-0.01em] text-[22px] md:text-[28px] hover:drop-shadow-[0_0_10px_rgba(34,211,238,0.25)] transition"
-          >
-            Aayush Kumar
-          </a>
+        <Link
+  href="/"
+  prefetch={false}
+  className={[
+    "font-semibold tracking-[-0.01em] text-[22px] md:text-[28px]",
+    // gradient text
+    "text-transparent bg-clip-text bg-gradient-to-r",
+    "from-rose-400 via-orange-300 to-fuchsia-400",
+    // subtle animated shift (optional)
+    "bg-[length:200%_100%] animate-[ak-gradient_10s_linear_infinite]",
+    // hover glow
+    "hover:drop-shadow-[0_0_12px_rgba(244,63,94,0.35)] transition"
+  ].join(" ")}
+>
+  Aayush Kumar
+</Link>
 
           <nav className="hidden md:block">
             <NavTabs items={nav} />

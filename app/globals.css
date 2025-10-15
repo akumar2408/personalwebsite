@@ -58,3 +58,9 @@ html, body { height: 100%; }
     .mt-tight       { @apply mt-4; }
   }
   
+
+  @keyframes ak-gradient {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
+  }
+  
