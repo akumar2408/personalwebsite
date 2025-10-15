@@ -10,6 +10,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import FocusBoard from "@/components/FocusBoard";
 import QuoteCard from "@/components/QuoteRotator";
 import ActivityHeatmap from "@/components/ActivityHeatmap";
+import Changelog from "@/components/Changelog";
 
 
 /* =========================
@@ -641,7 +642,21 @@ export default function PersonalSite() {
                   "If it's not logged and monitored, it basically didn't happen.",
                 ]}
               />
-                <ActivityHeatmap seed={12} />
+              <div className="flex items-center justify-between">
+  <p className="text-sm text-zinc-400">Last 8 weeks • days I shipped or reviewed code</p>
+  <div className="flex items-center gap-1 text-[11px] text-zinc-400">
+    <span>low</span>
+    <div className="h-3 w-3 rounded bg-cyan-900/40 ring-1 ring-white/10" />
+    <div className="h-3 w-3 rounded bg-cyan-700/60 ring-1 ring-white/10" />
+    <div className="h-3 w-3 rounded bg-cyan-500/80 ring-1 ring-white/10" />
+    <span>high</span>
+  </div>
+</div>
+                <ActivityHeatmap seed={12}
+                 metric="ship-days" 
+                 aria-label="Heatmap of days I shipped or reviewed code in the last few weeks"
+                />
+                
             </div>
             </motion.div>
           </div>
@@ -749,72 +764,45 @@ export default function PersonalSite() {
         </section>
 
         {/* NOW (replaces Blog) */}
-        <section id="now" className="mx-auto max-w-6xl px-4 py-10 md:py-14">
-          <div className="flex items-center gap-2">
-            <h2 className={`section-title ${titleGrad} text-xl md:text-2xl font-semibold tracking-tight`}style={{ ["--hlw" as any]: "140px" }}>Now</h2>
-            <span className="text-xs text-zinc-400">What I’m focused on this month</span>
-          </div>
+    
+<Changelog
+  updated="Oct 15"
+  intro="What I’m actually doing right now. Less coming-soon, more shipped."
+  items={[
+    {
+      tag: "BUILDING",
+      title: "Little AI tools I actually use",
+      note: "RAG helpers, quick insight bots, one-click stuff that saves me clicks.",
+    },
+    {
+      tag: "LEARNING",
+      title: "Clean ETL patterns",
+      note: "DAGs that make sense at 2am. Better logging, fewer surprises.",
+    },
+    {
+      tag: "SHIPPING",
+      title: "Polish on case studies",
+      note: "Short demo clips, clearer READMEs. Fewer words, more proof.",
+    },
+    {
+      tag: "BUILDING",
+      title: "Personal site UX",
+      note: "Tiny animations, better docs, faster nav.",
+      href: "#", // link to a PR or commit if you want
+    },
+    {
+      tag: "LIFE",
+      title: "Gym + design breaks",
+      note: "Move a bit, reset the brain, come back sharper.",
+    },
+    {
+      tag: "LEARNING",
+      title: "Agents and evals",
+      note: "Sandbox actions and don’t trust vibes.",
+    },
+  ]}
+/>
 
-          <div className="mt-6 grid md:grid-cols-3 gap-8">
-            <div className={card}>
-              <p className="text-xs text-cyan-300">AI + Product</p>
-              <h3 className="mt-1 font-medium">Building smarter AI tools that feel useful</h3>
-              <p className="mt-2 text-sm text-zinc-300">
-              Playing with RAG setups, vector search, and OpenAI APIs to make small tools that genuinely help — not just look cool. I’m testing ideas around document Q&A, quick insight generation, and productivity bots that I’d actually use daily.
-              </p>
-            </div>
-            <div className={card}>
-              <p className="text-xs text-fuchsia-300">Data Systems</p>
-              <h3 className="mt-1 font-medium">ETL that’s boring (on purpose)</h3>
-              <p className="mt-2 text-sm text-zinc-300">
-                Cleaner Airflow DAGs, better logs, and pipelines into PostgreSQL/Redshift that don’t wake you at 2am.
-              </p>
-            </div>
-            <div className={card}>
-              <p className="text-xs text-purple-300">Shipping</p>
-              <h3 className="mt-1 font-medium">Polish &gt; scope</h3>
-              <p className="mt-2 text-sm text-zinc-300">
-              Focusing on refining what I already have — better UX in my personal site, smoother project demos, and clearer readmes. Less “coming soon,” more “works right now.”
-              </p>
-            </div>
-          </div>
-          <div className="mt-6">
-  <FocusBoard
-    items={[
-      {
-        tag: "building",
-        title: "Little AI tools I actually use",
-        note: "RAG experiments, quick insight bots, and one-click helpers.",
-      },
-      {
-        tag: "learning",
-        title: "Clean ETL patterns",
-        note: "Airflow DAGs that make sense at 2am. Better logging, fewer surprises.",
-      },
-      {
-        tag: "shipping",
-        title: "Polish on case studies",
-        note: "Short demo clips, clearer READMEs, less coming soon.",
-      },
-      {
-        tag: "life",
-        title: "Gym + design breaks",
-        note: "Move a bit, reset the brain, come back sharper.",
-      },
-      {
-        tag: "building",
-        title: "Personal site UX",
-        note: "Tiny animations, better docs, faster nav.",
-      },
-      {
-        tag: "learning",
-        title: "Agents and evals",
-        note: "Sandboxing actions and not trusting vibes.",
-      },
-    ]}
-  />
-</div>
-        </section>
 
         {/* EXPERIENCE & EDUCATION */}
         <section id="experience" className="mx-auto max-w-6xl px-4 py-10 md:py-14">

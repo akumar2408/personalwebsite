@@ -1,40 +1,88 @@
-'use client';
+"use client";
 
-type Props = { seed?: number };
+import * as React from "react";
 
-/* tiny seeded rng so the pattern is stable across renders */
-function lcg(seed: number) {
-  let s = seed >>> 0;
-  return () => (s = (1664525 * s + 1013904223) >>> 0) / 2 ** 32;
+type Dot = { x: number; y: number; v: number };
+
+export interface ActivityHeatmapProps
+  extends React.HTMLAttributes<HTMLDivElement> {
+  seed?: number;           // keep your seed
+  user?: string;           // optional future use
+  metric?: string;         // NEW: “commits”, “sessions”, etc (purely cosmetic)
 }
 
-export default function ActivityHeatmap({ seed = 1 }: Props) {
-  const rand = lcg(seed);
-  const days = Array.from({ length: 7 * 6 }, () => rand()); // 6 weeks grid
+export default function ActivityHeatmap({
+  seed = 7,
+  user,
+  metric,
+  className = "",
+  ...rest                      // <-- picks up aria-label and any other HTML props
+}: ActivityHeatmapProps) {
+  // tiny PRNG so the dots are deterministic per seed
+  let s = seed || 1;
+  const rand = () => {
+    s ^= s << 13;
+    s ^= s >>> 17;
+    s ^= s << 5;
+    // map to [0,1]
+    return ((s >>> 0) % 1000) / 1000;
+  };
+
+  const weeks = 10;      // columns
+  const days = 7;        // rows
+  const dots: Dot[] = [];
+
+  for (let x = 0; x < weeks; x++) {
+    for (let y = 0; y < days; y++) {
+      dots.push({ x, y, v: rand() });
+    }
+  }
+
+  function level(v: number) {
+    if (v > 0.85) return "bg-fuchsia-400/60";
+    if (v > 0.65) return "bg-purple-400/60";
+    if (v > 0.45) return "bg-cyan-400/60";
+    if (v > 0.25) return "bg-zinc-300/40";
+    return "bg-zinc-600/30";
+  }
 
   return (
-    <div className="rounded-[20px] ring-1 ring-white/10 bg-white/[0.05] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
-      <div className="text-xs text-zinc-400 mb-2">Last few weeks</div>
+    <div
+      {...rest} // e.g. aria-label, title, id, onClick…
+      className={[
+        "rounded-[20px] ring-1 ring-white/10 bg-white/[0.04] p-4",
+        "backdrop-blur shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04)]",
+        className,
+      ].join(" ")}
+      role="img"
+      aria-roledescription="heatmap"
+    >
+      <div className="flex items-baseline justify-between mb-2">
+        <p className="text-sm text-zinc-300">Last few weeks</p>
+        {metric && (
+          <span className="text-xs text-zinc-400">metric: {metric}</span>
+        )}
+      </div>
+
       <div
-        className="grid grid-cols-7 gap-1.5"
-        aria-label="Activity heatmap"
+        className="grid"
+        style={{
+          gridTemplateColumns: `repeat(${weeks}, 1.25rem)`,
+          gridTemplateRows: `repeat(${days}, 1.25rem)`,
+          gap: "0.5rem",
+        }}
       >
-        {days.map((v, i) => {
-          const lvl = v > 0.85 ? 4 : v > 0.6 ? 3 : v > 0.35 ? 2 : v > 0.15 ? 1 : 0;
-          const classes = [
-            "bg-white/10",
-            "bg-cyan-400/30",
-            "bg-fuchsia-400/35",
-            "bg-purple-400/40",
-            "bg-white/60",
-          ][lvl];
-          return (
-            <div
-              key={i}
-              className={`h-4 w-4 rounded-[4px] ${classes} ring-1 ring-white/10`}
-            />
-          );
-        })}
+        {dots.map((d, i) => (
+          <div
+            key={i}
+            className={[
+              "h-5 w-5 rounded-[6px]",
+              "ring-1 ring-white/10",
+              level(d.v),
+            ].join(" ")}
+            title={`week ${d.x + 1}, day ${d.y + 1}`}
+          />
+        ))}
       </div>
     </div>
   );
