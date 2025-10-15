@@ -648,7 +648,7 @@ export default function PersonalSite() {
         {/* PROJECTS */}
         <section id="projects" className="mx-auto max-w-6xl px-4 py-10 md:py-14">
           <div className="flex items-center justify-between">
-            <h2 className="text-xl md:text-2xl font-semibold tracking-tight ${titleGrad}"style={{ ["--hlw" as any]: "140px" }}>Selected Projects</h2>
+            <h2 className={`section-title ${titleGrad} text-xl md:text-2xl font-semibold tracking-tight`}style={{ ["--hlw" as any]: "140px" }}>Selected Projects</h2>
             <a href={CONFIG.github} className="text-sm inline-flex items-center gap-1 hover:opacity-80">
               All repos <ExternalLink className="h-4 w-4" />
             </a>
@@ -717,16 +717,16 @@ export default function PersonalSite() {
         {/* NOW (replaces Blog) */}
         <section id="now" className="mx-auto max-w-6xl px-4 py-10 md:py-14">
           <div className="flex items-center gap-2">
-            <h2 className="text-xl md:text-2xl font-semibold tracking-tight ${titleGrad}"style={{ ["--hlw" as any]: "140px" }}>Now</h2>
+            <h2 className={`section-title ${titleGrad} text-xl md:text-2xl font-semibold tracking-tight`}style={{ ["--hlw" as any]: "140px" }}>Now</h2>
             <span className="text-xs text-zinc-400">What I’m focused on this month</span>
           </div>
 
           <div className="mt-6 grid md:grid-cols-3 gap-8">
             <div className={card}>
               <p className="text-xs text-cyan-300">AI + Product</p>
-              <h3 className="mt-1 font-medium">Tiny AI tools that feel useful</h3>
+              <h3 className="mt-1 font-medium">Building smarter AI tools that feel useful</h3>
               <p className="mt-2 text-sm text-zinc-300">
-                Rapid experiments with OpenAI embeddings + RAG, turning small pain points into one-click web tools.
+              Playing with RAG setups, vector search, and OpenAI APIs to make small tools that genuinely help — not just look cool. I’m testing ideas around document Q&A, quick insight generation, and productivity bots that I’d actually use daily.
               </p>
             </div>
             <div className={card}>
@@ -740,7 +740,7 @@ export default function PersonalSite() {
               <p className="text-xs text-purple-300">Shipping</p>
               <h3 className="mt-1 font-medium">Polish &gt; scope</h3>
               <p className="mt-2 text-sm text-zinc-300">
-                Case-study writeups, real screenshots, and short demo clips for each project. Less “coming soon”.
+              Focusing on refining what I already have — better UX in my personal site, smoother project demos, and clearer readmes. Less “coming soon,” more “works right now.”
               </p>
             </div>
           </div>
