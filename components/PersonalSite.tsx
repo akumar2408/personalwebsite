@@ -584,7 +584,7 @@ export default function PersonalSite() {
         <section id="about" className="mx-auto max-w-6xl px-4 py-10 md:py-14">
           <div className="grid md:grid-cols-12 gap-10">
             <div className="md:col-span-4">
-              <h2 className="text-xl md:text-2xl font-semibold tracking-tight ${titleGrad}">About</h2>
+              <h2 className={`section-title ${titleGrad} text-xl md:text-2xl font-semibold tracking-tight`}style={{ ["--hlw" as any]: "140px" }}>About</h2>
               <div className="mt-2 h-[2px] w-24 rounded-full bg-gradient-to-r from-cyan-400/60 via-fuchsia-400/50 to-purple-400/60" />
               <p className="mt-3 text-sm text-zinc-400 max-w-[28ch]">A little context and what I’m into.</p>
             </div>
@@ -616,7 +616,7 @@ export default function PersonalSite() {
         <section id="skills" className="mx-auto max-w-6xl px-4 py-10 md:py-14">
           <div className="grid md:grid-cols-12 gap-10">
             <div className="md:col-span-4">
-              <h2 className="text-xl md:text-2xl font-semibold tracking-tight ${titleGrad}">Skills</h2>
+              <h2 className={`section-title ${titleGrad} text-xl md:text-2xl font-semibold tracking-tight`}style={{ ["--hlw" as any]: "140px" }}>Skills</h2>
               <div className="mt-2 h-[2px] w-24 rounded-full bg-gradient-to-r from-cyan-400/60 via-fuchsia-400/50 to-purple-400/60" />
               <p className="mt-3 text-sm text-zinc-400 max-w-[28ch]">Tools I use a lot.</p>
             </div>
@@ -748,7 +748,7 @@ export default function PersonalSite() {
 
         {/* EXPERIENCE & EDUCATION */}
         <section id="experience" className="mx-auto max-w-6xl px-4 py-10 md:py-14">
-          <h2 className="text-xl md:text-2xl font-semibold tracking-tight ${titleGrad}">Experience & Education</h2>
+          <h2 className={`section-title ${titleGrad} text-xl md:text-2xl font-semibold tracking-tight`}style={{ ["--hlw" as any]: "140px" }}>Experience & Education</h2>
           <div className="mt-2 h-[2px] w-24 rounded-full bg-gradient-to-r from-cyan-400/60 via-fuchsia-400/50 to-purple-400/60" />
           <div className="mt-6 grid md:grid-cols-2 gap-8">
             <div className={card}>
@@ -790,7 +790,7 @@ export default function PersonalSite() {
         {/* CONTACT */}
         <section id="contact" className="mx-auto max-w-6xl px-4 py-10 md:py-14">
           <div className={card}>
-            <h2 className="text-xl md:text-2xl font-semibold tracking-tight ${titleGrad}">Let’s build something</h2>
+            <h2 className={`section-title ${titleGrad} text-xl md:text-2xl font-semibold tracking-tight`}style={{ ["--hlw" as any]: "140px" }}>Let’s build something</h2>
             <div className="mt-2 h-[2px] w-24 rounded-full bg-gradient-to-r from-cyan-400/60 via-fuchsia-400/50 to-purple-400/60" />
             <p className="mt-2 text-zinc-300 max-w-[60ch]">
               I’m open to full-time roles, internships, and projects in web, data, or AI. Email is best, or use the form.
