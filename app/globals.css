@@ -2,6 +2,59 @@
 @tailwind components;
 @tailwind utilities;
 
+/* base */
 :root { color-scheme: light dark; }
 html, body { height: 100%; }
 * { scroll-behavior: smooth; }
+
+/* Gradient line that continues to the right of the heading */
+.headline {
+  position: relative;
+  line-height: 1.2;
+}
+.headline::after {
+  content: "";
+  position: absolute;
+  left: calc(100% + 12px);
+  top: 50%;
+  transform: translateY(-50%);
+  width: 120px; /* length of the line – tweak to taste */
+  height: 2px;
+  border-radius: 9999px;
+  background-image: linear-gradient(
+    to right,
+    rgba(34, 211, 238, 0.6),  /* cyan-400/60 */
+    rgba(232, 121, 249, 0.5), /* fuchsia-400/50 */
+    rgba(168, 85, 247, 0.6)   /* purple-400/60 */
+  );
+  opacity: 0.9;
+}
+
+/* Optional underline variant (use instead of headline if you prefer underlines) */
+.headline-underline {
+  position: relative;
+  display: inline-block;
+  padding-bottom: 6px;
+}
+.headline-underline::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 2px;
+  border-radius: 9999px;
+  background-image: linear-gradient(
+    to right,
+    rgba(34, 211, 238, 0.6),
+    rgba(232, 121, 249, 0.5),
+    rgba(168, 85, 247, 0.6)
+  );
+  opacity: 0.9;
+}
+
+@layer utilities {
+    .section-y      { @apply py-10 md:py-14; }
+    .section-y-tight{ @apply py-8  md:py-12; }
+    .gap-tight      { @apply gap-6; }
+    .mt-tight       { @apply mt-4; }
+  }
+  

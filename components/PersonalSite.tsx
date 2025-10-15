@@ -581,7 +581,7 @@ export default function PersonalSite() {
         </section>
 
         {/* ABOUT */}
-        <section id="about" className="mx-auto max-w-6xl px-4 py-16 md:py-24">
+        <section id="about" className="mx-auto max-w-6xl px-4 py-10 md:py-14">
           <div className="grid md:grid-cols-12 gap-10">
             <div className="md:col-span-4">
               <h2 className="text-xl md:text-2xl font-semibold tracking-tight ${titleGrad}">About</h2>
@@ -613,7 +613,7 @@ export default function PersonalSite() {
         </section>
 
         {/* SKILLS */}
-        <section id="skills" className="mx-auto max-w-6xl px-4 py-16 md:py-24">
+        <section id="skills" className="mx-auto max-w-6xl px-4 py-10 md:py-14">
           <div className="grid md:grid-cols-12 gap-10">
             <div className="md:col-span-4">
               <h2 className="text-xl md:text-2xl font-semibold tracking-tight ${titleGrad}">Skills</h2>
@@ -646,7 +646,7 @@ export default function PersonalSite() {
         </section>
 
         {/* PROJECTS */}
-        <section id="projects" className="mx-auto max-w-6xl px-4 py-16 md:py-24">
+        <section id="projects" className="mx-auto max-w-6xl px-4 py-10 md:py-14">
           <div className="flex items-center justify-between">
             <h2 className="text-xl md:text-2xl font-semibold tracking-tight ${titleGrad}"style={{ ["--hlw" as any]: "140px" }}>Selected Projects</h2>
             <a href={CONFIG.github} className="text-sm inline-flex items-center gap-1 hover:opacity-80">
@@ -715,7 +715,7 @@ export default function PersonalSite() {
         </section>
 
         {/* NOW (replaces Blog) */}
-        <section id="now" className="mx-auto max-w-6xl px-4 py-16 md:py-24">
+        <section id="now" className="mx-auto max-w-6xl px-4 py-10 md:py-14">
           <div className="flex items-center gap-2">
             <h2 className="text-xl md:text-2xl font-semibold tracking-tight ${titleGrad}"style={{ ["--hlw" as any]: "140px" }}>Now</h2>
             <span className="text-xs text-zinc-400">What I’m focused on this month</span>
@@ -747,7 +747,7 @@ export default function PersonalSite() {
         </section>
 
         {/* EXPERIENCE & EDUCATION */}
-        <section id="experience" className="mx-auto max-w-6xl px-4 py-16 md:py-24">
+        <section id="experience" className="mx-auto max-w-6xl px-4 py-10 md:py-14">
           <h2 className="text-xl md:text-2xl font-semibold tracking-tight ${titleGrad}">Experience & Education</h2>
           <div className="mt-2 h-[2px] w-24 rounded-full bg-gradient-to-r from-cyan-400/60 via-fuchsia-400/50 to-purple-400/60" />
           <div className="mt-6 grid md:grid-cols-2 gap-8">
@@ -788,7 +788,7 @@ export default function PersonalSite() {
         </section>
 
         {/* CONTACT */}
-        <section id="contact" className="mx-auto max-w-6xl px-4 py-16 md:py-24">
+        <section id="contact" className="mx-auto max-w-6xl px-4 py-10 md:py-14">
           <div className={card}>
             <h2 className="text-xl md:text-2xl font-semibold tracking-tight ${titleGrad}">Let’s build something</h2>
             <div className="mt-2 h-[2px] w-24 rounded-full bg-gradient-to-r from-cyan-400/60 via-fuchsia-400/50 to-purple-400/60" />
