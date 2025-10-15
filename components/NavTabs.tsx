@@ -11,7 +11,7 @@ export default function NavTabs({ items }: { items: Item[] }) {
   const [hovered, setHovered] = useState<string | null>(null);
   const [active, setActive] = useState<string>(items[0]?.id ?? "");
 
-  // In-page section active detection
+  // Track in-page sections and set active on scroll
   useEffect(() => {
     const ids = items.filter(i => i.id && !i.href).map(i => i.id!) ;
     const io = new IntersectionObserver(
@@ -29,7 +29,7 @@ export default function NavTabs({ items }: { items: Item[] }) {
   };
 
   return (
-    <div className="relative flex gap-2 rounded-[14px] p-1 bg-zinc-900/60 border border-white/10">
+    <div className="relative flex gap-3 rounded-[16px] p-2 bg-zinc-900/70 border border-white/10 shadow-[0_10px_30px_-15px_rgba(0,0,0,0.6)]">
       {items.map((n) => {
         const activeNow = isRouteActive(n);
         return (
@@ -42,9 +42,9 @@ export default function NavTabs({ items }: { items: Item[] }) {
             <a
               href={n.href ?? `#${n.id}`}
               className={[
-                "px-3 py-1.5 rounded-[10px] text-sm transition",
-                "hover:text-white/90 text-zinc-300",
-                activeNow ? "font-medium" : ""
+                "px-4 py-2 md:px-4 md:py-2.5 rounded-[12px] text-[15px] md:text-base transition",
+                "hover:text-white/90 text-zinc-200",
+                activeNow ? "font-semibold" : "font-medium",
               ].join(" ")}
             >
               {n.label}
@@ -53,7 +53,7 @@ export default function NavTabs({ items }: { items: Item[] }) {
             {activeNow && (
               <motion.span
                 layoutId="nav-pill"
-                className="absolute inset-0 -z-10 rounded-[10px] bg-white/10"
+                className="absolute inset-0 -z-10 rounded-[12px] bg-white/12 ring-1 ring-white/15 shadow-[0_8px_24px_-12px_rgba(56,189,248,0.45)]"
                 transition={{ type: "spring", stiffness: 400, damping: 30 }}
               />
             )}
@@ -64,7 +64,7 @@ export default function NavTabs({ items }: { items: Item[] }) {
                   initial={{ opacity: 0, y: 6, scale: 0.98 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 6, scale: 0.98 }}
-                  className="absolute left-0 top-[110%] z-50 w-max max-w-[220px] rounded-[12px] border border-white/10 bg-zinc-900/95 px-3 py-2 text-xs text-zinc-200 shadow-xl"
+                  className="absolute left-0 top-[110%] z-50 w-max max-w-[240px] rounded-[12px] border border-white/10 bg-zinc-900/95 px-3 py-2 text-xs text-zinc-200 shadow-xl"
                 >
                   {n.hint}
                 </motion.div>
