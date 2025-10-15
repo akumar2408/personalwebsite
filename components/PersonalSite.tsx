@@ -648,8 +648,7 @@ export default function PersonalSite() {
         {/* PROJECTS */}
         <section id="projects" className="mx-auto max-w-6xl px-4 py-16 md:py-24">
           <div className="flex items-center justify-between">
-            <h2 className="text-xl md:text-2xl font-semibold tracking-tight ${titleGrad}">Selected Projects</h2>
-            <div className="mt-2 h-[2px] w-24 rounded-full bg-gradient-to-r from-cyan-400/60 via-fuchsia-400/50 to-purple-400/60" />
+            <h2 className="text-xl md:text-2xl font-semibold tracking-tight ${titleGrad}"style={{ ["--hlw" as any]: "140px" }}>Selected Projects</h2>
             <a href={CONFIG.github} className="text-sm inline-flex items-center gap-1 hover:opacity-80">
               All repos <ExternalLink className="h-4 w-4" />
             </a>
@@ -718,8 +717,7 @@ export default function PersonalSite() {
         {/* NOW (replaces Blog) */}
         <section id="now" className="mx-auto max-w-6xl px-4 py-16 md:py-24">
           <div className="flex items-center gap-2">
-            <h2 className="text-xl md:text-2xl font-semibold tracking-tight ${titleGrad}">Now</h2>
-            <div className="mt-2 h-[2px] w-24 rounded-full bg-gradient-to-r from-cyan-400/60 via-fuchsia-400/50 to-purple-400/60" />
+            <h2 className="text-xl md:text-2xl font-semibold tracking-tight ${titleGrad}"style={{ ["--hlw" as any]: "140px" }}>Now</h2>
             <span className="text-xs text-zinc-400">What I’m focused on this month</span>
           </div>
 
