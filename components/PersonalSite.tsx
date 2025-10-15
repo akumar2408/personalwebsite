@@ -643,7 +643,6 @@ export default function PersonalSite() {
                 ]}
               />
               <div className="flex items-center justify-between">
-  <p className="text-sm text-zinc-400">Last 8 weeks • days I shipped or reviewed code</p>
   <div className="flex items-center gap-1 text-[11px] text-zinc-400">
     <span>low</span>
     <div className="h-3 w-3 rounded bg-cyan-900/40 ring-1 ring-white/10" />
@@ -657,7 +656,8 @@ export default function PersonalSite() {
                 weeks={8}
                 metric="ship-days"
                 aria-label="Recent shipping activity"
-                /> 
+                />
+ 
             </div>
             </motion.div>
           </div>

@@ -2,34 +2,25 @@
 
 import * as React from "react";
 
-type Dot = {
-  x: number;  // column (0 = oldest)
-  y: number;  // row    (0 = Mon)
-  v: number;  // intensity 0..1
-  date: Date;
-};
+type Dot = { x: number; y: number; v: number; date: Date };
 
 export interface ActivityHeatmapProps
   extends React.HTMLAttributes<HTMLDivElement> {
-  /** Deterministic randomizer for the demo look */
   seed?: number;
-  /** How many weeks (columns) to show */
   weeks?: number;
-  /** Label for what the heat represents (e.g. “ship-days”) */
   metric?: string;
-  /** Optional: start week on Monday (default true) */
   startOnMonday?: boolean;
 }
 
 export default function ActivityHeatmap({
   seed = 7,
   weeks = 8,
-  metric = "activity",
+  metric = "ship-days",
   startOnMonday = true,
   className = "",
   ...rest
 }: ActivityHeatmapProps) {
-  // --- tiny deterministic PRNG (xor-shift) ---
+  // deterministic rng
   let s = seed || 1;
   const rand = () => {
     s ^= s << 13;
@@ -38,47 +29,36 @@ export default function ActivityHeatmap({
     return ((s >>> 0) % 1000) / 1000;
   };
 
-  // --- build grid (oldest -> newest, Mon..Sun) ---
   const days = 7;
-  const today = new Date();
-  const end = new Date(today.getFullYear(), today.getMonth(), today.getDate()); // strip time
+  const end = new Date();
+  end.setHours(0, 0, 0, 0);
 
-  // Helper to get Monday/Sunday index
   const weekday = (d: Date) => (d.getDay() === 0 ? 7 : d.getDay()); // 1..7 (Mon..Sun)
+  const endOffset = startOnMonday ? weekday(end) - 1 : end.getDay();
 
   const dots: Dot[] = [];
-  // Find the first column’s Monday (or Sunday) so columns align to weeks
-  const endWeekAnchor = new Date(end);
-  const endOffset = startOnMonday ? weekday(endWeekAnchor) - 1 : endWeekAnchor.getDay(); // 0..6
-  // last cell is today; newest column may be partial — that’s fine
-
   for (let cx = weeks - 1; cx >= 0; cx--) {
     for (let ry = 0; ry < days; ry++) {
-      const daysBack = cx * 7 + (startOnMonday ? ry : (ry + 1) % 7) + (startOnMonday ? 0 : 0);
-      // Align so column 0 starts at Monday of that week
-      const delta = cx * 7 + ry - (endOffset - (startOnMonday ? 0 : end.getDay()));
       const d = new Date(end);
-      d.setDate(end.getDate() - (weeks * 7 - 1 - (cx * 7 + ry))); // simple sliding window
-      // override with a clean anchored calc so labels are correct
-      const anchored = new Date(end);
-      anchored.setDate(end.getDate() - (endOffset + (weeks - 1 - cx) * 7 - ry));
-
-      dots.push({
-        x: weeks - 1 - cx, // 0..weeks-1 oldest->newest
-        y: ry,              // 0..6
-        v: rand(),
-        date: anchored,
-      });
+      // anchor per-row date so Mon..Sun align across columns
+      d.setDate(end.getDate() - (endOffset + (weeks - 1 - cx) * 7 - ry));
+      dots.push({ x: weeks - 1 - cx, y: ry, v: rand(), date: d });
     }
   }
 
-  // UI state for tooltip
   const [tip, setTip] = React.useState<{
-    x: number;
-    y: number;
+    left: number;
+    top: number;
     text: string;
-    key: string;
+    show: boolean;
   } | null>(null);
+
+  const gridRef = React.useRef<HTMLDivElement>(null);
+  const fmt = new Intl.DateTimeFormat(undefined, {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+  });
 
   function level(v: number) {
     if (v > 0.85) return "bg-fuchsia-400/60";
@@ -88,16 +68,31 @@ export default function ActivityHeatmap({
     return "bg-zinc-600/30";
   }
 
-  const fmt = new Intl.DateTimeFormat(undefined, {
-    weekday: "short",
-    month: "short",
-    day: "numeric",
-  });
-
-  // weekday labels (Mon..Sun)
+  // labels (only on sm+ to keep compact)
   const labels = startOnMonday
     ? ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
     : ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+  // helpers for tooltip positioning relative to the grid container
+  function showTip(el: HTMLElement, text: string) {
+    const container = gridRef.current!;
+    const crect = container.getBoundingClientRect();
+    const rect = el.getBoundingClientRect();
+    const left = rect.left - crect.left + rect.width / 2;
+    const top = rect.top - crect.top - 8; // above cell
+
+    // clamp inside container
+    const clampedLeft = Math.max(8, Math.min(left, crect.width - 8));
+    const clampedTop = Math.max(8, top);
+
+    setTip({ left: clampedLeft, top: clampedTop, text, show: true });
+  }
+
+  function hideTip() {
+    setTip((t) => (t ? { ...t, show: false } : null));
+    // fully remove after fade (avoid layout shift)
+    setTimeout(() => setTip(null), 140);
+  }
 
   return (
     <div
@@ -127,19 +122,24 @@ export default function ActivityHeatmap({
         </div>
       </div>
 
-      {/* Grid wrapper to position tooltip relative to it */}
+      {/* Grid wrapper (relative = tooltip anchor) */}
       <div className="relative">
-        {/* Row labels (compact) */}
-        <div className="absolute -left-10 top-0 hidden sm:grid text-[11px] text-zinc-500"
-             style={{ gridTemplateRows: `repeat(${days}, 1.4rem)`, rowGap: "0.5rem" }}>
+        {/* Row labels */}
+        <div
+          className="absolute -left-10 top-0 hidden sm:grid text-[11px] text-zinc-500"
+          style={{ gridTemplateRows: `repeat(${days}, 1.4rem)`, rowGap: "0.5rem" }}
+        >
           {labels.map((l) => (
-            <span key={l} className="h-5 leading-5">{l}</span>
+            <span key={l} className="h-5 leading-5">
+              {l}
+            </span>
           ))}
         </div>
 
         {/* Grid */}
         <div
-          className="grid"
+          ref={gridRef}
+          className="relative grid"
           style={{
             gridTemplateColumns: `repeat(${weeks}, 1.25rem)`,
             gridTemplateRows: `repeat(${days}, 1.25rem)`,
@@ -156,44 +156,31 @@ export default function ActivityHeatmap({
                   "transition-transform hover:scale-[1.07]",
                   level(d.v),
                 ].join(" ")}
-                onMouseEnter={(e) => {
-                  const rect = (e.target as HTMLElement).getBoundingClientRect();
-                  setTip({
-                    x: rect.left + rect.width / 2,
-                    y: rect.top - 6, // above
-                    text,
-                    key: `${i}`,
-                  });
-                }}
-                onMouseLeave={() => setTip((t) => (t && t.key === `${i}` ? null : t))}
-                onFocus={(e) => {
-                  const rect = (e.target as HTMLElement).getBoundingClientRect();
-                  setTip({
-                    x: rect.left + rect.width / 2,
-                    y: rect.top - 6,
-                    text,
-                    key: `${i}`,
-                  });
-                }}
-                onBlur={() => setTip(null)}
-                title={text} // native tooltip as fallback
+                onMouseEnter={(e) => showTip(e.currentTarget, text)}
+                onMouseLeave={hideTip}
+                onFocus={(e) => showTip(e.currentTarget, text)}
+                onBlur={hideTip}
+                // IMPORTANT: no native title (prevents the extra tooltip)
                 aria-label={text}
               />
             );
           })}
-        </div>
 
-        {/* Tooltip (portal-like but relative) */}
-        {tip && (
-          <div
-            className="pointer-events-none fixed z-[70] -translate-x-1/2 -translate-y-full
-                       rounded-[10px] border border-white/10 bg-zinc-900/95 px-2.5 py-1.5
-                       text-xs text-zinc-100 shadow-xl"
-            style={{ left: tip.x, top: tip.y }}
-          >
-            {tip.text}
-          </div>
-        )}
+          {/* Tooltip (inside the grid; clamped) */}
+          {tip && (
+            <div
+              className={[
+                "pointer-events-none absolute z-[5] -translate-x-1/2 -translate-y-full",
+                "rounded-[10px] border border-white/10 bg-zinc-900/95 px-2.5 py-1.5",
+                "text-xs text-zinc-100 shadow-xl transition-opacity duration-150",
+                tip.show ? "opacity-100" : "opacity-0",
+              ].join(" ")}
+              style={{ left: tip.left, top: tip.top }}
+            >
+              {tip.text}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
