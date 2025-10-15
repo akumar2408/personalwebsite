@@ -633,22 +633,19 @@ export default function PersonalSite() {
                 <Chip icon={GraduationCap} tone="purple">ASU — MCS Big Data Systems ’26</Chip>
               </div>
               <div className="mt-4 grid sm:grid-cols-2 gap-4">
-                <QuoteCard
-                title="Stuff I live by"
-                quotes={[
-                  "Ship a tiny slice end to end. Make it pretty after it's useful.",
-                  "Readable beats clever. Future me has to debug this.",
-                  "Postgres first. Add Redshift when it actually hurts.",
-                  "If it's not logged and monitored, it basically didn't happen.",
-                ]}
-              />
+              <QuoteCard
+  className="mt-6 md:mt-8"
+  items={[
+    "If it works, don’t ask why.”",
+    "Gym? I thought you said gin.",
+    "Working hard or hardly awake.",
+    "I don’t have a plan, just a good playlist.”",
+    "Mentally 25, financially 12.",
+  ]}
+/>
               <div className="flex items-center justify-between">
   <div className="flex items-center gap-1 text-[11px] text-zinc-400">
-    <span>low</span>
-    <div className="h-3 w-3 rounded bg-cyan-900/40 ring-1 ring-white/10" />
-    <div className="h-3 w-3 rounded bg-cyan-700/60 ring-1 ring-white/10" />
-    <div className="h-3 w-3 rounded bg-cyan-500/80 ring-1 ring-white/10" />
-    <span>high</span>
+    
   </div>
 </div>
                 <ActivityHeatmap 
