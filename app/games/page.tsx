@@ -1,6 +1,6 @@
-// app/games/page.tsx
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 /* ------------------------------
@@ -18,7 +18,9 @@ function Card({
   className?: string;
 }) {
   return (
-    <div className={`rounded-[20px] ring-1 ring-white/10 bg-white/[0.05] p-4 md:p-5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04)] ${className}`}>
+    <div
+      className={`rounded-[20px] ring-1 ring-white/10 bg-white/[0.05] p-4 md:p-5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04)] ${className}`}
+    >
       <div className="mb-3">
         <h3 className="text-lg font-semibold tracking-tight">{title}</h3>
         {subtitle && <p className="text-xs text-zinc-400">{subtitle}</p>}
@@ -94,10 +96,9 @@ function TypingTest() {
   }, [value, target]);
 
   const accuracy = value.length ? Math.round((correct / value.length) * 100) : 100;
-
   const elapsedMin =
     startedAt == null ? 0 : Math.max((Date.now() - startedAt) / 1000 / 60, 1 / 60);
-  const wpm = Math.max(0, Math.round((correct / 5) / elapsedMin));
+  const wpm = Math.max(0, Math.round(correct / 5 / elapsedMin));
 
   function onChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
     if (!startedAt) setStartedAt(Date.now());
@@ -122,7 +123,7 @@ function TypingTest() {
       />
       <div className="mt-3 flex items-center gap-3 text-sm">
         <span className="rounded-full px-2 py-1 ring-1 ring-white/10">
-          WPM: <span className="font-medium">{wpm}</span>
+          WPM: <span className="font-medium">{Number.isFinite(wpm) ? wpm : 0}</span>
         </span>
         <span className="rounded-full px-2 py-1 ring-1 ring-white/10">
           Accuracy: <span className="font-medium">{accuracy}%</span>
@@ -133,9 +134,7 @@ function TypingTest() {
         </div>
       </div>
       {done && (
-        <div className="mt-3 text-emerald-400 text-sm">
-          Nice! You nailed it. Try another prompt.
-        </div>
+        <div className="mt-3 text-emerald-400 text-sm">Nice! You nailed it. Try another prompt.</div>
       )}
     </Card>
   );
@@ -144,101 +143,39 @@ function TypingTest() {
 /* ------------------------------
    2) Aayush Trivia (enhanced)
 ------------------------------ */
-type Q = {
-  question: string;
-  choices: string[];
-  answer: number;
-  explain?: string;
-};
+type Q = { question: string; choices: string[]; answer: number; explain?: string };
 
 const TRIVIA: Q[] = [
-  {
-    question: "Where is Aayush based?",
+  { question: "Where is Aayush based?",
     choices: ["Phoenix • Los Angeles", "Boston • NYC", "Seattle • Austin", "Tempe • San Diego"],
-    answer: 0,
-    explain: "You show this in your hero chip: Phoenix • Los Angeles.",
-  },
-  {
-    question: "Favorite build style?",
-    choices: [
-      "Massive monolith first",
-      "Small end-to-end slice, then polish",
-      "Microservices immediately",
-      "Only front-end demos",
-    ],
-    answer: 1,
-    explain: "You preach 'tiny slice end-to-end' across the site.",
-  },
-  {
-    question: "What’s Aayush studying right now?",
-    choices: [
-      "BFA – Graphic Design",
-      "BS CS & MCS Big Data Systems (accelerated)",
-      "MBA – Finance",
-      "Physics & Math",
-    ],
-    answer: 1,
-  },
-  {
-    question: "Which AI approach do you prototype a lot?",
-    choices: ["GANs", "RAG + Embeddings", "Transformers from scratch", "AutoML only"],
-    answer: 1,
-  },
-  {
-    question: "Your go-to database for getting started?",
-    choices: ["MongoDB", "DynamoDB", "PostgreSQL", "Cassandra"],
-    answer: 2,
-  },
-  {
-    question: "Cloud/tooling combo you’ve used in projects?",
-    choices: [
-      "Azure + Cosmos + Logic Apps",
-      "AWS + Kinesis + Glue + Redshift",
-      "GCP + Spanner + Bigtable",
-      "On-prem Hadoop",
-    ],
-    answer: 1,
-  },
-  {
-    question: "Which project is a student investing helper?",
-    choices: ["Operational Dashboard", "AIInvestMate", "SafetyGuardian", "StockPay Insights"],
-    answer: 1,
-  },
-  {
-    question: "What do you value more than scope?",
-    choices: ["Velocity", "Polish", "Headcount", "Revenue"],
-    answer: 1,
-  },
-  {
-    question: "CI/CD mindset?",
-    choices: [
-      "YOLO to prod",
-      "Only manual deploys",
-      "Feature flags + short PRs + preview deploys",
-      "Scheduled monthly deploys",
-    ],
-    answer: 2,
-  },
-  {
-    question: "Your logging/observability stance?",
-    choices: [
-      "Only print statements",
-      "Log everything, no dashboards",
-      "If it's not logged & monitored, it doesn't exist",
-      "Rely on user reports",
-    ],
-    answer: 2,
-  },
-  {
-    question: "Which frontend framework do you use a lot?",
-    choices: ["Svelte", "React/Next.js", "Vue", "Ember"],
-    answer: 1,
-  },
-  {
-    question: "A tiny fun tab on your site?",
-    choices: ["Music", "Games", "Gallery", "Shop"],
-    answer: 1,
-  },
+    answer: 0, explain: "Shown in the hero chip." },
+  { question: "Favorite build style?",
+    choices: ["Massive monolith first","Small end-to-end slice, then polish","Microservices immediately","Only front-end demos"],
+    answer: 1, explain: "You say this across the site." },
+  { question: "Current study path?",
+    choices: ["BFA – Graphic Design","BS CS & MCS Big Data Systems (accelerated)","MBA – Finance","Physics & Math"],
+    answer: 1 },
+  { question: "AI approach you prototype a lot?",
+    choices: ["GANs","RAG + Embeddings","Transformers from scratch","AutoML only"], answer: 1 },
+  { question: "Go-to starter database?",
+    choices: ["MongoDB","DynamoDB","PostgreSQL","Cassandra"], answer: 2 },
+  { question: "Cloud/tooling combo you’ve used?",
+    choices: ["Azure + Cosmos + Logic Apps","AWS + Kinesis + Glue + Redshift","GCP + Spanner + Bigtable","On-prem Hadoop"],
+    answer: 1 },
+  { question: "Student investing helper project?",
+    choices: ["Operational Dashboard","AIInvestMate","SafetyGuardian","StockPay Insights"], answer: 1 },
+  { question: "What do you value more than scope?",
+    choices: ["Velocity","Polish","Headcount","Revenue"], answer: 1 },
+  { question: "CI/CD mindset?",
+    choices: ["YOLO to prod","Only manual deploys","Feature flags + short PRs + preview deploys","Monthly scheduled deploys"],
+    answer: 2 },
+  { question: "Logging/observability stance?",
+    choices: ["Only print statements","Log everything, no dashboards","If it's not logged & monitored, it doesn't exist","Rely on user reports"],
+    answer: 2 },
+  { question: "Frontend framework you use a lot?",
+    choices: ["Svelte","React/Next.js","Vue","Ember"], answer: 1 },
+  { question: "A tiny fun tab on your site?",
+    choices: ["Music","Games","Gallery","Shop"], answer: 1 },
 ];
 
 function TriviaGame() {
@@ -248,13 +185,12 @@ function TriviaGame() {
   const [showExplain, setShowExplain] = useState(false);
 
   const q = TRIVIA[i];
-  const progress = Math.round(((i) / TRIVIA.length) * 100);
+  const progress = Math.round((i / TRIVIA.length) * 100);
 
   function choose(c: number) {
     if (pick != null) return;
     setPick(c);
-    const correct = c === q.answer;
-    if (correct) setScore((s) => s + 1);
+    if (c === q.answer) setScore((s) => s + 1);
     setShowExplain(true);
   }
 
@@ -275,7 +211,6 @@ function TriviaGame() {
 
   return (
     <Card title="Aayush Trivia" subtitle="How well do you know me?">
-      {/* progress */}
       <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden mb-3">
         <div
           className="h-full bg-gradient-to-r from-cyan-400 via-fuchsia-400 to-purple-400"
@@ -311,8 +246,7 @@ function TriviaGame() {
 
       {showExplain && (
         <div className="mt-3 text-xs text-zinc-400">
-          {q.explain ??
-            (q.answer != null ? `Answer: ${q.choices[q.answer]}` : null)}
+          {q.explain ?? `Answer: ${q.choices[q.answer]}`}
         </div>
       )}
 
@@ -338,35 +272,17 @@ function TriviaGame() {
    3) Guess the Stack
 ------------------------------ */
 const STACK = [
-  "Python",
-  "TypeScript",
-  "JavaScript",
-  "SQL",
-  "Go",
-  "C#",
-  "React",
-  "Next.js",
-  "Django",
-  "FastAPI",
-  "Spring Boot",
-  "React Native",
-  "Tailwind",
-  "AWS",
-  "Vercel",
-  "Supabase",
-  "Azure",
-  "PostgreSQL",
-  "Redshift",
-  "Docker",
-  "Terraform",
-  "GitHub Actions",
-  "Kinesis",
-  "Glue",
+  "Python","TypeScript","JavaScript","SQL","Go","C#",
+  "React","Next.js","Django","FastAPI","Spring Boot","React Native","Tailwind",
+  "AWS","Vercel","Supabase","Azure",
+  "PostgreSQL","Redshift",
+  "Docker","Terraform","GitHub Actions",
+  "Kinesis","Glue",
 ];
 
 const HINTS: Record<string, string> = {
   "Next.js": "Meta-framework on top of React.",
-  "FastAPI": "Lightning-fast Python APIs.",
+  FastAPI: "Lightning-fast Python APIs.",
   "Spring Boot": "Java framework that just runs.",
   Redshift: "Columnar warehouse from AWS.",
   Kinesis: "AWS stream firehose.",
@@ -379,9 +295,7 @@ function GuessTheStack() {
   const [miss, setMiss] = useState<string[]>([]);
   const [hint, setHint] = useState<string>("Type a tech and press Enter.");
 
-  function normalize(s: string) {
-    return s.trim().toLowerCase().replace(/\s+/g, "");
-  }
+  const normalize = (s: string) => s.trim().toLowerCase().replace(/\s+/g, "");
 
   function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -441,9 +355,7 @@ function GuessTheStack() {
       </div>
 
       {miss.length > 0 && (
-        <div className="mt-3 text-xs text-zinc-400">
-          Misses: {miss.slice(-5).join(", ")}
-        </div>
+        <div className="mt-3 text-xs text-zinc-400">Misses: {miss.slice(-5).join(", ")}</div>
       )}
 
       {done && (
@@ -463,13 +375,13 @@ function TicTacToe() {
   const [xTurn, setXTurn] = useState(true);
 
   const lines = [
-    [0,1,2],[3,4,5],[6,7,8],
-    [0,3,6],[1,4,7],[2,5,8],
-    [0,4,8],[2,4,6],
+    [0, 1, 2],[3, 4, 5],[6, 7, 8],
+    [0, 3, 6],[1, 4, 7],[2, 5, 8],
+    [0, 4, 8],[2, 4, 6],
   ];
 
   const winner = useMemo(() => {
-    for (const [a,b,c] of lines) {
+    for (const [a, b, c] of lines) {
       if (cells[a] && cells[a] === cells[b] && cells[a] === cells[c]) return cells[a];
     }
     return null;
@@ -504,10 +416,16 @@ function TicTacToe() {
         ))}
       </div>
       <div className="mt-3 flex items-center gap-2 text-sm">
-        {!winner && !full && <span>Turn: <b>{xTurn ? "X" : "O"}</b></span>}
+        {!winner && !full && (
+          <span>
+            Turn: <b>{xTurn ? "X" : "O"}</b>
+          </span>
+        )}
         {winner && <span className="text-emerald-400">Winner: {winner}</span>}
         {!winner && full && <span className="text-cyan-400">Draw!</span>}
-        <Btn className="ml-auto" onClick={reset}>Reset</Btn>
+        <Btn className="ml-auto" onClick={reset}>
+          Reset
+        </Btn>
       </div>
     </Card>
   );
@@ -517,11 +435,25 @@ function TicTacToe() {
    Page
 ------------------------------ */
 export default function GamesPage() {
+  // Header is rendered from app/layout.tsx so it already works on every route.
+  // We keep the page content below it and provide a Back home button here.
   return (
-    <main className="mx-auto max-w-6xl px-4 pt-10 pb-16">
-      <div className="mb-6">
-        <h1 className="text-2xl md:text-3xl font-semibold tracking-tight">Games</h1>
-        <p className="text-sm text-zinc-400">Little breaks that still feel like me.</p>
+    <main className="relative z-0 mx-auto max-w-6xl px-4 pt-10 pb-16">
+      <div className="mb-6 flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl md:text-3xl font-semibold tracking-tight">Games</h1>
+          <p className="text-sm text-zinc-400">Little breaks that still feel like me.</p>
+        </div>
+
+        {/* Back home button */}
+        <Link
+          href="/"
+          prefetch={false}
+          className="text-sm rounded-full px-3 py-1.5 ring-1 ring-white/10 hover:ring-white/20 hover:bg-white/5"
+          aria-label="Back home"
+        >
+          ← Back home
+        </Link>
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
