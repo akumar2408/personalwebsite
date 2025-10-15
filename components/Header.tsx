@@ -1,18 +1,21 @@
+// components/Header.tsx
 "use client";
 
+import Link from "next/link";
 import { HelpCircle, Sun, MoonStar } from "lucide-react";
 import { useEffect, useState } from "react";
 import { motion, useScroll } from "framer-motion";
-import Link from "next/link";
 import NavTabs from "./NavTabs";
 import MobileNav from "./MobileNav";
 
+// Use absolute-hash hrefs so tabs work universally from any route.
+// Keep the id so the home page can still observe sections for "active" state.
 const nav = [
   { id: "about",      href: "/#about",      label: "About",      hint: "Who I am + what I do" },
   { id: "skills",     href: "/#skills",     label: "Skills",     hint: "Stacks I use a lot" },
   { id: "projects",   href: "/#projects",   label: "Projects",   hint: "Selected builds & case studies" },
   { id: "now",        href: "/#now",        label: "Now",        hint: "What I’m focused on this month" },
-  {                   href: "/games",       label: "Games",      hint: "Tiny side fun" },
+  {                    href: "/games",      label: "Games",      hint: "Tiny side fun" },
   { id: "experience", href: "/#experience", label: "Experience", hint: "Work + school" },
   { id: "contact",    href: "/#contact",    label: "Contact",    hint: "Say hi" },
 ];
@@ -42,27 +45,28 @@ export default function Header() {
 
       <header className="sticky top-0 z-50 backdrop-blur bg-zinc-950/75 border-b border-white/10
         after:block after:h-px after:w-full after:bg-gradient-to-r after:from-cyan-400/25 after:via-fuchsia-400/15 after:to-purple-400/25">
-        <Link
-  href="/"
-  prefetch={false}
-  className={[
-    "font-semibold tracking-[-0.01em] text-[22px] md:text-[28px]",
-    // gradient text
-    "text-transparent bg-clip-text bg-gradient-to-r",
-    "from-rose-400 via-orange-300 to-fuchsia-400",
-    // subtle animated shift (optional)
-    "bg-[length:200%_100%] animate-[ak-gradient_10s_linear_infinite]",
-    // hover glow
-    "hover:drop-shadow-[0_0_12px_rgba(244,63,94,0.35)] transition"
-  ].join(" ")}
->
-  Aayush Kumar
-</Link>
+        <div className="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between">
+          {/* Brand with reddish gradient + subtle animated shimmer */}
+          <Link
+            href="/"
+            prefetch={false}
+            className={[
+              "font-semibold tracking-[-0.01em] text-[22px] md:text-[28px]",
+              "text-transparent bg-clip-text bg-gradient-to-r",
+              "from-rose-400 via-orange-300 to-fuchsia-400",
+              "bg-[length:200%_100%] animate-[ak-gradient_10s_linear_infinite]",
+              "hover:drop-shadow-[0_0_12px_rgba(244,63,94,0.35)] transition"
+            ].join(" ")}
+          >
+            Aayush Kumar
+          </Link>
 
+          {/* Desktop nav */}
           <nav className="hidden md:block">
             <NavTabs items={nav} />
           </nav>
 
+          {/* Actions + mobile nav */}
           <div className="flex items-center gap-2">
             <button
               aria-label="Quick tour (?)"
