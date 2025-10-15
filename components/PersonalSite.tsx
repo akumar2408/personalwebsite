@@ -124,7 +124,7 @@ function SplashOverlay() {
                 <motion.rect x={220} y={170} width={520} height={5} rx={2} fill="url(#splashInk)" shapeRendering="crispEdges" initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} style={{ transformOrigin: '50% 50%' }} transition={{ delay: reduced ? 0.1 : 0.95, duration: reduced ? 0.1 : 0.45, ease: 'easeOut' }} />
               </svg>
               <motion.div className="mt-6 text-center text-zinc-100 text-lg md:text-xl" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: reduced ? 0.15 : 1.15, duration: reduced ? 0.15 : 0.45 }}>
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-300 via-fuchsia-300 to-purple-300">Incoming — Associate Developer @ Insurity</span>
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-300 via-fuchsia-300 to-purple-300">AI Associate Developer @ Insurity</span>
               </motion.div>
             </div>
           </div>
@@ -413,13 +413,13 @@ export default function PersonalSite() {
                     </div>
                     <div>
                       <p className="text-[11px] uppercase tracking-widest text-cyan-400/90 font-semibold">Currently</p>
-                      <p className="text-base font-semibold">Associate Developer <span className="text-zinc-500">@ Insurity</span></p>
+                      <p className="text-base font-semibold">AI Associate Developer <span className="text-zinc-500">@ Insurity</span></p>
                     </div>
                   </div>
                   <ul className="mt-4 text-sm leading-6 list-disc ml-4 text-zinc-300">
-                    <li>Build AI tools with the AI Solutions team.</li>
-                    <li>Work on AI-assisted features where they actually help.</li>
-                    <li>Focus on clean code, solid tests, and smooth deploys.</li>
+                    <li>Work with the AI Solutions team on smarter tools.</li>
+                    <li>Build features that make real work easier.</li>
+                    <li>Focus on clarity, testing, and smooth deploys.</li>
                   </ul>
                   <div className="mt-5 flex flex-wrap gap-2">
                     <span className="text-[10px] uppercase tracking-wider px-2 py-1 rounded-full border border-white/10 bg-white/5">Insurity • Oct 2025</span>
@@ -443,7 +443,7 @@ export default function PersonalSite() {
               <p className="mt-3 text-sm text-zinc-400 max-w-[28ch]">A little context and what I’m into.</p>
             </div>
             <motion.div className="md:col-span-8 text-zinc-300" initial={fadeUp.initial} animate={fadeUp.animate}>
-              <p className="leading-relaxed">I like small, end-to-end slices that prove the idea. Once it works, I clean it up and make it sturdy. Most of my projects mix web, data, and a bit of AI.</p>
+              <p className="leading-relaxed">I like building small, end-to-end things that prove an idea works. Once it does, I polish it up and make it solid. Most of what I build mixes web, data, and a bit of AI.</p>
               <p className="mt-4 leading-relaxed">Right now I’m finishing my BS at ASU and working through the MCS Big Data Systems track. Outside of classes, I build things for fun and post the ones I’m proud of.</p>
               <div className="mt-4 flex flex-wrap gap-2 text-xs">
                 <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-2 py-1"><GraduationCap className="h-3.5 w-3.5"/> ASU — BS CS ’25</span>
