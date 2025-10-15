@@ -32,7 +32,6 @@ export default function QuoteRotator({
   return (
     <div
       className={[
-        // full width card; visually aligns with your text column
         "w-full rounded-[20px] ring-1 ring-white/10 bg-white/[0.05] backdrop-blur",
         "shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04)] p-5 md:p-6",
         className,
@@ -41,23 +40,19 @@ export default function QuoteRotator({
     >
       <div className="text-xs tracking-wide text-zinc-400 mb-2">Stuff I live by</div>
 
-      {/* Quote */}
+      {/* Quote with guaranteed opening & closing marks */}
       <blockquote
         key={i}
         className={[
           fraunces.className,
           "relative text-2xl md:text-[28px] leading-[1.25] text-zinc-100",
+          // Render decorative quotes that are not selectable
+          "before:content-['“'] after:content-['”'] before:select-none after:select-none",
+          "before:text-white/30 after:text-white/30 before:mr-2 after:ml-2",
           "transition-opacity duration-300",
         ].join(" ")}
       >
-        {/* decorative opening quote */}
-        <span
-          aria-hidden
-          className="select-none absolute -left-3 -top-1 text-3xl md:text-4xl text-white/20"
-        >
-          “
-        </span>
-        <span className="pl-3">{items[i]}</span>
+        {items[i]}
       </blockquote>
 
       {/* dots */}

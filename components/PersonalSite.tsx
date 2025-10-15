@@ -9,7 +9,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import FocusBoard from "@/components/FocusBoard";
 import QuoteCard from "@/components/QuoteRotator";
-import ActivityHeatmap from "@/components/ActivityHeatmap";
+
 import Changelog from "@/components/Changelog";
 
 
@@ -648,13 +648,6 @@ export default function PersonalSite() {
     
   </div>
 </div>
-                <ActivityHeatmap 
-                seed={12}
-                weeks={8}
-                metric="ship-days"
-                aria-label="Recent shipping activity"
-                />
- 
             </div>
             </motion.div>
           </div>
