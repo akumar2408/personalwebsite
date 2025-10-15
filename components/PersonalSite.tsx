@@ -634,7 +634,7 @@ export default function PersonalSite() {
               </div>
               <div className="mt-4 grid sm:grid-cols-2 gap-4">
               <QuoteCard
-  className="mt-6 md:mt-8"
+  className="mt-6 md:col-span-8"
   items={[
     "If it works, don’t ask why.”",
     "Gym? I thought you said gin.",
