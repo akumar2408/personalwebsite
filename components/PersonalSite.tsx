@@ -24,7 +24,7 @@ const CONFIG = {
 const nav = [
   { id: "about", label: "About", hint: "Who I am + what I do" },
   { id: "skills", label: "Skills", hint: "Stacks I use a lot" },
-  { id: "projects", label: "Projects", hint: "Selected builds & case studies" },
+  { id: "projects", label: "Projects", href: "/projects", hint: "Selected builds & case studies" },
   { id: "now", label: "Now", hint: "What I’m focused on this month" }, // NEW
   { id: "games", label: "Games", href: "/games", hint: "Tiny side fun" },
   { id: "experience", label: "Experience", hint: "Work + school" },
@@ -82,6 +82,33 @@ const fadeUp = {
 /* =========================
    Splash intro
 ========================= */
+
+function Chip({
+  icon: Icon,
+  children,
+  tone = "cyan",
+}: {
+  icon: React.ComponentType<{ className?: string }>;
+  children: React.ReactNode;
+  tone?: "cyan" | "fuchsia" | "purple";
+}) {
+  const color =
+    tone === "cyan"
+      ? "text-cyan-300"
+      : tone === "fuchsia"
+      ? "text-fuchsia-300"
+      : "text-purple-300";
+
+  return (
+    <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 pl-2 pr-3 py-1.5">
+      <span className="inline-grid place-items-center h-6 w-6 rounded-full bg-white/5 ring-1 ring-white/10">
+        <Icon className={`h-3.5 w-3.5 ${color}`} />
+      </span>
+      <span className="text-sm">{children}</span>
+    </span>
+  );
+}
+
 function SplashOverlay() {
   const [show, setShow] = useState(true);
   const [reduced, setReduced] = useState(false);
@@ -597,15 +624,9 @@ export default function PersonalSite() {
                 classes, I build things for fun and post the ones I’m proud of.
               </p>
               <div className="mt-4 flex flex-wrap gap-2 text-xs">
-                <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-2 py-1">
-                  <GraduationCap className={`${accentChip} text-cyan-300/90`} /> ASU — BS CS ’25
-                </span>
-                <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-2 py-1">
-                  <Award className={`${accentChip} text-fuchsia-300/90`}/> Dean’s List (GPA 3.75)
-                </span>
-                <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-2 py-1">
-                  <GraduationCap className={`${accentChip} text-purple-300/90`}/> ASU — MCS Big Data Systems ’26
-                </span>
+                <Chip icon={GraduationCap} tone="cyan">ASU — BS CS ’25</Chip>
+                <Chip icon={Award} tone="fuchsia">Dean’s List (GPA 3.75)</Chip>
+                <Chip icon={GraduationCap} tone="purple">ASU — MCS Big Data Systems ’26</Chip>
               </div>
             </motion.div>
           </div>
