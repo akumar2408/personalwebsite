@@ -7,6 +7,10 @@ import {
   TerminalSquare, HelpCircle, Keyboard, Grid3X3
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import FocusBoard from "@/components/FocusBoard";
+import QuoteCard from "@/components/QuoteRotator";
+import ActivityHeatmap from "@/components/ActivityHeatmap";
+
 
 /* =========================
    Basic config
@@ -627,6 +631,18 @@ export default function PersonalSite() {
                 <Chip icon={Award} tone="fuchsia">Dean’s List (GPA 3.75)</Chip>
                 <Chip icon={GraduationCap} tone="purple">ASU — MCS Big Data Systems ’26</Chip>
               </div>
+              <div className="mt-4 grid sm:grid-cols-2 gap-4">
+                <QuoteCard
+                title="Stuff I live by"
+                quotes={[
+                  "Ship a tiny slice end to end. Make it pretty after it's useful.",
+                  "Readable beats clever. Future me has to debug this.",
+                  "Postgres first. Add Redshift when it actually hurts.",
+                  "If it's not logged and monitored, it basically didn't happen.",
+                ]}
+              />
+                <ActivityHeatmap seed={12} />
+            </div>
             </motion.div>
           </div>
         </section>
@@ -762,6 +778,42 @@ export default function PersonalSite() {
               </p>
             </div>
           </div>
+          <div className="mt-6">
+  <FocusBoard
+    items={[
+      {
+        tag: "building",
+        title: "Little AI tools I actually use",
+        note: "RAG experiments, quick insight bots, and one-click helpers.",
+      },
+      {
+        tag: "learning",
+        title: "Clean ETL patterns",
+        note: "Airflow DAGs that make sense at 2am. Better logging, fewer surprises.",
+      },
+      {
+        tag: "shipping",
+        title: "Polish on case studies",
+        note: "Short demo clips, clearer READMEs, less coming soon.",
+      },
+      {
+        tag: "life",
+        title: "Gym + design breaks",
+        note: "Move a bit, reset the brain, come back sharper.",
+      },
+      {
+        tag: "building",
+        title: "Personal site UX",
+        note: "Tiny animations, better docs, faster nav.",
+      },
+      {
+        tag: "learning",
+        title: "Agents and evals",
+        note: "Sandboxing actions and not trusting vibes.",
+      },
+    ]}
+  />
+</div>
         </section>
 
         {/* EXPERIENCE & EDUCATION */}
