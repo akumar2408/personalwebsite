@@ -12,7 +12,7 @@ export default function NavTabs({ items }: { items: Item[] }) {
   const [hovered, setHovered] = useState<string | null>(null);
   const [activeId, setActiveId] = useState<string>(items.find(i => i.id)?.id ?? "");
 
-  // Only track sections when we're on the homepage
+  // Track sections only on the homepage
   useEffect(() => {
     if (typeof window === "undefined") return;
     if (window.location.pathname !== "/") return;
@@ -24,17 +24,12 @@ export default function NavTabs({ items }: { items: Item[] }) {
       (entries) => entries.forEach(e => e.isIntersecting && setActiveId(e.target.id)),
       { rootMargin: "-40% 0px -55% 0px", threshold: 0.01 }
     );
-
     ids.forEach(id => { const el = document.getElementById(id); if (el) io.observe(el); });
     return () => io.disconnect();
   }, [items]);
 
   const isRouteActive = (it: Item) => {
-    // Section tabs: active only on home and when that section is intersecting
-    if (it.id && it.href.startsWith("/#")) {
-      return (pathname === "/" && activeId === it.id);
-    }
-    // Route tabs (e.g., /games)
+    if (it.id && it.href.startsWith("/#")) return (pathname === "/" && activeId === it.id);
     return pathname === it.href;
   };
 
@@ -49,9 +44,10 @@ export default function NavTabs({ items }: { items: Item[] }) {
             onMouseLeave={() => setHovered(null)}
             className="relative"
           >
+            {/* Cast to any to satisfy typedRoutes for dynamic strings */}
             <Link
               prefetch={false}
-              href={n.href}
+              href={n.href as any}
               className={[
                 "px-4 py-2 md:px-4 md:py-2.5 rounded-[12px] text-[15px] md:text-base transition",
                 "hover:text-white/90 text-zinc-200",

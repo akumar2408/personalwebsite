@@ -32,9 +32,9 @@ export default function MobileNav({ items }: { items: Item[] }) {
                 <li key={n.label}>
                   <Link
                     prefetch={false}
-                    href={n.href}
+                    href={n.href as any}  // cast for typedRoutes
                     onClick={() => setOpen(false)}
-                    className="block px-3 py-2 text-sm text-zinc-200 hover:bg-white/5 rounded-[8px]"
+                    className="block px-3 py-2 text-sm text-zinc-200 hover:bg:white/5 hover:bg-white/5 rounded-[8px]"
                   >
                     {n.label}
                   </Link>
