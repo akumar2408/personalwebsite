@@ -101,7 +101,7 @@ export default function ProjectCase({ params }: { params: { slug: string } }) {
   const item = cases[params.slug];
   if (!item) {
     return (
-      <main className="relative z-0">
+      <main className="mx-auto max-w-3xl p-6">
         <p className="text-zinc-300">Not found.</p>
         <div className="mt-4 flex gap-4">
           <Link href="/projects" className="underline text-sm opacity-80">
@@ -116,7 +116,7 @@ export default function ProjectCase({ params }: { params: { slug: string } }) {
   }
 
   return (
-    <main className="relative z-0">
+    <main className="mx-auto max-w-3xl p-6">
       <div className="flex items-center justify-between">
         <Link href="/projects" className="text-sm opacity-80 hover:underline">
           ← Back to projects

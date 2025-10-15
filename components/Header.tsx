@@ -39,7 +39,8 @@ export default function Header() {
         className="fixed top-0 left-0 right-0 h-[3px] origin-left bg-gradient-to-r from-cyan-400 via-fuchsia-400 to-purple-400 z-[60]"
       />
 
-      <header className="sticky top-0 z-[100] backdrop-blur bg-zinc-900/70 border-b border-white/10">
+      <header className="sticky top-0 z-50 backdrop-blur bg-zinc-950/75 border-b border-white/10
+        after:block after:h-px after:w-full after:bg-gradient-to-r after:from-cyan-400/25 after:via-fuchsia-400/15 after:to-purple-400/25">
         <div className="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between">
           <a
             href="/"

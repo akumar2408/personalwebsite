@@ -24,7 +24,7 @@ const CONFIG = {
 const nav = [
   { id: "about", label: "About", hint: "Who I am + what I do" },
   { id: "skills", label: "Skills", hint: "Stacks I use a lot" },
-  { id: "projects", label: "Projects", href: "/projects", hint: "Selected builds & case studies" },
+  { id: "projects", label: "Projects", hint: "Selected builds & case studies" },
   { id: "now", label: "Now", hint: "What I’m focused on this month" }, // NEW
   { id: "games", label: "Games", href: "/games", hint: "Tiny side fun" },
   { id: "experience", label: "Experience", hint: "Work + school" },
@@ -82,7 +82,6 @@ const fadeUp = {
 /* =========================
    Splash intro
 ========================= */
-
 function Chip({
   icon: Icon,
   children,
