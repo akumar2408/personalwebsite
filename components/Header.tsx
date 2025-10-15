@@ -7,16 +7,17 @@ import NavTabs from "./NavTabs";
 import MobileNav from "./MobileNav";
 
 const nav = [
-  { href: "/#about",      label: "About",      hint: "Who I am + what I do" },
-  { href: "/#skills",     label: "Skills",     hint: "Stacks I use a lot" },
-  { href: "/#projects",   label: "Projects",   hint: "Selected builds & case studies" },
-  { href: "/#now",        label: "Now",        hint: "What I’m focused on this month" },
-  { href: "/games",       label: "Games",      hint: "Tiny side fun" },
-  { href: "/#experience", label: "Experience", hint: "Work + school" },
-  { href: "/#contact",    label: "Contact",    hint: "Say hi" },
+  { id: "about",      href: "/#about",      label: "About",      hint: "Who I am + what I do" },
+  { id: "skills",     href: "/#skills",     label: "Skills",     hint: "Stacks I use a lot" },
+  { id: "projects",   href: "/#projects",   label: "Projects",   hint: "Selected builds & case studies" },
+  { id: "now",        href: "/#now",        label: "Now",        hint: "What I’m focused on this month" },
+  {                   href: "/games",       label: "Games",      hint: "Tiny side fun" },
+  { id: "experience", href: "/#experience", label: "Experience", hint: "Work + school" },
+  { id: "contact",    href: "/#contact",    label: "Contact",    hint: "Say hi" },
 ];
 
 export default function Header() {
+  // theme toggle persisted
   const [dark, setDark] = useState(true);
   useEffect(() => {
     const stored = localStorage.getItem("prefers-dark");
@@ -27,10 +28,12 @@ export default function Header() {
     localStorage.setItem("prefers-dark", String(dark));
   }, [dark]);
 
+  // scroll progress bar
   const { scrollYProgress } = useScroll();
 
   return (
     <>
+      {/* gradient progress bar */}
       <motion.div
         style={{ scaleX: scrollYProgress }}
         className="fixed top-0 left-0 right-0 h-[3px] origin-left bg-gradient-to-r from-cyan-400 via-fuchsia-400 to-purple-400 z-[60]"
