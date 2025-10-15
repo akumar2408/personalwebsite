@@ -652,11 +652,12 @@ export default function PersonalSite() {
     <span>high</span>
   </div>
 </div>
-                <ActivityHeatmap seed={12}
-                 metric="ship-days" 
-                 aria-label="Heatmap of days I shipped or reviewed code in the last few weeks"
-                />
-                
+                <ActivityHeatmap 
+                seed={12}
+                weeks={8}
+                metric="ship-days"
+                aria-label="Recent shipping activity"
+                /> 
             </div>
             </motion.div>
           </div>
