@@ -636,10 +636,10 @@ export default function PersonalSite() {
               <QuoteCard
   className="mt-6 md:col-span-8"
   items={[
-    "If it works, don’t ask why.”",
+    "If it works, don’t ask why.",
     "Gym? I thought you said gin.",
     "Working hard or hardly awake.",
-    "I don’t have a plan, just a good playlist.”",
+    "I don’t have a plan, just a good playlist.",
     "Mentally 25, financially 12.",
   ]}
 />

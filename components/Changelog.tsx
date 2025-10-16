@@ -8,6 +8,9 @@ type Item = {
   href?: string;
 };
 
+const titleGrad = 
+    "bg-clip-text text-transparent bg-gradient-to-r from-cyan-300 via-fuchsia-300 to-purple-300";
+    
 export default function Changelog({
   updated,
   intro,
@@ -27,7 +30,7 @@ export default function Changelog({
   return (
     <section id="now" className="mx-auto max-w-6xl px-4 py-10 md:py-14">
       <div className="flex items-baseline gap-3">
-        <h2 className="section-title text-xl md:text-2xl font-semibold tracking-tight">Now</h2>
+      <h2 className={`section-title ${titleGrad} text-xl md:text-2xl font-semibold tracking-tight`}style={{ ["--hlw" as any]: "140px" }}>Now</h2>
         <span className="text-xs text-zinc-400">Updated {updated}</span>
       </div>
       {intro && <p className="mt-1 text-sm text-zinc-400">{intro}</p>}
