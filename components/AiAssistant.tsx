@@ -6,18 +6,28 @@ import { MessageCircle, X, Send, Mic, MicOff } from "lucide-react";
 
 type Msg = { from: "user" | "bot"; text: string };
 
-export default function AiAssistant() {
-  // ui state
+type AiAssistantProps = {
+  /** If provided, controls when the FAB can appear. Useful: visible={splashDone} */
+  visible?: boolean;
+  /** Delay (ms) after visible goes true before showing the FAB */
+  appearDelayMs?: number;
+};
+
+export default function AiAssistant({
+  visible,
+  appearDelayMs = 600,
+}: AiAssistantProps) {
+  // UI state
   const [open, setOpen] = useState(false);
-  const [ready, setReady] = useState(false); // when true, show the FAB after splash is gone
+  const [ready, setReady] = useState(false); // when true, show the FAB
   const [loading, setLoading] = useState(false);
-  const [voice, setVoice] = useState<boolean>(() => {
+  const [voice, setVoice] = useState(() => {
     if (typeof window === "undefined") return false;
     const v = localStorage.getItem("ai-voice");
     return v ? v === "on" : false;
   });
 
-  // chat state
+  // Chat state
   const [msgs, setMsgs] = useState<Msg[]>([
     {
       from: "bot",
@@ -29,8 +39,20 @@ export default function AiAssistant() {
   const endRef = useRef<HTMLDivElement>(null);
   const messagesRef = useRef<HTMLDivElement>(null);
 
-  /* ---------- show FAB only after splash is gone ---------- */
+  /* ---------- Control “ready” (when the FAB shows) ---------- */
   useEffect(() => {
+    // If parent passes 'visible', use that as the source of truth
+    if (typeof visible === "boolean") {
+      if (visible) {
+        const t = setTimeout(() => setReady(true), appearDelayMs);
+        return () => clearTimeout(t);
+      } else {
+        setReady(false);
+      }
+      return;
+    }
+
+    // Otherwise, auto-detect a splash element
     const splash =
       document.getElementById("splash") ||
       document.getElementById("splash-intro");
@@ -43,17 +65,15 @@ export default function AiAssistant() {
     const io = new IntersectionObserver(
       (entries) => {
         const e = entries[0];
-        // If splash is no longer visible (mostly), we can show FAB
+        // show FAB when splash is mostly gone
         setReady(!e.isIntersecting || e.intersectionRatio < 0.2);
       },
       { threshold: [0, 0.2, 1] }
     );
     io.observe(splash);
 
-    // safety fallback – in case your splash removes itself from DOM
+    // Fallback + optional custom event for reliability
     const fallback = setTimeout(() => setReady(true), 6000);
-
-    // also listen to an optional custom event you might fire when splash is done
     const done = () => setReady(true);
     window.addEventListener("splash:done", done);
 
@@ -62,25 +82,24 @@ export default function AiAssistant() {
       clearTimeout(fallback);
       window.removeEventListener("splash:done", done);
     };
-  }, []);
+  }, [visible, appearDelayMs]);
 
-  /* ---------- lock body scroll when the panel is open ---------- */
+  /* ---------- Lock page scroll while panel is open ---------- */
   useEffect(() => {
-    if (open) {
-      const prev = document.documentElement.style.overflow;
-      document.documentElement.style.overflow = "hidden";
-      return () => {
-        document.documentElement.style.overflow = prev;
-      };
-    }
+    if (!open) return;
+    const prev = document.documentElement.style.overflow;
+    document.documentElement.style.overflow = "hidden";
+    return () => {
+      document.documentElement.style.overflow = prev;
+    };
   }, [open]);
 
-  /* ---------- keep chat scrolled to bottom on new messages ---------- */
+  /* ---------- Auto-scroll messages to bottom ---------- */
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [msgs, open]);
 
-  /* ---------- persist voice toggle ---------- */
+  /* ---------- Persist voice toggle ---------- */
   useEffect(() => {
     if (typeof window !== "undefined") {
       localStorage.setItem("ai-voice", voice ? "on" : "off");
@@ -102,22 +121,20 @@ export default function AiAssistant() {
       });
 
       const data = await res.json();
-      const reply =
-        data.reply || "Hmm, I’m not sure about that right now.";
-
+      const reply = data.reply || "Hmm, I’m not sure about that right now.";
       setMsgs((m) => [...m, { from: "bot", text: reply }]);
 
-      // voice reply (only if toggled on)
+      // Voice reply (only if toggled on)
       if (voice && typeof window !== "undefined" && "speechSynthesis" in window) {
         const utter = new SpeechSynthesisUtterance(reply);
         utter.rate = 1.05;
         utter.pitch = 1.0;
         utter.lang = "en-US";
-        window.speechSynthesis.cancel(); // stop anything already speaking
+        window.speechSynthesis.cancel();
         window.speechSynthesis.speak(utter);
       }
 
-      // fun confetti on compliments
+      // Fun confetti on compliments
       if (/nice|cool|awesome|great|good job|amazing/i.test(reply)) {
         import("canvas-confetti").then((c) => c.default());
       }
@@ -141,7 +158,7 @@ export default function AiAssistant() {
 
   return (
     <>
-      {/* Floating Button (only after splash is gone) */}
+      {/* Floating Button (only after splash is gone / visible=true) */}
       <AnimatePresence>
         {!open && ready && (
           <motion.button
@@ -157,7 +174,7 @@ export default function AiAssistant() {
         )}
       </AnimatePresence>
 
-      {/* Backdrop (clicking it minimizes) */}
+      {/* Backdrop (click to minimize) */}
       <AnimatePresence>
         {open && (
           <motion.div
@@ -171,7 +188,7 @@ export default function AiAssistant() {
         )}
       </AnimatePresence>
 
-      {/* Chat Box */}
+      {/* Chat Panel */}
       <AnimatePresence>
         {open && (
           <motion.div
@@ -181,8 +198,9 @@ export default function AiAssistant() {
             exit={{ opacity: 0, y: 40 }}
             transition={{ type: "spring", stiffness: 140, damping: 18 }}
             className="fixed bottom-6 right-6 z-[95] w-[360px] sm:w-[400px] h-[520px] sm:h-[560px] rounded-[20px] border border-white/10 bg-zinc-900/95 text-zinc-100 shadow-2xl backdrop-blur-lg flex flex-col"
-            // Stop scroll events from bubbling to the page
+            // Stop scroll events from affecting the page
             onWheel={(e) => e.stopPropagation()}
+            onTouchMove={(e) => e.stopPropagation()}
           >
             {/* Header */}
             <div className="flex items-center justify-between px-4 py-2.5 border-b border-white/10 bg-gradient-to-r from-cyan-500/10 via-fuchsia-500/10 to-purple-500/10">

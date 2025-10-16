@@ -446,7 +446,7 @@ export default function PersonalSite() {
   const year = useMemo(() => new Date().getFullYear(), []);
   const [splashDone, setSplashDone] = useState(false);
   
-  <AiAssistant />
+  <AiAssistant visible={splashDone} appearDelayMs={800} />
   
   // UI states
   const [cmd, setCmd] = useState(false);
