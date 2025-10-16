@@ -2,6 +2,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Header from "../components/Header";
+import AiAssistant from "@/components/AiAssistant";
+import Script from "next/script";
 
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL || "https://aayush-kumarr.vercel.app";
@@ -55,19 +57,21 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    // After adding your site to Google Search Console, paste the meta content here:
-    // google: "PASTE_GOOGLE_SEARCH_CONSOLE_CODE"
+    // Add Google Search Console meta tag here if needed
   },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className="min-h-screen bg-zinc-950 text-zinc-100">
+      <body className="min-h-screen bg-zinc-950 text-zinc-100 antialiased selection:bg-fuchsia-500/40">
         <Header />
         {children}
 
-        {/* JSON-LD Person schema */}
+        {/* Floating AI Assistant */}
+        <AiAssistant />
+
+        {/* JSON-LD Schema */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -79,19 +83,53 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               url: SITE_URL,
               sameAs: [
                 "https://github.com/akumar2408",
-                "https://www.linkedin.com/in/aayushkumar2/",
+                "https://www.linkedin.com/in/aayushkumar2/"
               ],
               jobTitle: "Software Engineer",
               affiliation: {
                 "@type": "CollegeOrUniversity",
                 name: "Arizona State University",
-                sameAs: "https://www.asu.edu/",
+                sameAs: "https://www.asu.edu/"
               },
               description:
-                "AI + Software Engineer from ASU building intelligent, data-driven systems.",
-            }),
+                "AI + Software Engineer from ASU building intelligent, data-driven systems."
+            })
           }}
         />
+
+        {/* Confetti + Speech API Setup */}
+        <Script id="voice-confetti">
+          {`
+            // Speech synthesis helper
+            window.speak = (text) => {
+              try {
+                const msg = new SpeechSynthesisUtterance(text);
+                msg.lang = "en-US";
+                msg.rate = 1;
+                msg.pitch = 1.05;
+                msg.volume = 1;
+                window.speechSynthesis.speak(msg);
+              } catch (err) {
+                console.warn("Speech failed:", err);
+              }
+            };
+
+            // Confetti trigger
+            window.sparkConfetti = () => {
+              import("https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js")
+                .then((mod) => {
+                  const confetti = mod.default;
+                  confetti({
+                    particleCount: 80,
+                    spread: 80,
+                    origin: { y: 0.8 },
+                    colors: ["#22d3ee", "#e879f9", "#ffffff"]
+                  });
+                })
+                .catch(() => {});
+            };
+          `}
+        </Script>
       </body>
     </html>
   );

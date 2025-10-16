@@ -1,0 +1,28 @@
+{
+    "bio": "Aayush is an AI Associate Developer at Insurity, focused on smarter tools and real-world AI systems.",
+    "now": [
+      "Tweaking NetVR’s 3D Theater for smoother multi-user sessions.",
+      "Refactoring Supabase auth and Edge Functions setup.",
+      "Finishing up MCS Big Data Systems coursework at ASU."
+    ],
+    "projects": [
+      {
+        "name": "NetVR",
+        "desc": "React Native VR-style app with Supabase + Twitch."
+      },
+      {
+        "name": "LawBandit",
+        "desc": "AI legal research tool with RAG and smart citations."
+      },
+      {
+        "name": "SafetyGuardian",
+        "desc": "AWS data pipeline using Kinesis → Glue → Redshift."
+      }
+    ],
+    "fun": [
+      "Fueled by cold brew and curiosity.",
+      "Still insists ‘ship first, polish later’ works.",
+      "Once debugged a bug that didn’t exist. Felt powerful."
+    ]
+  }
+  
