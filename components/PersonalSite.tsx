@@ -9,7 +9,8 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import FocusBoard from "@/components/FocusBoard";
 import QuoteCard from "@/components/QuoteRotator";
-
+import SplashIntro from "@/components/SplashIntro";
+import AiAssistant from "@/components/AiAssistant";
 import Changelog from "@/components/Changelog";
 
 
@@ -443,7 +444,10 @@ function DevChecks() {
 ========================= */
 export default function PersonalSite() {
   const year = useMemo(() => new Date().getFullYear(), []);
-
+  const [splashDone, setSplashDone] = useState(false);
+  
+  <AiAssistant visible={splashDone} appearDelayMs={800} />
+  
   // UI states
   const [cmd, setCmd] = useState(false);
   const [tour, setTour] = useState(false);
