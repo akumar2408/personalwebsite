@@ -2,11 +2,16 @@ version: 2
 updates:
   - package-ecosystem: "npm"
     directory: "/"
-    schedule:
-      interval: "weekly"
+    schedule: { interval: "daily" }
     labels: ["dependencies"]
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+
   - package-ecosystem: "pip"
     directory: "/"
-    schedule:
-      interval: "weekly"
+    schedule: { interval: "daily" }
     labels: ["dependencies"]
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
