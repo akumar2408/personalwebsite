@@ -1,28 +1,27 @@
 {
-    "bio": "Aayush is an AI Associate Developer at Insurity, focused on smarter tools and real-world AI systems.",
-    "now": [
-      "Tweaking NetVR’s 3D Theater for smoother multi-user sessions.",
-      "Refactoring Supabase auth and Edge Functions setup.",
-      "Finishing up MCS Big Data Systems coursework at ASU."
-    ],
-    "projects": [
-      {
-        "name": "NetVR",
-        "desc": "React Native VR-style app with Supabase + Twitch."
-      },
-      {
-        "name": "LawBandit",
-        "desc": "AI legal research tool with RAG and smart citations."
-      },
-      {
-        "name": "SafetyGuardian",
-        "desc": "AWS data pipeline using Kinesis → Glue → Redshift."
-      }
-    ],
-    "fun": [
-      "Fueled by cold brew and curiosity.",
-      "Still insists ‘ship first, polish later’ works.",
-      "Once debugged a bug that didn’t exist. Felt powerful."
-    ]
-  }
-  
+  "bio": "Aayush is an AI Associate Developer at Insurity, quietly wiring AI copilots into day-to-day insurance tooling.",
+  "now": [
+    "Rolling out dependable AI flows for policy operations at Insurity.",
+    "Documenting and handing off NetVR before its Oct 2025 sunset.",
+    "Grinding through ASU’s MCS Big Data Systems labs and capstones."
+  ],
+  "projects": [
+    {
+      "name": "NetVR Theater",
+      "desc": "Shared VR watch parties powered by Supabase presence + Twitch embeds."
+    },
+    {
+      "name": "LawBandit",
+      "desc": "AI legal research sprints with citations you can actually trace."
+    },
+    {
+      "name": "SafetyGuardian",
+      "desc": "AWS Kinesis → Glue → Redshift pipeline with human-friendly monitors."
+    }
+  ],
+  "fun": [
+    "Sleep schedule optimized for build sprints.",
+    "Mentally at the whiteboard, physically at a coffee shop.",
+    "Believes every deck deserves a running demo."
+  ]
+}

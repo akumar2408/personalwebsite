@@ -1,6 +1,8 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useMemo, useState, useRef } from "react";
+import profile from "@/data/aayush.json";
 import {
   Github, Linkedin, Mail, FileText, ArrowRight, MapPin, Rocket, ExternalLink,
   Download, GraduationCap, Award, Code, Server, Database, Boxes,
@@ -19,8 +21,8 @@ import Changelog from "@/components/Changelog";
 ========================= */
 const CONFIG = {
   name: "Aayush Kumar",
-  tagline: "I like making useful stuff that just works.",
-  location: "Phoenix • Los Angeles",
+  tagline: "I build grounded AI tools with indie energy.",
+  location: "Phoenix ↔ Los Angeles",
   email: "aayushkumar2004@gmail.com",
   resumeUrl: "/resume.pdf",
   github: "https://github.com/akumar2408",
@@ -77,6 +79,29 @@ const projects = [
   },
 ];
 
+const nowBoard = [
+  {
+    tag: "INSURITY",
+    title: "Copilots in prod",
+    note: "Pairing retrieval + AI with underwriting & policy review flows.",
+  },
+  {
+    tag: "NETVR",
+    title: "Sunset checklist",
+    note: "Documenting hand-off steps before the Oct 2025 wrap-up.",
+  },
+  {
+    tag: "STUDY",
+    title: "ASU MCS labs",
+    note: "Big Data Systems projects + agentic AI electives.",
+  },
+  {
+    tag: "PLAY",
+    title: "Weekend experiments",
+    note: "Games page revamp + tiny SaaS prototypes.",
+  },
+];
+
 /* =========================
    Motion helpers
 ========================= */
@@ -114,7 +139,7 @@ function Chip({
   );
 }
 
-function SplashOverlay() {
+function SplashOverlay({ onFinish }: { onFinish?: () => void }) {
   const [show, setShow] = useState(true);
   const [reduced, setReduced] = useState(false);
 
@@ -134,9 +159,15 @@ function SplashOverlay() {
   }, [show]);
 
   useEffect(() => {
-    const t = setTimeout(() => setShow(false), reduced ? 800 : 3400);
+    const t = setTimeout(() => {
+      setShow(false);
+      onFinish?.();
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new Event("splash:done"));
+      }
+    }, reduced ? 800 : 3400);
     return () => clearTimeout(t);
-  }, [reduced]);
+  }, [reduced, onFinish]);
 
   if (!show) return null;
 
@@ -445,8 +476,12 @@ function DevChecks() {
 export default function PersonalSite() {
   const year = useMemo(() => new Date().getFullYear(), []);
   const [splashDone, setSplashDone] = useState(false);
-  
-  <AiAssistant visible={splashDone} appearDelayMs={800} />
+
+  useEffect(() => {
+    if (splashDone) return;
+    const fallback = setTimeout(() => setSplashDone(true), 4200);
+    return () => clearTimeout(fallback);
+  }, [splashDone]);
   
   // UI states
   const [cmd, setCmd] = useState(false);
@@ -527,7 +562,8 @@ export default function PersonalSite() {
 
   return (
     <>
-      <SplashOverlay />
+      <SplashOverlay onFinish={() => setSplashDone(true)} />
+      <AiAssistant visible={splashDone} appearDelayMs={800} />
       <GridOverlay show={grid} />
       <CommandPalette open={cmd} setOpen={setCmd} onSelect={handlePaletteSelect} />
       <QuickTour open={tour} setOpen={setTour} />
@@ -547,8 +583,9 @@ export default function PersonalSite() {
                 {CONFIG.tagline}
               </h1>
               <p className="mt-4 text-zinc-300 leading-relaxed max-w-[60ch]">
-                I’m Aayush, working at Insurity on AI-driven tools that make insurance software smarter. When I’m not
-                coding, I’m usually exploring new ideas in machine learning and system design.
+                I’m Aayush — I like calm, boringly reliable software with a little AI spark. Days are spent inside
+                Insurity wiring copilots into policy workflows. Nights and weekends go to NetVR, data-heavy side quests,
+                and giving my friends better tools than another spreadsheet.
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
                 <a href="#projects" className={btn}>
@@ -581,7 +618,13 @@ export default function PersonalSite() {
                 <div className={card}>
                   <div className="flex items-center gap-3">
                     <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-cyan-500/30 to-fuchsia-500/30 grid place-items-center">
-                      <img src="/insurity.svg" alt="Insurity" className="h-full w-full object-contain drop-shadow-sm" />
+                      <Image
+                        src="/insurity.svg"
+                        alt="Insurity"
+                        width={56}
+                        height={56}
+                        className="h-full w-full object-contain drop-shadow-sm"
+                      />
                     </div>
                     <div>
                       <p className="text-[11px] uppercase tracking-widest text-cyan-400/90 font-semibold">Currently</p>
@@ -591,13 +634,13 @@ export default function PersonalSite() {
                     </div>
                   </div>
                   <ul className="mt-4 text-sm leading-6 list-disc ml-4 text-zinc-300">
-                    <li>Work with the AI Solutions team on smarter tools.</li>
-                    <li>Build features that make real work easier.</li>
-                    <li>Focus on clarity, testing, and smooth deploys.</li>
+                    <li>Prototype copilots and retrieval flows with the AI Solutions team.</li>
+                    <li>Pair new services with our existing stack without making ops miserable.</li>
+                    <li>Keep deploys boring: tests, observability, and rollout plans.</li>
                   </ul>
                   <div className="mt-5 flex flex-wrap gap-2">
                     <span className="text-[10px] uppercase tracking-wider px-2 py-1 rounded-full border border-white/10 bg-white/5">
-                      Insurity • Oct 2025
+                      Insurity • 2024 → Present
                     </span>
                   </div>
                   <div className="mt-6">
@@ -624,35 +667,32 @@ export default function PersonalSite() {
             </div>
             <motion.div className="md:col-span-8 text-zinc-300" initial={fadeUp.initial} animate={fadeUp.animate}>
               <p className="leading-relaxed">
-                I like building small, end-to-end things that prove an idea works. Once it does, I polish it up and make
-                it solid. Most of what I build mixes web, data, and a bit of AI.
+                {profile.bio} I still chase small, end-to-end builds that prove an idea works before I let myself polish
+                them.
               </p>
               <p className="mt-4 leading-relaxed">
-                Right now I’m finishing my BS at ASU and working through the MCS Big Data Systems track. Outside of
-                classes, I build things for fun and post the ones I’m proud of.
+                School-wise I’m finishing the ASU BS CS and rolling straight into the MCS Big Data Systems track.
+                Work-wise it’s Insurity copilots during the day and NetVR cleanup + fun experiments at night.
               </p>
               <div className="mt-4 flex flex-wrap gap-2 text-xs">
-                <Chip icon={GraduationCap} tone="cyan">ASU — BS CS ’25</Chip>
-                <Chip icon={Award} tone="fuchsia">Dean’s List (GPA 3.75)</Chip>
+                <Chip icon={GraduationCap} tone="cyan">ASU — BS CS ’25 (accelerated)</Chip>
+                <Chip icon={Award} tone="fuchsia">Dean’s List • GPA 3.75</Chip>
                 <Chip icon={GraduationCap} tone="purple">ASU — MCS Big Data Systems ’26</Chip>
               </div>
-              <div className="mt-4 grid sm:grid-cols-2 gap-4">
-              <QuoteCard
-  className="mt-6 md:col-span-8"
-  items={[
-    "If it works, don’t ask why.",
-    "Gym? I thought you said gin.",
-    "Working hard or hardly awake.",
-    "I don’t have a plan, just a good playlist.",
-    "Mentally 25, financially 12.",
-  ]}
-/>
-              <div className="flex items-center justify-between">
-  <div className="flex items-center gap-1 text-[11px] text-zinc-400">
-    
-  </div>
-</div>
-            </div>
+              <div className="mt-6 grid sm:grid-cols-2 gap-4">
+                <div className="rounded-[20px] ring-1 ring-white/10 p-4 bg-white/[0.04] backdrop-blur">
+                  <p className="text-xs uppercase tracking-[0.2em] text-zinc-400">Recent experiments</p>
+                  <ul className="mt-3 space-y-3">
+                    {profile.projects.map((proj) => (
+                      <li key={proj.name}>
+                        <p className="text-sm font-medium text-zinc-100">{proj.name}</p>
+                        <p className="text-xs text-zinc-400">{proj.desc}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <QuoteCard className="h-full" items={profile.fun} />
+              </div>
             </motion.div>
           </div>
         </section>
@@ -759,44 +799,59 @@ export default function PersonalSite() {
         </section>
 
         {/* NOW (replaces Blog) */}
-    
-<Changelog
-  updated="Oct 15"
-  intro="What I’m actually doing right now. Less coming-soon, more shipped."
-  items={[
-    {
-      tag: "BUILDING",
-      title: "Little AI tools I actually use",
-      note: "RAG helpers, quick insight bots, one-click stuff that saves me clicks.",
-    },
-    {
-      tag: "LEARNING",
-      title: "Clean ETL patterns",
-      note: "DAGs that make sense at 2am. Better logging, fewer surprises.",
-    },
-    {
-      tag: "SHIPPING",
-      title: "Polish on case studies",
-      note: "Short demo clips, clearer READMEs. Fewer words, more proof.",
-    },
-    {
-      tag: "BUILDING",
-      title: "Personal site UX",
-      note: "Tiny animations, better docs, faster nav.",
-      href: "#", // link to a PR or commit if you want
-    },
-    {
-      tag: "LIFE",
-      title: "Gym + design breaks",
-      note: "Move a bit, reset the brain, come back sharper.",
-    },
-    {
-      tag: "LEARNING",
-      title: "Agents and evals",
-      note: "Sandbox actions and don’t trust vibes.",
-    },
-  ]}
-/>
+
+        <Changelog
+          updated="Jan 05"
+          intro="What I’m actively shipping, learning, and sunsetting. No someday lists."
+          items={[
+            {
+              tag: "BUILDING",
+              title: "Insurity copilots",
+              note: "Retrieval, evals, and UX so AI answers line up with policy reality.",
+            },
+            {
+              tag: "SHIPPING",
+              title: "NetVR wrap-up",
+              note: "Docs, analytics, and a calm Oct 2025 sunset plan.",
+            },
+            {
+              tag: "LEARNING",
+              title: "MCS Big Data labs",
+              note: "Distributed systems, Spark, and agent eval research at ASU.",
+            },
+            {
+              tag: "BUILDING",
+              title: "Games tab glow-up",
+              note: "Typing coach, trivia lifelines, smarter stack guessing, and an idea mixer.",
+            },
+            {
+              tag: "LIFE",
+              title: "Daily reset walks",
+              note: "Sun + espresso = better commits.",
+            },
+            {
+              tag: "LEARNING",
+              title: "Agent safety rails",
+              note: "Sandboxed tools and evals instead of trusting vibes.",
+            },
+          ]}
+          sidebar={
+            <>
+              <FocusBoard items={nowBoard} user="Aayush" />
+              <div className="rounded-[20px] ring-1 ring-white/10 bg-white/[0.04] backdrop-blur p-4">
+                <p className="text-xs uppercase tracking-[0.2em] text-zinc-400">Right now</p>
+                <ul className="mt-3 space-y-2 text-sm text-zinc-300">
+                  {profile.now.map((item) => (
+                    <li key={item} className="flex items-start gap-2">
+                      <ArrowRight className="h-3.5 w-3.5 mt-1 text-cyan-300" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </>
+          }
+        />
 
 
         {/* EXPERIENCE & EDUCATION */}
@@ -806,11 +861,11 @@ export default function PersonalSite() {
           <div className="mt-6 grid md:grid-cols-2 gap-8">
             <div className={card}>
               <p className="font-medium">The Net VR — Software Engineering Intern</p>
-              <p className="text-xs text-zinc-400 mt-0.5">Aug 2025 – Present • Remote</p>
+              <p className="text-xs text-zinc-400 mt-0.5">Aug 2024 – Oct 2025 • Remote</p>
               <ul className="mt-3 list-disc ml-5 text-sm text-zinc-300">
-                <li>Shipped cross-platform VR and mobile features with Unity and React Native.</li>
-                <li>Built an AI companion service with Flask and a WebSocket bridge.</li>
-                <li>Dockerized services, added CI checks, and improved performance.</li>
+                <li>Shipped cross-platform VR + mobile releases and documented the handoff.</li>
+                <li>Built an AI concierge service with Flask plus a WebSocket bridge for live sessions.</li>
+                <li>Dockerized services, tightened CI, and added perf monitors before the Oct 2025 sunset.</li>
               </ul>
             </div>
             <div className={card}>
