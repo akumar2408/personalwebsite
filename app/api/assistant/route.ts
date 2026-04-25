@@ -16,18 +16,18 @@ export async function POST(req: Request) {
   const lower = message.toLowerCase();
   let reply = "";
 
-  if (lower.includes("hi") || lower.includes("hello")) reply = "Hey there 👋 what’s up?";
+  if (lower.includes("hi") || lower.includes("hello")) reply = "Hey, I’m Aayush’s site. Ask me about his work, projects, or stack.";
   else if (lower.includes("working") || lower.includes("now"))
     reply = aayush.now[Math.floor(Math.random() * aayush.now.length)];
   else if (lower.includes("project"))
     reply = aayush.projects.map((p) => `${p.name}: ${p.desc}`).join(" • ");
   else if (lower.includes("commit"))
     reply = recentCommit
-      ? `Last commit says: “${recentCommit}” — sounds like Aayush, right?`
-      : "No fresh commits lately — maybe he’s actually resting 😴";
+      ? `Last commit says: “${recentCommit}” — likely more polish or debugging.`
+      : "No fresh public commits lately, but he is probably still building or debugging something.";
   else if (lower.includes("fun"))
     reply = aayush.fun[Math.floor(Math.random() * aayush.fun.length)];
-  else reply = "Hmm, not sure. Probably building or debugging something right now.";
+  else reply = "Ask me about Aayush’s Insurity work, Richish, AI/data projects, or technical stack.";
 
   // Tone polish via GPT-4-mini
   try {
@@ -43,7 +43,7 @@ export async function POST(req: Request) {
           {
             role: "system",
             content:
-              "You are Aayush's personal AI assistant. Speak in his natural chill tone — real, confident, slightly witty, never robotic.",
+              "You are Aayush's personal AI assistant. Speak in a natural, confident, concise tone. Keep the positioning technical: software engineering, AI, data, product quality, and real production experience. Avoid fake hype.",
           },
           { role: "user", content: reply },
         ],

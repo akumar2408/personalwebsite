@@ -7,9 +7,9 @@ import Script from "next/script";
 
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL || "https://aayush-kumarr.vercel.app";
-const TITLE = "Aayush Kumar | AI & Software Engineer | ASU";
+const TITLE = "Aayush Kumar | Software Engineer | AI, Data, Full-Stack";
 const DESC =
-  "Aayush Kumar — Senior at Arizona State University (ASU), finishing CS in Dec and pursuing an accelerated MS in Big Data Systems (3.5+1). I build AI-powered, data-driven apps with clean UX.";
+  "Aayush Kumar is a software engineer in Phoenix focused on AI, data, and full-stack product development. He builds polished software systems with clean UX and practical technical depth.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -21,9 +21,11 @@ export const metadata: Metadata = {
     "Software Engineer",
     "AI Engineer",
     "Big Data Systems",
+    "Data Engineer",
     "Next.js",
     "Machine Learning",
     "Arizona State University",
+    "Phoenix Software Engineer",
   ],
   authors: [{ name: "Aayush Kumar", url: SITE_URL }],
   creator: "Aayush Kumar",
@@ -32,16 +34,16 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     url: SITE_URL,
-    title: "Aayush Kumar | AI & Software Engineer",
-    description: "Senior @ ASU | Building intelligent systems with AI, data, and code.",
+    title: "Aayush Kumar | Software Engineer",
+    description: "Software engineer focused on AI, data, and full-stack product development.",
     siteName: "Aayush Kumar Portfolio",
     images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Aayush Kumar Portfolio" }],
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Aayush Kumar | Software & AI Engineer",
-    description: "ASU CS + Accelerated MS (Big Data Systems). I build AI/data products.",
+    title: "Aayush Kumar | Software Engineer",
+    description: "AI, data, and full-stack product development.",
     images: ["/og-image.png"],
   },
   icons: { icon: "/favicon.ico", apple: "/apple-touch-icon.png" },
@@ -85,14 +87,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 "https://github.com/akumar2408",
                 "https://www.linkedin.com/in/aayushkumar2/"
               ],
-              jobTitle: "Software Engineer",
+              image: `${SITE_URL}/aayush-headshot.png`,
+              jobTitle: "Solution Analyst",
+              worksFor: {
+                "@type": "Organization",
+                name: "Insurity"
+              },
               affiliation: {
                 "@type": "CollegeOrUniversity",
                 name: "Arizona State University",
                 sameAs: "https://www.asu.edu/"
               },
               description:
-                "AI + Software Engineer from ASU building intelligent, data-driven systems."
+                "Software engineer focused on AI, data, and full-stack product development."
             })
           }}
         />

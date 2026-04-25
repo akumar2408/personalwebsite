@@ -2,7 +2,7 @@
 "use client";
 
 type Item = {
-  tag: "BUILDING" | "LEARNING" | "SHIPPING" | "LIFE";
+  tag: "WORK" | "BUILDING" | "LEARNING" | "SHIPPING" | "LIFE";
   title: string;
   note?: string;
   href?: string;
@@ -21,6 +21,7 @@ export default function Changelog({
   items: Item[];
 }) {
   const tagColor: Record<Item["tag"], string> = {
+    WORK: "text-cyan-300",
     BUILDING: "text-cyan-300",
     LEARNING: "text-emerald-300",
     SHIPPING: "text-fuchsia-300",
@@ -35,11 +36,11 @@ export default function Changelog({
       </div>
       {intro && <p className="mt-1 text-sm text-zinc-400">{intro}</p>}
 
-      <div className="mt-6 grid md:grid-cols-2 gap-6 rounded-[28px] ring-1 ring-white/10 p-5 bg-white/[0.04] backdrop-blur">
+      <div className="mt-6 grid md:grid-cols-2 gap-6 rounded-lg ring-1 ring-white/10 p-5 bg-white/[0.04] backdrop-blur">
         {items.map((it, i) => (
           <div
             key={i}
-            className="rounded-[16px] ring-1 ring-white/10 bg-white/[0.04] px-4 py-3 hover:ring-white/20 transition"
+            className="rounded-lg ring-1 ring-white/10 bg-white/[0.04] px-4 py-3 hover:ring-white/20 transition"
           >
             <p className={`text-[11px] font-semibold tracking-wider ${tagColor[it.tag]}`}>
               {it.tag}

@@ -32,7 +32,7 @@ export default function QuoteRotator({
   return (
     <div
       className={[
-        "w-full rounded-[20px] ring-1 ring-white/10 bg-white/[0.05] backdrop-blur",
+        "w-full rounded-lg ring-1 ring-white/10 bg-white/[0.05] backdrop-blur",
         "shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04)] p-5 md:p-6",
         className,
       ].join(" ")}
