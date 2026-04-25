@@ -32,7 +32,7 @@ export default function AiAssistant({
     {
       from: "bot",
       text:
-        "Hey, I’m Aayush’s site. Ask me anything — try 'What’s he working on right now?'",
+        "Hey, I’m Aayush’s site. Ask me about his Insurity work, Richish, AI/data projects, or stack.",
     },
   ]);
   const [input, setInput] = useState("");
@@ -121,7 +121,7 @@ export default function AiAssistant({
       });
 
       const data = await res.json();
-      const reply = data.reply || "Hmm, I’m not sure about that right now.";
+      const reply = data.reply || "I’m not sure about that yet.";
       setMsgs((m) => [...m, { from: "bot", text: reply }]);
 
       // Voice reply (only if toggled on)
@@ -142,7 +142,7 @@ export default function AiAssistant({
       console.error(err);
       setMsgs((m) => [
         ...m,
-        { from: "bot", text: "Something went wrong — probably me again 😅" },
+        { from: "bot", text: "Something went wrong. Try again in a bit." },
       ]);
     } finally {
       setLoading(false);
@@ -197,7 +197,7 @@ export default function AiAssistant({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 40 }}
             transition={{ type: "spring", stiffness: 140, damping: 18 }}
-            className="fixed bottom-6 right-6 z-[95] w-[360px] sm:w-[400px] h-[520px] sm:h-[560px] rounded-[20px] border border-white/10 bg-zinc-900/95 text-zinc-100 shadow-2xl backdrop-blur-lg flex flex-col"
+            className="fixed bottom-6 right-6 z-[95] w-[360px] sm:w-[400px] h-[520px] sm:h-[560px] rounded-lg border border-white/10 bg-zinc-900/95 text-zinc-100 shadow-2xl backdrop-blur-lg flex flex-col"
             // Stop scroll events from affecting the page
             onWheel={(e) => e.stopPropagation()}
             onTouchMove={(e) => e.stopPropagation()}

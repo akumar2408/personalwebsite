@@ -1,28 +1,31 @@
 {
-    "bio": "Aayush is an AI Associate Developer at Insurity, focused on smarter tools and real-world AI systems.",
-    "now": [
-      "Tweaking NetVR’s 3D Theater for smoother multi-user sessions.",
-      "Refactoring Supabase auth and Edge Functions setup.",
-      "Finishing up MCS Big Data Systems coursework at ASU."
-    ],
-    "projects": [
-      {
-        "name": "NetVR",
-        "desc": "React Native VR-style app with Supabase + Twitch."
-      },
-      {
-        "name": "LawBandit",
-        "desc": "AI legal research tool with RAG and smart citations."
-      },
-      {
-        "name": "SafetyGuardian",
-        "desc": "AWS data pipeline using Kinesis → Glue → Redshift."
-      }
-    ],
-    "fun": [
-      "Fueled by cold brew and curiosity.",
-      "Still insists ‘ship first, polish later’ works.",
-      "Once debugged a bug that didn’t exist. Felt powerful."
-    ]
-  }
-  
+  "bio": "Aayush is a software engineer focused on AI, data, and full-stack product development.",
+  "now": [
+    "Working remotely at Insurity on platform logic, workflows, data handling, output generation, debugging, and testing.",
+    "Continuing the M.C.S. in Big Data Systems at Arizona State University.",
+    "Building Richish and sharpening AI, data, and product-focused project proof."
+  ],
+  "projects": [
+    {
+      "name": "Richish",
+      "desc": "Live iOS wealth tracking app focused on manual finance workflows, clean UX, and local-first thinking."
+    },
+    {
+      "name": "IAM dApp",
+      "desc": "Decentralized identity and credential verification project with smart contracts and auditable workflows."
+    },
+    {
+      "name": "Personal Website",
+      "desc": "Custom Next.js portfolio built with TypeScript, Tailwind CSS, and Framer Motion."
+    },
+    {
+      "name": "AI / Data / ML Projects",
+      "desc": "Applied projects around model experiments, analytics, ETL-style workflows, and structured data problems."
+    }
+  ],
+  "fun": [
+    "Fueled by cold brew, clean interfaces, and practical ideas.",
+    "Build the useful version first, then make it feel good.",
+    "Debugs first, vibes later."
+  ]
+}

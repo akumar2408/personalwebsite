@@ -86,7 +86,7 @@ export default function SplashIntro({ onDone }: { onDone: () => void }) {
 
           {/* 2) NAME: per-letter pop with neon sweep */}
           <motion.h1
-            className="mt-4 font-semibold tracking-[-0.04em] text-[12vw] md:text-7xl
+            className="mt-4 font-semibold text-[12vw] md:text-7xl
                        bg-clip-text text-transparent bg-gradient-to-r from-cyan-300 via-white to-fuchsia-300"
             initial="hidden"
             animate="show"
@@ -123,7 +123,7 @@ export default function SplashIntro({ onDone }: { onDone: () => void }) {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0, transition: { delay: 1.2, duration: 0.4 } }}
           >
-            AI Associate Developer @ Insurity
+            Software Engineer | AI, Data & Full-Stack
           </motion.p>
 
           {/* 4) Exit dash (shrinks and slides upward slightly) */}

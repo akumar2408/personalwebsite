@@ -12,7 +12,7 @@ export default function NavTabs({ items }: { items: Item[] }) {
   const [hovered, setHovered] = useState<string | null>(null);
   const [activeId, setActiveId] = useState<string>(items.find(i => i.id)?.id ?? "");
 
-  // Track sections only on the homepage
+  // Track the section currently passing under the fixed header.
   useEffect(() => {
     if (typeof window === "undefined") return;
     if (window.location.pathname !== "/") return;
@@ -20,12 +20,29 @@ export default function NavTabs({ items }: { items: Item[] }) {
     const ids = items.filter(i => i.id && i.href.startsWith("/#")).map(i => i.id!) ;
     if (!ids.length) return;
 
-    const io = new IntersectionObserver(
-      (entries) => entries.forEach(e => e.isIntersecting && setActiveId(e.target.id)),
-      { rootMargin: "-40% 0px -55% 0px", threshold: 0.01 }
-    );
-    ids.forEach(id => { const el = document.getElementById(id); if (el) io.observe(el); });
-    return () => io.disconnect();
+    const setActiveFromScroll = () => {
+      const marker = window.scrollY + 140;
+      let current = ids[0];
+
+      for (const id of ids) {
+        const el = document.getElementById(id);
+        if (!el) continue;
+        if (el.offsetTop <= marker) current = id;
+      }
+
+      setActiveId(current);
+    };
+
+    setActiveFromScroll();
+    window.addEventListener("scroll", setActiveFromScroll, { passive: true });
+    window.addEventListener("resize", setActiveFromScroll);
+    window.addEventListener("hashchange", setActiveFromScroll);
+
+    return () => {
+      window.removeEventListener("scroll", setActiveFromScroll);
+      window.removeEventListener("resize", setActiveFromScroll);
+      window.removeEventListener("hashchange", setActiveFromScroll);
+    };
   }, [items]);
 
   const isRouteActive = (it: Item) => {
@@ -34,7 +51,7 @@ export default function NavTabs({ items }: { items: Item[] }) {
   };
 
   return (
-    <div className="relative flex gap-3 rounded-[16px] p-2 bg-zinc-900/70 border border-white/10 shadow-[0_10px_30px_-15px_rgba(0,0,0,0.6)]">
+    <div className="relative flex max-w-full items-center justify-center gap-7 overflow-visible">
       {items.map((n) => {
         const activeNow = isRouteActive(n);
         return (
@@ -42,16 +59,17 @@ export default function NavTabs({ items }: { items: Item[] }) {
             key={n.label}
             onMouseEnter={() => setHovered(n.label)}
             onMouseLeave={() => setHovered(null)}
-            className="relative"
+            className="relative shrink-0"
           >
-            {/* Cast to any to satisfy typedRoutes for dynamic strings */}
             <Link
               prefetch={false}
               href={n.href as any}
+              aria-current={activeNow ? "page" : undefined}
               className={[
-                "px-4 py-2 md:px-4 md:py-2.5 rounded-[12px] text-[15px] md:text-base transition",
-                "hover:text-white/90 text-zinc-200",
-                activeNow ? "font-semibold" : "font-medium",
+                "relative z-10 block whitespace-nowrap py-[22px] text-[13px] font-semibold uppercase leading-none tracking-[0.18em] transition duration-200 xl:text-[14px]",
+                activeNow
+                  ? "text-white drop-shadow-[0_0_12px_rgba(34,211,238,0.28)]"
+                  : "text-zinc-400 hover:text-zinc-100",
               ].join(" ")}
               title={n.hint}
             >
@@ -59,11 +77,18 @@ export default function NavTabs({ items }: { items: Item[] }) {
             </Link>
 
             {activeNow && (
-              <motion.span
-                layoutId="nav-pill"
-                className="absolute inset-0 -z-10 rounded-[12px] bg-white/12 ring-1 ring-white/15 shadow-[0_8px_24px_-12px_rgba(56,189,248,0.45)]"
-                transition={{ type: "spring", stiffness: 400, damping: 30 }}
-              />
+              <>
+                <motion.span
+                  layoutId="nav-underline"
+                  className="absolute inset-x-0 bottom-2 h-[2px] rounded-full bg-gradient-to-r from-cyan-300 via-fuchsia-300 to-violet-300 shadow-[0_0_18px_rgba(34,211,238,0.55)]"
+                  transition={{ type: "spring", stiffness: 420, damping: 32 }}
+                />
+                <motion.span
+                  layoutId="nav-aura"
+                  className="absolute inset-x-[-10px] bottom-0 h-8 rounded-full bg-cyan-400/8 blur-xl"
+                  transition={{ type: "spring", stiffness: 420, damping: 32 }}
+                />
+              </>
             )}
 
             <AnimatePresence>
@@ -72,7 +97,7 @@ export default function NavTabs({ items }: { items: Item[] }) {
                   initial={{ opacity: 0, y: 6, scale: 0.98 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 6, scale: 0.98 }}
-                  className="absolute left-0 top-[110%] z-50 w-max max-w-[240px] rounded-[12px] border border-white/10 bg-zinc-900/95 px-3 py-2 text-xs text-zinc-200 shadow-xl"
+                  className="absolute left-1/2 top-[115%] z-50 w-max max-w-[240px] -translate-x-1/2 rounded-2xl border border-white/10 bg-zinc-900/95 px-3 py-2 text-xs text-zinc-200 shadow-xl"
                 >
                   {n.hint}
                 </motion.div>

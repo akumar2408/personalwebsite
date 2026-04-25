@@ -1,9 +1,5 @@
 // app/page.tsx
-import dynamic from "next/dynamic";
-
-const PersonalSite = dynamic(() => import("../components/PersonalSite"), {
-  ssr: false,
-});
+import PersonalSite from "../components/PersonalSite";
 
 export default function Page() {
   return <PersonalSite />;

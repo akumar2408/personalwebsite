@@ -1,6 +1,7 @@
 // app/projects/[slug]/page.tsx
 import type { Metadata } from "next";
-import Link from "next/link";
+import Image from "next/image";
+import BackButton from "@/components/BackButton";
 
 type Case = {
   title: string;
@@ -11,84 +12,122 @@ type Case = {
   owned: string[];
   code?: string;
   demo?: string;
+  appStore?: string;
+  icon?: { src: string; alt: string };
+  screenshots?: { src: string; alt: string }[];
+  visuals?: { src: string; alt: string; caption: string }[];
 };
 
+const RICHISH_APP_STORE_URL =
+  "https://apps.apple.com/us/app/richish-net-worth-tracker/id6760427550";
+
 const cases: Record<string, Case> = {
-  "operational-dashboard": {
-    title: "Operational Dashboard",
+  richish: {
+    title: "Richish",
     problem: [
-      "Leads and deals lived in different places and people made decisions from stale spreadsheets.",
-      "The team needed a simple view of the numbers and a light forecast that didn’t get in the way.",
+      "A lot of personal finance apps assume automated bank connections, even when users want privacy and manual control.",
+      "The product needed to make wealth tracking feel clear, calm, and useful without making the user hand over financial accounts.",
     ],
     built: [
-      "A small React + API setup that pulled data on a schedule and cached results for quick loads.",
-      "Clear charts for pipeline, conversion, and a basic 30-day projection.",
-      "Role-based access with seed data so anyone could try it locally.",
+      "A SwiftUI iOS app for manual asset, liability, and net worth tracking.",
+      "Clean mobile flows for updating financial data, reviewing changes, and understanding trends.",
+      "Optional CSV import workflows, local-first thinking, StoreKit structure, and launch-prep polish.",
     ],
     impact: [
-      "Gave the team one reliable place to check the week and plan the next one.",
-      "Reduced manual spreadsheet updates and made weekly reviews faster.",
+      "Shows an end-user product taken from idea through implementation and launch preparation.",
+      "Combines product design, privacy-first thinking, mobile UX, and data presentation.",
     ],
-    stack: ["React", "Spring Boot", "PostgreSQL", "Docker", "GitHub Actions"],
-    owned: ["frontend UI", "API endpoints", "DB schema", "deploy", "basic tests"],
-    code: "https://github.com/akumar2408/operationaldashboard/",
-    demo: "",
+    stack: ["SwiftUI", "StoreKit", "iOS", "Mobile UX", "Data presentation"],
+    owned: ["product direction", "mobile UX", "app architecture", "data model", "launch prep"],
+    appStore: RICHISH_APP_STORE_URL,
+    icon: { src: "/richish/icon.png", alt: "Richish app icon" },
+    screenshots: [
+      { src: "/richish/home.png", alt: "Richish home dashboard screenshot" },
+      { src: "/richish/transactions.png", alt: "Richish transactions analytics screenshot" },
+      { src: "/richish/accounts.png", alt: "Richish accounts organization screenshot" },
+      { src: "/richish/invest.png", alt: "Richish investments screenshot" },
+    ],
   },
 
-  aiinvestmate: {
-    title: "AIInvestMate",
+  "iam-dapp": {
+    title: "IAM dApp",
     problem: [
-      "Students wanted a safe way to try simple investing ideas without real money or complex tools.",
+      "Credential verification depends on trust, auditability, and clear roles between issuers, holders, and verifiers.",
+      "The project needed a technical model for identity and credential workflows that could be inspected and verified.",
     ],
     built: [
-      "Next.js app with auth, saved portfolios, and quick scenario runs.",
-      "Clean forms and guardrails so numbers stay sensible.",
-      "Basic content to explain what the model does and doesn’t do.",
+      "Smart contract logic for credential registry concepts and verification flows.",
+      "Full-stack workflow ideas for issuers, holders, and verifiers.",
+      "A project structure around trust, auditable records, and decentralized identity patterns.",
     ],
     impact: [
-      "Lowered the barrier to experiment and learn.",
-      "Made conversations about risk and return more concrete.",
+      "Shows systems thinking beyond standard CRUD applications.",
+      "Demonstrates comfort working with modern technical concepts, architecture, and verification workflows.",
     ],
-    stack: ["Next.js", "Supabase", "TypeScript"],
-    owned: ["app architecture", "auth + data model", "UI/UX", "deployment"],
-    code: "https://github.com/akumar2408/AIInvestMate",
-    demo: "https://aiinvestmate.vercel.app",
+    stack: ["Solidity", "Hardhat", "Smart contracts", "Blockchain application design"],
+    owned: ["contract design", "identity workflow modeling", "verification logic", "project architecture"],
+    visuals: [
+      {
+        src: "/iam-dapp/dashboard.png",
+        alt: "IAM dApp DID dashboard interface",
+        caption: "DID dashboard concept for registries, credentials, verification status, and audit flow.",
+      },
+      {
+        src: "/iam-dapp/architecture.png",
+        alt: "IAM dApp credential verification architecture diagram",
+        caption: "Credential flow across issuers, holders, verifiers, registries, and immutable verification logs.",
+      },
+    ],
   },
 
-  "stock-based-comp": {
-    title: "Stock-Based Compensation System",
+  "personal-website": {
+    title: "Personal Website",
     problem: [
-      "Finance needed a simple way to calculate stock-based comp with clean exports.",
+      "The portfolio needed to communicate current technical direction instead of feeling like an outdated project list.",
+      "Recruiters should quickly understand the through-line: software engineering, AI, data, and product-minded execution.",
     ],
     built: [
-      "Small service with clear inputs/outputs and predictable jobs.",
-      "Basic tests and a seed script for reliable demos.",
+      "A custom Next.js site with TypeScript, Tailwind CSS, motion, project case studies, and a focused personal narrative.",
+      "A content refresh that emphasizes current Insurity work, stronger projects, technical strengths, and product taste.",
     ],
     impact: [
-      "Cut manual time and reduced spreadsheet errors.",
-      "Kept deploys smooth during busy weeks.",
+      "Gives the site a clearer recruiting surface and a more current representation of the work.",
+      "Shows frontend polish, interaction design, and personal brand judgment.",
     ],
-    stack: ["Python", "FastAPI", "PostgreSQL", "Docker", "GitHub Actions"],
-    owned: ["API design", "data model", "tests", "deployment"],
-    code: "https://github.com/akumar2408/stock-based-comp",
+    stack: ["Next.js", "TypeScript", "Tailwind CSS", "Framer Motion"],
+    owned: ["frontend architecture", "content strategy", "UI polish", "deployment"],
+    visuals: [
+      {
+        src: "/site/personal-website-hero.png",
+        alt: "Personal website hero section screenshot",
+        caption: "Homepage hero for the portfolio refresh, combining motion, clearer positioning, and a stronger product presentation.",
+      },
+    ],
   },
 
-  "streaming-etl": {
-    title: "Safety Guardian – Streaming ETL",
+  "ai-data-ml": {
+    title: "AI / Data / ML Projects",
     problem: [
-      "Sensor data arrived in bursts and dashboards lagged.",
-      "Ops needed a pipeline that was simple, visible, and easy to fix.",
+      "Many useful AI and analytics projects depend on structured data workflows before the model or dashboard can be trusted.",
+      "The work needed to connect modeling, ETL-style thinking, analytics, and deployment exploration.",
     ],
     built: [
-      "A tiny streaming path with clear transforms and a backfill toggle.",
-      "Dead-letter queue and metrics so issues were obvious.",
+      "Model experiments, analytics dashboards, ETL-style data flows, and structured data problem solving.",
+      "Exploration around AI-assisted tools, data pipelines, and ML deployment patterns on AWS.",
     ],
     impact: [
-      "Fresher data within minutes instead of hours.",
-      "On-call triaged faster because logs and metrics were straightforward.",
+      "Shows the practical bridge between software engineering, data systems, and applied machine learning.",
+      "Keeps the focus on useful systems rather than isolated theory.",
     ],
-    stack: ["AWS Kinesis", "Glue", "Redshift", "Python"],
-    owned: ["ETL steps", "infra as code", "alerts", "dashboards"],
+    stack: ["Python", "SQL", "AWS", "ETL", "Data pipelines", "Applied ML"],
+    owned: ["model experimentation", "data workflow design", "analytics surfaces", "deployment exploration"],
+    visuals: [
+      {
+        src: "/site/ai-investmate-dashboard.png",
+        alt: "AI InvestMate financial dashboard with cashflow, markets, and AI briefing panels",
+        caption: "AI InvestMate dashboard concept with cashflow snapshots, market pulse cards, planning views, and an AI briefing surface.",
+      },
+    ],
   },
 };
 
@@ -104,12 +143,7 @@ export default function ProjectCase({ params }: { params: { slug: string } }) {
       <main className="mx-auto max-w-3xl p-6">
         <p className="text-zinc-300">Not found.</p>
         <div className="mt-4 flex gap-4">
-          <Link href="/projects" className="underline text-sm opacity-80">
-            ← Back to projects
-          </Link>
-          <Link href="/" className="underline text-sm opacity-80">
-            ← Back home
-          </Link>
+          <BackButton fallbackHref="/projects" label="Back to projects" />
         </div>
       </main>
     );
@@ -117,16 +151,76 @@ export default function ProjectCase({ params }: { params: { slug: string } }) {
 
   return (
     <main className="mx-auto max-w-3xl p-6">
-      <div className="flex items-center justify-between">
-        <Link href="/projects" className="text-sm opacity-80 hover:underline">
-          ← Back to projects
-        </Link>
-        <Link href="/" className="text-sm opacity-80 hover:underline">
-          ← Back home
-        </Link>
+      <div className="flex items-center">
+        <BackButton fallbackHref="/projects" label="Back to projects" />
       </div>
 
       <h1 className="mt-2 text-3xl font-semibold tracking-tight">{item.title}</h1>
+
+      {item.appStore && (
+        <div className="mt-5 flex flex-wrap items-center gap-4 rounded-lg border border-white/10 bg-white/5 p-4">
+          {item.icon && (
+            <Image
+              src={item.icon.src}
+              alt={item.icon.alt}
+              width={64}
+              height={64}
+              className="h-16 w-16 rounded-2xl object-cover ring-1 ring-white/15"
+            />
+          )}
+          <div className="min-w-0 flex-1">
+            <p className="font-medium">Richish is live on the App Store</p>
+            <p className="mt-1 text-sm text-zinc-400">
+              Net worth, cash flow, accounts, and investments in one private iOS app.
+            </p>
+          </div>
+          <a
+            href={item.appStore}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-md border border-white/10 px-3 py-2 text-sm hover:bg-white/5"
+          >
+            View on App Store
+          </a>
+        </div>
+      )}
+
+      {item.screenshots && (
+        <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-4">
+          {item.screenshots.map((shot) => (
+            <div key={shot.src} className="overflow-hidden rounded-lg border border-white/10 bg-black/30">
+              <Image
+                src={shot.src}
+                alt={shot.alt}
+                width={1242}
+                height={2688}
+                sizes="(min-width: 768px) 180px, 45vw"
+                className="h-auto w-full"
+              />
+            </div>
+          ))}
+        </div>
+      )}
+
+      {item.visuals && (
+        <div className="mt-8 grid gap-5">
+          {item.visuals.map((visual) => (
+            <figure key={visual.src} className="overflow-hidden rounded-lg border border-white/10 bg-white/[0.04]">
+              <Image
+                src={visual.src}
+                alt={visual.alt}
+                width={1672}
+                height={941}
+                sizes="(min-width: 768px) 768px, 94vw"
+                className="h-auto w-full"
+              />
+              <figcaption className="border-t border-white/10 px-4 py-3 text-sm text-zinc-400">
+                {visual.caption}
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+      )}
 
       <Section title="Problem" points={item.problem} />
       <Section title="What I built" points={item.built} />
@@ -141,7 +235,7 @@ export default function ProjectCase({ params }: { params: { slug: string } }) {
               href={item.code}
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-[12px] border border-white/10 px-3 py-2 text-sm hover:bg-white/5"
+              className="rounded-md border border-white/10 px-3 py-2 text-sm hover:bg-white/5"
             >
               View code
             </a>
@@ -151,7 +245,7 @@ export default function ProjectCase({ params }: { params: { slug: string } }) {
               href={item.demo}
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-[12px] border border-white/10 px-3 py-2 text-sm hover:bg-white/5"
+              className="rounded-md border border-white/10 px-3 py-2 text-sm hover:bg-white/5"
             >
               Open demo
             </a>

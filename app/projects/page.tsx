@@ -1,30 +1,31 @@
 // app/projects/page.tsx
 import Link from "next/link";
+import BackButton from "@/components/BackButton";
 
 const items = [
   {
-    slug: "operational-dashboard",
-    title: "Operational Dashboard",
+    slug: "richish",
+    title: "Richish",
     summary:
-      "Full-stack sales analytics with simple 30-day forecasts. Helped the team spot trends sooner and keep decisions grounded.",
+      "Live iOS wealth tracking app built around manual tracking, clean UX, local-first thinking, and optional CSV import workflows.",
   },
   {
-    slug: "aiinvestmate",
-    title: "AIInvestMate",
+    slug: "iam-dapp",
+    title: "IAM dApp",
     summary:
-      "A small app that helps students try investing ideas and learn the basics in a friendly way.",
+      "Decentralized identity and credential verification project with smart contracts, issuers, holders, verifiers, and auditable workflows.",
   },
   {
-    slug: "stock-based-comp",
-    title: "Stock-Based Compensation System",
+    slug: "personal-website",
+    title: "Personal Website",
     summary:
-      "A small, reliable service for calculating stock-based comp and exporting clean reports.",
+      "Custom portfolio built with Next.js, TypeScript, Tailwind CSS, and Framer Motion to present work with a premium product feel.",
   },
   {
-    slug: "streaming-etl",
-    title: "Safety Guardian — Streaming ETL",
+    slug: "ai-data-ml",
+    title: "AI / Data / ML Projects",
     summary:
-      "A steady pipeline for sensor data with simple transforms and visible errors.",
+      "Applied model, analytics, ETL-style, and structured data projects showing the bridge between software, AI, and data systems.",
   },
 ];
 
@@ -33,18 +34,16 @@ export default function ProjectsIndex() {
     <main className="mx-auto max-w-4xl p-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold tracking-tight">Projects</h1>
-        <Link href="/" className="text-sm opacity-80 hover:underline">
-          ← Back home
-        </Link>
+        <BackButton fallbackHref="/#projects" label="Back" />
       </div>
-      <p className="opacity-70 mt-1">A few things I’ve built and shipped.</p>
+      <p className="opacity-70 mt-1">Selected builds across product, AI, data, and full-stack systems.</p>
 
       <div className="mt-6 grid gap-4 md:grid-cols-2">
         {items.map((p) => (
           <Link
             key={p.slug}
             href={`/projects/${p.slug}`}
-            className="rounded-[20px] border border-white/10 bg-white/5 p-4 hover:bg-white/10 transition block"
+            className="rounded-lg border border-white/10 bg-white/5 p-4 hover:bg-white/10 transition block"
           >
             <h2 className="font-medium">{p.title}</h2>
             <p className="text-sm text-zinc-300 mt-1">{p.summary}</p>
