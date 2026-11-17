@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState, useRef } from "react";
 import {
   Github, Linkedin, Mail, FileText, ArrowRight, MapPin, Rocket, ExternalLink,
-  Download, GraduationCap, Award, Code, Server, Database, Boxes,
+  GraduationCap, Award, Code, Server, Database, Boxes,
   TerminalSquare, HelpCircle, Keyboard, Grid3X3, BriefcaseBusiness, Cpu, GraduationCap as GraduationIcon
 } from "lucide-react";
 import Image from "next/image";
@@ -688,9 +688,6 @@ export default function PersonalSite() {
                 <a href={`mailto:${CONFIG.email}`} className={btn}>
                   <Mail className="h-4 w-4" /> Contact
                 </a>
-                <a href={CONFIG.resumeUrl} target="_blank" rel="noopener noreferrer" className={btn}>
-                  <FileText className="h-4 w-4" /> View Resume
-                </a>
               </div>
               <div className="mt-6 flex items-center gap-4 text-zinc-400">
                 <a aria-label="GitHub" href={CONFIG.github} className="hover:opacity-80">
@@ -730,15 +727,6 @@ export default function PersonalSite() {
                     <span className="text-[10px] uppercase tracking-wider px-2 py-1 rounded-full border border-white/10 bg-white/5">
                       Full-time • Since Mar 2026
                     </span>
-                  </div>
-                  <div className="mt-6">
-                    <a
-                      href={CONFIG.resumeUrl}
-                      download
-                      className="inline-flex items-center gap-2 rounded-md border border-white/20 px-4 py-2 text-sm hover:shadow-lg hover:shadow-cyan-500/10"
-                    >
-                      <Download className="h-4 w-4" /> Download résumé
-                    </a>
                   </div>
                 </div>
               </div>
